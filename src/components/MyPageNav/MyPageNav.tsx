@@ -1,4 +1,5 @@
-import { useState } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 import { Group } from '@mantine/core';
 import {
   IconBellRinging,
@@ -13,16 +14,29 @@ import {
 import classes from './MyPageNav.module.css';
 import { Badge } from '@mantine/core';
 
-const data = [
-  { link: '/vacation', label: '휴가계', icon: IconCalendarUp },
-  { link: '/payment', label: '지출결의서', icon: IconCash },
-  { link: '/alarm', label: '알람', icon: IconBellRinging },
-  { link: '/employee', label: '사원관리', icon: IconUsers },
-  { link: '/setting', label: 'Settings', icon: IconSettings },
-];
 
 export function MyPageNav() {
+  const [titleArray, setTitleArray] = useState([])
+  fetch('http://localhost:9999/board')
+  .then(e =>  // console.log("e.json > ",e.json())
+    e.json()
+  )
+  .then(data => setTitleArray(data))
+
+  console.log("tests>>>", titleArray)
+  // useEffect(() => {
+  // })
+  
+  const data = [
+    { link: '/vacation', label: '휴가계', icon: IconCalendarUp },
+    { link: '/payment', label: '지출결의서', icon: IconCash },
+    { link: '/alarm', label: '알람', icon: IconBellRinging },
+    { link: '/employee', label: '사원관리', icon: IconUsers },
+    { link: '/setting', label: 'Settings', icon: IconSettings },
+  ];
+
   const [active, setActive] = useState('Billing');
+  
 
   const links = data.map((item) => (
     <a
