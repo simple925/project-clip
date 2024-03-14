@@ -2,16 +2,32 @@
 import { Button, ScrollArea } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconBell } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 
-export function Demo() {
+export function Demo(props) {
   //   const [opened, { open, close }] = useDisclosure(false);
+
+  const [data, setData] = useState(null);
+  
+  //한번만 호출
+  useEffect(() => {
+    fetch('http://localhost:9999/comments')
+      .then(res => res.json())
+      .then(data => {
+            setData(data)
+      })
+    },[]);
+
+  if (!data) return <p>No profile data</p>
+  
+  console.log(data);
   const openModal = () =>
     modals.open({
       title: (
         <>
           <IconBell />
           <span style={{ fontWeight: "bold", padding: "10px" }}>
-            알림의 제목이 들어갑니다
+            {props.id+"님의 알림"}
           </span>
         </>
       ),
@@ -20,7 +36,8 @@ export function Demo() {
       children: (
         <>
           <ScrollArea h={300}>
-            리자몽 (포켓몬) Bulbapedia의 리자몽 설명 리자몽은 용감한 이족보행
+            <p style={{fontWeight: "bold"}}>{data[1].body}</p>
+            {data[0].body/* 리자몽 (포켓몬) Bulbapedia의 리자몽 설명 리자몽은 용감한 이족보행
             포켓몬입니다. 주로 주황색이며 가슴부터 꼬리 끝까지 아래쪽에 크림색이
             있습니다. 긴 목, 작은 파란 눈, 약간 올라간 콧구멍, 직사각형 머리
             뒤쪽에 두 개의 뿔 같은 구조물이 튀어나와 있습니다. 입을 닫았을 때
@@ -40,7 +57,7 @@ export function Demo() {
             점으로 나누어집니다. 각 날개 팔의 세 번째 관절은 발톱 모양의
             스파이크로 장식되어 있습니다. 메가리자몽X는 입가에서 푸른 불꽃을
             내뿜고, 꼬리의 불꽃도 푸른색으로 타오른다. 새로운 힘으로 인해 몸이
-            검게 변하고, 더욱 강렬한 불길을 일으킨다고 합니다.
+            검게 변하고, 더욱 강렬한 불길을 일으킨다고 합니다. */}
           </ScrollArea>
           <Button fullWidth onClick={() => modals.closeAll()} mt="md">
             확인
