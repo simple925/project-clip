@@ -1,0 +1,36 @@
+.card {
+  background-color: var(--mantine-color-body);
+}
+
+.avatar {
+  border: rem(2px) solid var(--mantine-color-body);
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.logo-layer {
+  width: 90%; /* 부모 요소 .container의 너비에 따라 유동적으로 조절 */
+  max-width: 500px; /* 최대 너비 설정 */
+  aspect-ratio: 1; /* 가로 세로 비율 1:1로 유지 */
+}
+
+.logo-img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.input-layer {
+  width: 20%;
+  margin-top: 8px;
+}
+
+.login-btn {
+  width: 100%; /* .input-layer의 너비에 맞추기 위해 100%로 설정 */
+  margin-top: 50px; /* .input-layer의 하위 요소가 아니므로 별도로 정의 */
+}
