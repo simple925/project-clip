@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Group } from '@mantine/core';
 import {
   IconBellRinging,
@@ -13,19 +13,13 @@ import {
 } from '@tabler/icons-react';
 import classes from './MyPageNav.module.css';
 import { Badge } from '@mantine/core';
-
+import getUserId from '../../../lib/getUserId';
 
 export function MyPageNav() {
-  const [titleArray, setTitleArray] = useState([])
-  fetch('http://localhost:9999/board')
-  .then(e =>  // console.log("e.json > ",e.json())
-    e.json()
-  )
-  .then(data => setTitleArray(data))
-
-  console.log("tests>>>", titleArray)
-  // useEffect(() => {
-  // })
+  const userInfo: Promise<[]> = getUserId()
+  const userId = userInfo.then(e => (
+    <div>{e.userId}</div>
+  ));
   
   const data = [
     { link: '/vacation', label: '휴가계', icon: IconCalendarUp },
@@ -35,8 +29,7 @@ export function MyPageNav() {
     { link: '/setting', label: 'Settings', icon: IconSettings },
   ];
 
-  const [active, setActive] = useState('Billing');
-  
+  const [active, setActive] = useState('Billing');  
 
   const links = data.map((item) => (
     <a
@@ -59,6 +52,7 @@ export function MyPageNav() {
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
           <IconPaperclip size={25} />
+          <span>{userId}</span>
           <Badge color="gray">CLIP</Badge>
         </Group>
         {links}
