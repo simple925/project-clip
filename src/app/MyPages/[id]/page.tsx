@@ -5,11 +5,11 @@ import { AppShell } from "@mantine/core";
 import { MyPageNav } from "@/components/MyPageNav/MyPageNav";
 import { MyContent } from "@/components/MyContent/MyContent";
 
- export default function MyPages() {
+ export default function MyPages(props) {
     return (
       <AppShell withBorder={false} navbar={{ width: 350, breakpoint: 'sm' }}>
         <AppShell.Navbar>
-          <MyPageNav />
+          <MyPageNav id={props.params.id}/>
         </AppShell.Navbar>
         <AppShell.Main>
           <MyContent />

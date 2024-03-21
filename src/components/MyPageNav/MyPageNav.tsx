@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Group } from '@mantine/core';
 import {
   IconBellRinging,
@@ -13,13 +13,22 @@ import {
 } from '@tabler/icons-react';
 import classes from './MyPageNav.module.css';
 import { Badge } from '@mantine/core';
-import getUserId from '../../../lib/getUserId';
 
-export function MyPageNav() {
-  const userInfo: Promise<[]> = getUserId()
-  const userId = userInfo.then(e => (
-    <div>{e.userId}</div>
-  ));
+export function MyPageNav(props) {
+  const [info, setInfo] = useState('')
+
+  useEffect(() => {
+    fetch(`http://localhost:9999/board/${props.id}`)
+    .then(res => res.json())
+    .then(info => {
+      setInfo(info)
+    })
+  }, []);
+  
+  // const userInfo: Promise<[]> = getUserId()
+  // const userId = userInfo.then(e => (
+  //   <div>{e.userId}</div>
+  // ));
   
   const data = [
     { link: '/vacation', label: '휴가계', icon: IconCalendarUp },
@@ -52,7 +61,7 @@ export function MyPageNav() {
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
           <IconPaperclip size={25} />
-          <span>{userId}</span>
+          <span>{info.userId}</span>
           <Badge color="gray">CLIP</Badge>
         </Group>
         {links}
