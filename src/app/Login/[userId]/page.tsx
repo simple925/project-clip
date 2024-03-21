@@ -1,48 +1,31 @@
+"use client";
 import type { Metadata } from "next"
-import { Suspense } from "react"
+import { Suspense, useEffect, useState } from "react"
 import getData from "../../../../lib/commonApi"
 
 type Props = {
     promise: Promise<Users>
 }
 
-export async function generateMetadata( {params:{userId}}: Params): Promise<Metadata> {
-    const userData: Promise<Users> = getData(`http://localhost:9999/Users?id=${userId}`)
-    const user: Users = await userData
-    // console.log('데이터 확인 : ', user)
-    // 메타데이터 : 예약어
+export default function UserPage( {params: { userId} }: Params) {
 
-    return {
-        title: user.name,
-        description: `This is the page of ${user.name}`
-    }
-}
+    const [ member, setMember ] = useState(null);
 
-export async function UserInput({promise}:Props) {
-    const userData = await promise
+    useEffect(() => {
+         getData(`http://localhost:9999/Users?id=${userId}`)
+        .then(member1 => setMember(member1))
+        .catch(error => console.error('fetch commonApi에서 오류 발생:', error))
+    }, [])
+    
+    // console.log('*** 데이터 확인 : ', member)
+    const memberName = member[0].name
 
-    const content = (
-            <article key={userData.id}>
-                <h2>{userData.username}</h2>
-                <p>{userData.email}</p>
-                <br />
-            </article>
-    )
-
-    return content
-}
-
-export default async function UserPage( {params: { userId} }: Params) {
-    const userData: Promise<Users> = getData(`http://localhost:9999/Users?id=${userId}`)
-    const user = await userData
-    console.log('Login/[userId] 의 데이터 확인 :', user)
-
-   return (
+    return (
    <>
-    <h2>{user.name}</h2>
+    <h2>환영합니다, {memberName} 님!</h2>
     <br/>
     <Suspense fallback={<h2>Loading...</h2>}>
-        <UserInput promise={userData}></UserInput>
+        {/* <UserInput promise={member}></UserInput> */}
     </Suspense>
    </>
   )
