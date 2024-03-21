@@ -1,0 +1,12 @@
+
+.input-layer {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.login-btn {
+    width: 100%;
+    /* .input-layer의 너비에 맞추기 위해 100%로 설정 */
+    margin-top: 50px;
+    /* .input-layer의 하위 요소가 아니므로 별도로 정의 */
+}
