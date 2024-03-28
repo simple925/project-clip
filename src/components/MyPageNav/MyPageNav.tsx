@@ -9,14 +9,16 @@ import {
   IconPaperclip,
   IconCalendarUp,
   IconCash,
-  IconUsers
+  IconUsers,
+  IconMail,
+
 } from '@tabler/icons-react';
 import classes from './MyPageNav.module.css';
 import { Badge } from '@mantine/core';
 
 export function MyPageNav(props) {
   const [info, setInfo] = useState('')
-
+  // 사용자 정보 조회
   useEffect(() => {
     fetch(`http://localhost:9999/board/${props.id}`)
     .then(res => res.json())
@@ -25,20 +27,17 @@ export function MyPageNav(props) {
     })
   }, []);
   
-  // const userInfo: Promise<[]> = getUserId()
-  // const userId = userInfo.then(e => (
-  //   <div>{e.userId}</div>
-  // ));
-  
+  // navbar 메뉴 추가 시 변경 될 데이터 
   const data = [
     { link: '/vacation', label: '휴가계', icon: IconCalendarUp },
     { link: '/payment', label: '지출결의서', icon: IconCash },
     { link: '/alarm', label: '알람', icon: IconBellRinging },
-    { link: '/employee', label: '사원관리', icon: IconUsers },
+    { link: '/email', label: '이메일', icon: IconMail },
     { link: '/setting', label: 'Settings', icon: IconSettings },
+    { link: '/employee', label: '사원관리', icon: IconUsers },
   ];
 
-  const [active, setActive] = useState('Billing');  
+  const [active, setActive] = useState('휴가계');  
 
   const links = data.map((item) => (
     <a
