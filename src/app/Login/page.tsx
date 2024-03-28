@@ -3,13 +3,6 @@
 import LoginInput from "@/components/LoginInput/LoginInput"
 import { useState, useRef } from "react";
 import Image from 'next/image';
-import {
-  PasswordInput,
-  Button,
-  Autocomplete,
-  Loader,
-  ButtonProps,
-} from "@mantine/core";
 import style from "./Login.module.css";
 
 // export default function으로 외부 출력해주어야 합니다

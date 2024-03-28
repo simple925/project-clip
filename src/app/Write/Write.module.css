@@ -1,0 +1,27 @@
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.input_paper {
+  min-width: 800px; 
+  margin: 20px;
+}
+
+.input_form {
+  margin: 30px;
+}
+
+.write_paper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.btn_area{
+  justify-content: space-between
+}
