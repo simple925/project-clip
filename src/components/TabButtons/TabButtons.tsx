@@ -5,30 +5,22 @@ import { useState, useRef } from "react";
 import { Tabs, rem } from "@mantine/core";
 import style from "./TabButtons.module.css";
 
-
-// export function TabItem(
-//   props: ButtonProps & React.ComponentPropsWithoutRef<"button">
-// ) {
-//   return <Button variant="default" {...props} />;
-// }
-
 // export default function으로 외부 출력해주어야 합니다
-export default function TabButtons() {
+export default function TabButtons(prop: {
+  tabItems: { label: string; value: string }[];
+}) {
+  const tabItems: {} = prop.tabItems;
 
   return (
-    <Tabs variant="pills" radius="xl" defaultValue="gallery">
+    <Tabs variant="pills" radius="xl" defaultValue={tabItems[0].value}>
       <Tabs.List>
-        <Tabs.Tab value="gallery" leftSection="">
-          공지
-        </Tabs.Tab>
-        <Tabs.Tab value="messages" leftSection="">
-          휴가
-        </Tabs.Tab>
-        <Tabs.Tab value="settings" leftSection="">
-          지출
-        </Tabs.Tab>
+        {tabItems.map((item, index) => (
+          <Tabs.Tab key={index} value={item.value} leftSection="">
+            {item.label}
+          </Tabs.Tab>
+        ))}
       </Tabs.List>
-
+      {/* 
       <Tabs.Panel value="gallery">
         Gallery tab content
       </Tabs.Panel>
@@ -39,7 +31,7 @@ export default function TabButtons() {
 
       <Tabs.Panel value="settings">
         Settings tab content
-      </Tabs.Panel>
+      </Tabs.Panel> */}
     </Tabs>
   );
 }
