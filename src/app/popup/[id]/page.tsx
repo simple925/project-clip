@@ -1,5 +1,5 @@
 // import { Welcome } from '../components/Welcome/Welcome';
-import { Demo } from "@/components/Modal";
+import { Modal } from "@/components/Modal";
 
 export default function HomePage(props) {
   // console.log(props);
@@ -7,7 +7,7 @@ export default function HomePage(props) {
 
   return (
     <>
-      <Demo id={props.params.id}/>
+      <Modal id={props.params.id}/>
     </>
   );
 }

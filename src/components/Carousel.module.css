@@ -1,6 +1,7 @@
 .controls {
   transition: opacity 150ms ease;
   opacity: 0;
+  outline: 5px;
 }
 
 .root {
