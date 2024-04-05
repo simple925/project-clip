@@ -1,7 +1,6 @@
 'use client';
 import { Container, Title, Accordion, ScrollArea } from '@mantine/core';
 import classes from './myContent.module.css';
-import { MyPageSearchBar } from "@/components/MyPageSearchBar/myPageSearchBar";
 import commonApi from '../../../lib/commonApi';
 import { useEffect, useState } from 'react';
 import { error } from 'console';
@@ -16,30 +15,27 @@ export function MyContent() {
   const [studentList, setStudentList] = useState([])
   useEffect(() => {
 
-      //api 사용 차이 비교할 것
+    //api 사용 차이 비교할 것
 
-      // Fetch student data
-        fetch('http://localhost:9999/student')
-        .then(res => res.json())
-        .then(student => setStudent(student))
-        .catch(error => console.error('fetch student에서 오류 발생:', error))
-        
-      //Fetch commonApi 사용해서 student data 가져옴
-      commonApi('http://localhost:9999/person')
+    // Fetch student data
+    fetch('http://localhost:9999/student')
+      .then(res => res.json())
+      .then(student => setStudent(student))
+      .catch(error => console.error('fetch student에서 오류 발생:', error))
+
+    //Fetch commonApi 사용해서 student data 가져옴
+    commonApi('http://localhost:9999/person')
       .then(studentList => setStudentList(studentList))
       .catch(error => console.error('fetch commonApi에서 오류 발생:', error))
   }, [])
-  
+
   return (
     <Container size="sm" className={classes.wrapper}>
-      <div>
-        <MyPageSearchBar />
-      </div>   
       <Title ta="center" className={classes.title}>
         휴가계
       </Title>
       <ScrollArea w={800} h={530}>
-            {/* <div>불러온 데이터 조회</div>
+        {/* <div>불러온 데이터 조회</div>
             {
                 student.map(data=>{
                   return (
