@@ -8,11 +8,11 @@ import { IconBell } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import carouselHover from '@/components/Carousel.module.css';
 
-export function Modal(props) {
+export function Modal(props: {id:  string }) {
   //   const [opened, { open, close }] = useDisclosure(false);
   const TRANSITION_DURATION = 50;
-  const [data, setData] = useState(null);
-  const [embla, setEmbla] = useState<Embla | null>(null);
+  const [data, setData] = useState<any>(null);
+  const [embla, setEmbla] = useState<any | null>(null);
 
   useAnimationOffsetEffect(embla, TRANSITION_DURATION);
   //한번만 호출
@@ -46,7 +46,7 @@ export function Modal(props) {
         <>
           <Carousel loop getEmblaApi={setEmbla} maw={500} classNames={carouselCss}>           
           {
-            data.map((d,i) => {
+            data.map((d: any,i: number) => {
               return <>
                 <Carousel.Slide key={i}>
                 <ScrollArea h={300}>
