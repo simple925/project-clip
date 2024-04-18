@@ -1,0 +1,100 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "fruits": [
+    {
+      "id": 1,
+      "name": "apple",
+      "price": "2000"
+    },
+    {
+      "id": 2,
+      "name": "strawberry",
+      "price": "8000"
+    },
+    {
+      "id": 3,
+      "name": "mango",
+      "price": "16000"
+    }
+  ],
+  "login": [
+    {
+      "userid": "newspring",
+      "pw": "first0000",
+      "id": 1
+    },
+    {
+      "userid": "newspring",
+      "pw": "first0000",
+      "id": 2
+    },
+    {
+      "userId": "abc111",
+      "userPw": "ddddd",
+      "id": 3
+    },
+    {
+      "userId": "abcd111",
+      "userPw": "abcd1111!",
+      "id": 4
+    }
+  ],
+  "board": [
+    {
+      "id": "1",
+      "no": "1",
+      "title": "first_board",
+      "content": "Hello",
+      "userId": "newspring",
+      "rgstDt": "2023-09-14 20:09:02"
+    },
+    {
+      "id": "2",
+      "no": "2",
+      "title": "second_board",
+      "content": "Hello222",
+      "userId": "navisdf",
+      "rgstDt": "2023-09-20 20:09:02"
+    },
+    {
+      "id": "3",
+      "no": "3",
+      "title": "third_board",
+      "content": "Hohoho",
+      "userId": "sekfei22",
+      "rgstDt": "2023-09-14 20:09:02"
+    },
+    {
+      "id": "4",
+      "no": "4",
+      "title": "fourth_board",
+      "content": "Hello444",
+      "userId": "qewr2444",
+      "rgstDt": "2023-09-14 20:09:02"
+    },
+    {
+      "id": "5",
+      "no": "5",
+      "title": "fifth_board",
+      "content": "Hello555",
+      "userId": "ndksl22",
+      "rgstDt": "2023-09-14 20:09:02"
+    }
+  ]
+}
