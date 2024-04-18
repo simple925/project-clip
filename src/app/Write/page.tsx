@@ -1,6 +1,5 @@
 "use client";
 // use client 사용해야 함
-import TabButtons from "@/components/TabButtons/TabButtons";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { DatePickerInput as MantineDatePickerInput } from "@mantine/dates";
@@ -16,6 +15,7 @@ import {
   NumberInput,
   PillsInput,
   Pill,
+  Tabs,
 } from "@mantine/core";
 import style from "./Write.module.css";
 import dayjs from "dayjs";
@@ -59,6 +59,188 @@ const writeTabBtnItems = [
 /** 글쓰기 페이지 출력부  */
 // export default function으로 외부 출력
 export default function WritePage() {
+  // 공지사항 글쓰기 박스
+  function NoticeWrite() {
+    return (
+      <>
+        <Input.Wrapper
+          label="공지 제목"
+          withAsterisk
+          error="작성하지 않았을 경우 에러 문구 발생"
+        >
+          <Input placeholder="제목을 입력하세요." />
+        </Input.Wrapper>
+        <Textarea
+          label="공지 내용"
+          withAsterisk
+          placeholder="공지사항 내용을 입력하세요."
+          autosize
+          minRows={20}
+        />
+      </>
+    );
+  }
+
+  // 휴가계 글쓰기 박스
+  function VacationWrite() {
+    return (
+      <>
+        <Input.Wrapper label="휴가계 제목" withAsterisk>
+          <Input readOnly value={vacationTitle} placeholder={vacationTitle} />
+        </Input.Wrapper>
+        <Input.Wrapper label="신청자" withAsterisk>
+          <Input variant="filled" readOnly value={user.userName} />
+        </Input.Wrapper>
+        <Input.Wrapper label="신청일" withAsterisk>
+          <MantineDatePickerInput
+            locale="ko"
+            value={writtenDate}
+            onChange={setWrittenDate}
+          />
+          {/* 입력란에서 포커스가 떠날 때 휴가계 제목 업데이트 */}
+        </Input.Wrapper>
+        <Input.Wrapper
+          label="휴가 사용일"
+          withAsterisk
+          error={
+            formattedApplicatedDates.length === 0 &&
+            "휴가 사용일을 선택해주세요."
+          }
+        >
+          <MantineDatePicker
+            size="md"
+            locale="ko"
+            type="multiple"
+            value={datesValue}
+            onChange={setDatesValue}
+          />
+          {/* 휴가 사용일 선택시 해당 내용이 pillInput으로 자동으로 추가됨 */}
+          {/* datepicker 날짜 5개로 제한하는 속성있는지 확인 필요 */}
+          <PillsInput>
+            <Pill.Group>
+              {formattedApplicatedDates.map((date, index) => (
+                <Pill key={index}>{date}</Pill>
+              ))}
+            </Pill.Group>
+          </PillsInput>
+        </Input.Wrapper>
+        <Input.Wrapper
+          label="휴가 사유"
+          withAsterisk
+          error={reasonVacation.trim() == "" && "휴가 사유를 입력해주세요."}
+        >
+          <Input
+            value={reasonVacation}
+            onChange={(event) => setReasonVacation(event.currentTarget.value)}
+            placeholder="휴가 사유를 입력하세요."
+          />
+        </Input.Wrapper>
+        <Input.Wrapper label="소진 휴가일수 / 연차일수" withAsterisk>
+          <NumberInput
+            className={style["input_number_box"]}
+            value={user.usedVacation + lastUsedVacation}
+          />
+          / {user.totalVacation}
+        </Input.Wrapper>
+      </>
+    );
+  }
+  // 지출결의서 글쓰기 박스
+  function DisbursementWrite() {
+    return (
+      <>
+        <Input.Wrapper label="지출결의서 제목" withAsterisk>
+          <Input value={disbursementTitle} />
+        </Input.Wrapper>
+        <Input.Wrapper label="지급 요청일" withAsterisk>
+          <MantineDatePickerInput
+            locale="ko"
+            value={disbursementWrittenDate}
+            onChange={setDisbursementWrittenDate}
+          />
+          {/* TODO : 입력란에서 포커스가 떠날 때 지출결의서 제목 업데이트 */}
+        </Input.Wrapper>
+        <Input.Wrapper label="일금" withAsterisk>
+          <Input
+            value={expense}
+            onChange={(event) => setExpense(event.currentTarget.value)}
+          />
+        </Input.Wrapper>
+        <Input.Wrapper label="지급 방법" withAsterisk>
+          <Input
+            value={wayOfDisbursementContent}
+            onChange={(event) =>
+              setWayOfDisbursementContent(event.currentTarget.value)
+            }
+          />
+        </Input.Wrapper>
+        <Input.Wrapper label="지출 세부 내역" withAsterisk>
+          <Input
+            value={disbursementContent}
+            onChange={(event) =>
+              setDisbursementContent(event.currentTarget.value)
+            }
+          />
+        </Input.Wrapper>
+        <Input.Wrapper label="은행 이체 명세" withAsterisk>
+          <Input
+            value={disbursementBank}
+            onChange={(event) => setDisbursementBank(event.currentTarget.value)}
+          />
+        </Input.Wrapper>
+        <Input.Wrapper label="작성일자" withAsterisk>
+          <MantineDatePickerInput
+            locale="ko"
+            value={dateOfWrittenDisbursement}
+            onChange={setDateOfWrittenDisbursement}
+          />
+        </Input.Wrapper>
+        <Input.Wrapper label="공급가액" withAsterisk>
+          <Input
+            value={supplyValue}
+            onChange={(event) => setSupplyValue(event.currentTarget.value)}
+          />
+        </Input.Wrapper>
+        <Input.Wrapper label="부가세액" withAsterisk>
+          <Input
+            value={tax}
+            onChange={(event) => setTax(event.currentTarget.value)}
+          />
+        </Input.Wrapper>
+        <Input.Wrapper label="합계" withAsterisk>
+          <Input
+            value={totalDisbursement}
+            onChange={(event) =>
+              setTotalDisbursement(event.currentTarget.value)
+            }
+          />
+        </Input.Wrapper>
+        {/* TO DO 증빙에 필요한 이미지 파일 첨부 가능하게끔 파일 업로드 */}
+        <Input.Wrapper label="증빙" withAsterisk>
+          <Input
+            value={evidence}
+            onChange={(event) => setEvidence(event.currentTarget.value)}
+          />
+        </Input.Wrapper>
+      </>
+    );
+  }
+
+  const [selectedWrite, setSelectedWrite] = useState(writeTabBtnItems[0].value);
+
+  const renderWriteContent = () => {
+    switch (selectedWrite) {
+      case "공지":
+        return <NoticeWrite />;
+      case "휴가계":
+        return <VacationWrite />;
+      case "지출결의서":
+        return <DisbursementWrite />;
+      default:
+        return null;
+    }
+  };
+
   // ################ Define Variables
   // 휴가계 변수 선언
   const [vacationTitle, setVacationTitle] = useState(""); // 휴가계 제목
@@ -68,7 +250,7 @@ export default function WritePage() {
   >([]); // 변환된 날짜들을 저장할 배열
   const [writtenDate, setWrittenDate] = useState<Date | null>(new Date()); // 휴가계 작성일
   const formatttedDate = dayjs(writtenDate).format("YYYY-MM-DD");
-  const [content, setContent] = useState(""); // 휴가 사유
+  const [reasonVacation, setReasonVacation] = useState(""); // 휴가 사유
   const [lastUsedVacation, setLastUsedVacation] = useState(user.usedVacation); // 소진 휴가일수
 
   // 현재 선택된 datesValue의 길이에 따라 사용된 휴가일수를 계산
@@ -115,105 +297,52 @@ export default function WritePage() {
 
   // ################ Define Variables
   // 지출결의서 변수 선언
-  // const [disbursementTitle, setDisbursementTitle] = useState(""); // 지출결의서 제목
-  // const [disbursementWrittenDate, setDisbursementWrittenDate] =
-  //   useState<Date | null>(new Date()); // 지급 요청일
-  // const formatttedDisbursementDate = dayjs(disbursementWrittenDate).format(
-  //   "YYYY-MM-DD"
-  // );
-  // const [content, setContent] = useState(""); // 일금
-  // const [lastUsedVacation, setLastUsedVacation] = useState(user.usedVacation); // 지급 방법
-  // const [disbursementContent, setDisbursementContent] = useState("");  // 지출 세부 내역(무엇을 구매했는지?)
-  // const [disbursementBank, setDisbursementBank] = useState(""); // 은행 이체 명세(은행명, 수취인, 계좌번호)
-  // const [] // 작성일자
-  // const [] // 공급가액
-  // const [] // 부가세액
-  // const [] // 합계
-  // const // 증빙 
+  const [disbursementTitle, setDisbursementTitle] = useState(""); // 지출결의서 제목
+  const [disbursementWrittenDate, setDisbursementWrittenDate] =
+    useState<Date | null>(new Date()); // 지급 요청일
+  const formatttedDisbursementDate = dayjs(disbursementWrittenDate).format(
+    "YYYY-MM-DD"
+  );
+  const [expense, setExpense] = useState(""); // 일금
+  const [wayOfDisbursementContent, setWayOfDisbursementContent] = useState(""); // 지급 방법
+  const [disbursementContent, setDisbursementContent] = useState(""); // 지출 세부 내역(무엇을 구매했는지?)
+  const [disbursementBank, setDisbursementBank] = useState(""); // 은행 이체 명세(은행명, 수취인, 계좌번호)
+  const [dateOfWrittenDisbursement, setDateOfWrittenDisbursement] =
+    useState<Date | null>(new Date()); // 작성일자
+  const [supplyValue, setSupplyValue] = useState(""); // 공급가액
+  const [tax, setTax] = useState(""); // 부가세액
+  const [totalDisbursement, setTotalDisbursement] = useState(""); // 합계
+  const [evidence, setEvidence] = useState(""); // 증빙
 
   return (
     <div className={style.container}>
       {/* TabButtons에 props로 label을 보내고, 어떤 탭인지 value를 받아와 해당 내용으로 뿌림... */}
-      <TabButtons tabItems={writeTabBtnItems} />
+      {/* <TabButtons
+        tabItems={writeTabBtnItems}
+        onSelect={(value) => setSelectedWrite(value)}
+      /> */}
+      <Tabs
+        variant="pills"
+        radius="xl"
+        defaultValue="공지"
+        onChange={setSelectedWrite}
+      >
+        <Tabs.List>
+          {writeTabBtnItems.map(
+            (items: { label: string; value: string }, index: number) => (
+              <Tabs.Tab key={index} value={items.value}>
+                {items.label}
+              </Tabs.Tab>
+            )
+          )}
+        </Tabs.List>
+      </Tabs>
       <Paper className={style["input_paper"]} shadow="sm" withBorder p="xs">
         <div className={style["input_form"]}>
           {/* ############# 공지 사항 입력 폼 */}
-          {/* <Input.Wrapper
-            label="공지 제목"
-            withAsterisk
-            error="작성하지 않았을 경우 에러 문구 발생"
-          >
-            <Input placeholder="제목을 입력하세요." />
-          </Input.Wrapper>
-          <Textarea
-            label="공지 내용"
-            withAsterisk
-            placeholder="공지사항 내용을 입력하세요."
-            autosize
-            minRows={20}
-          /> */}
           {/* ############# 휴가계 입력 폼 */}
-          <Input.Wrapper label="휴가계 제목" withAsterisk>
-            <Input readOnly value={vacationTitle} placeholder={vacationTitle} />
-          </Input.Wrapper>
-          <Input.Wrapper label="신청자" withAsterisk>
-            <Input variant="filled" readOnly value={user.userName} />
-          </Input.Wrapper>
-          <Input.Wrapper label="신청일" withAsterisk>
-            <MantineDatePickerInput
-              locale="ko"
-              value={writtenDate}
-              onChange={setWrittenDate}
-            />
-            {/* 입력란에서 포커스가 떠날 때 휴가계 제목 업데이트 */}
-          </Input.Wrapper>
-          <Input.Wrapper
-            label="휴가 사용일"
-            withAsterisk
-            error={
-              formattedApplicatedDates.length === 0 &&
-              "휴가 사용일을 선택해주세요."
-            }
-          >
-            <MantineDatePicker
-              size="md"
-              locale="ko"
-              type="multiple"
-              value={datesValue}
-              onChange={setDatesValue}
-            />
-            {/* 휴가 사용일 선택시 해당 내용이 pillInput으로 자동으로 추가됨 */}
-            {/* datepicker 날짜 5개로 제한하는 속성있는지 확인 필요 */}
-            <PillsInput>
-              <Pill.Group>
-                {formattedApplicatedDates.map((date, index) => (
-                  <Pill key={index}>{date}</Pill>
-                ))}
-              </Pill.Group>
-            </PillsInput>
-          </Input.Wrapper>
-          <Input.Wrapper
-            label="휴가 사유"
-            withAsterisk
-            error={content.trim() == "" && "휴가 사유를 입력해주세요."}
-          >
-            <Input
-              value={content}
-              onChange={(event) => setContent(event.currentTarget.value)}
-              placeholder="휴가 사유를 입력하세요."
-            />
-          </Input.Wrapper>
-          <Input.Wrapper label="소진 휴가일수 / 연차일수" withAsterisk>
-            <NumberInput
-              className={style["input_number_box"]}
-              value={user.usedVacation + lastUsedVacation}
-            />
-            / {user.totalVacation}
-          </Input.Wrapper>
           {/* ############# 지출결의서 입력 폼 */}
-          {/* <Input.Wrapper label="지출결의서 제목" withAsterisk>
-            <Input readOnly value={vacationTitle} placeholder={vacationTitle} />
-          </Input.Wrapper> */}
+          {renderWriteContent()}
         </div>
       </Paper>
       {/* 버튼 2개를 기능과 label을 받아 뿌려주게끔 추후 수정 - */}
