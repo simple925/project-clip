@@ -15,13 +15,16 @@ import {
 } from '@tabler/icons-react';
 import classes from './MyPageNav.module.css';
 import { Badge } from '@mantine/core';
+import MyPages from '@/app/MyPages/[id]/page';
+import MyPagesDetail from '@/app/MyPages/[id]/[link]/page';
+import { MyContent } from '../MyContent/MyContent';
 
 export function MyPageNav(props: { id: number; }) {
   // type 추가
-  const [info, setInfo] = useState<any>('')
+  const [info, setInfo] = useState<any>([])
   // 사용자 정보 조회
   useEffect(() => {
-    fetch(`http://localhost:9999/board/${props.id}`)
+    fetch(`http://localhost:9999/Users/${props.id}`)
     .then(res => res.json())
     .then(info => {
       setInfo(info)
@@ -38,7 +41,8 @@ export function MyPageNav(props: { id: number; }) {
     { link: '/employee', label: '사원관리', icon: IconUsers },
   ];
 
-  const [active, setActive] = useState('휴가계');  
+  const [active, setActive] = useState('휴가계');
+  const [activeLink, setActiveLink] = useState('/vacation')
 
   const links = data.map((item) => (
     <a
@@ -49,6 +53,7 @@ export function MyPageNav(props: { id: number; }) {
       onClick={(event) => {
         event.preventDefault();
         setActive(item.label);
+        setActiveLink(item.link);
       }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
@@ -61,7 +66,7 @@ export function MyPageNav(props: { id: number; }) {
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
           <IconPaperclip size={25} />
-          <span>{info.userId}</span>
+          <span>{info.name}</span>
           <Badge color="gray">CLIP</Badge>
         </Group>
         {links}
