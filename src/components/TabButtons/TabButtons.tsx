@@ -9,12 +9,12 @@ import style from "./TabButtons.module.css";
 export default function TabButtons(prop: {
   tabItems: { label: string; value: string }[];
 }) {
-  const tabItems: {} = prop.tabItems;
+  const tabItems: any = prop.tabItems;
 
   return (
     <Tabs variant="pills" radius="xl" defaultValue={tabItems[0].value}>
       <Tabs.List>
-        {tabItems.map((item, index) => (
+        {tabItems.map((item: any, index: any) => (
           <Tabs.Tab key={index} value={item.value} leftSection="">
             {item.label}
           </Tabs.Tab>

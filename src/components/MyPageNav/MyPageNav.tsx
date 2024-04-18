@@ -16,8 +16,9 @@ import {
 import classes from './MyPageNav.module.css';
 import { Badge } from '@mantine/core';
 
-export function MyPageNav(props) {
-  const [info, setInfo] = useState('')
+export function MyPageNav(props: { id: number; }) {
+  // type 추가
+  const [info, setInfo] = useState<any>('')
   // 사용자 정보 조회
   useEffect(() => {
     fetch(`http://localhost:9999/board/${props.id}`)
