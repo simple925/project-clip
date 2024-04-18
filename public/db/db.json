@@ -1,0 +1,83 @@
+{
+  "posts": [
+    {
+      "id": 3,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "id": 2,
+      "title": "he",
+      "author": "happy"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "board": [
+    {
+      "id": 1,
+      "contents": "some contents",
+      "boardId": 1      
+    },
+        {
+      "id": 2,
+      "contents": "some contents",
+      "boardId": 2   
+    }
+  ],
+  "Users" :[ 
+    {
+      "id": 1,
+      "userUUID": "1234",
+      "name": "백지연",
+      "username": "diana",
+      "email": "dianapaik@cluedin.co.kr",
+      "address": {
+        "street": "street",
+        "suite": "suite",
+        "city": "seoul",
+        "zipcode": "12345",
+        "geo": {
+          "lat" : "lat",
+          "lng" : "lng"
+        }
+      },
+      "phone": "01012345678",
+      "website": "",
+      "company": {
+        "name": "클루드인",
+        "catchPhrase": "뭐야",
+        "bs": "bs"
+      }
+    },
+    {
+      "id": 2,
+      "userUUID": "1234",
+      "name": "이수진",
+      "username": "sujin",
+      "email": "sujinLee@cluedin.co.kr",
+      "address": {
+        "street": "하안대로",
+        "suite": "suite",
+        "city": "광명시",
+        "zipcode": "12345",
+        "geo": {
+          "lat" : "lat",
+          "lng" : "lng"
+        }
+      },
+      "phone": "01012345678",
+      "website": "",
+      "company": {
+        "name": "클루드인",
+        "catchPhrase": "기획서비스",
+        "bs": "bs"
+      }
+    }
+  ]
+}
