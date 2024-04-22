@@ -1,22 +1,21 @@
 'use client';
 import { AppShell, rem } from "@mantine/core";
-// import classes from './MyPages.module.css';
 
 import { MyPageNav } from "@/components/MyPageNav/MyPageNav";
 import { MyContent } from "@/components/MyContent/MyContent";
 import { MyPageSearchBar } from "@/components/MyPageSearchBar/MyPageSearchBar";
 import { ManageAuth } from "@/components/ManageAuth/ManageAuth";
-import MyPagesDetail from "./[link]/page";
 
 export default function MyPages(props: any) {
   
   return (
     <AppShell withBorder={false} navbar={{ width: rem(350), breakpoint: 'sm' }}>
       <AppShell.Navbar>
-        <MyPageNav id={props.id} />
+        <MyPageNav id={1} />
       </AppShell.Navbar>
       <AppShell.Main>
-        <MyPagesDetail />
+        <MyPageSearchBar mt={20}/>
+        <MyContent />
       </AppShell.Main>
     </AppShell>
   );
