@@ -7,5 +7,5 @@ npm run dev
 
 ## DB Started
 ```
-npx json-server ./db/[디비파일명].json
+npx json-server --port 9990 ./db/[디비파일명].json
 ```
