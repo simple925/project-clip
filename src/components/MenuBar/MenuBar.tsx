@@ -1,6 +1,19 @@
 "use client";
 import styles from './Menu.module.css';
 import Link from "next/link";
+import {
+  IconBellRinging,
+  IconSettings,
+  IconSwitchHorizontal,
+  IconLogout,
+  IconPaperclip,
+  IconCalendarUp,
+  IconCash,
+  IconUsers,
+  IconMail,
+  IconHome,
+  IconWritingSign
+} from '@tabler/icons-react';
 
 export function MenuBar() {
  // 스타일을 object 형태로 만들었기 때문에
@@ -28,12 +41,12 @@ export function MenuBar() {
 				{/*
 					<a /> 태그를 react router 사용을 위해 <Link /> 태그로 변경
 				*/}
-			<Link href="#" className={styles["menu-item"] + ' ' + styles.blue}><i className="fa fa-anchor"></i></Link>
-			<Link href="#" className={styles["menu-item"] + ' ' + styles.green}><i className="fa fa-coffee"></i></Link>
-			<Link href="#" className={styles["menu-item"] + ' ' + styles.red}><i className="fa fa-heart"></i></Link>
-			<Link href="#" className={styles["menu-item"] + ' ' + styles.purple}><i className="fa fa-microphone"></i></Link>
-			<Link href="#" className={styles["menu-item"] + ' ' + styles.orange}><i className="fa fa-star"></i></Link>
-			<Link href="#" className={styles["menu-item"] + ' ' + styles.lightblue}><i className="fa fa-diamond"></i></Link>
+			<Link href="#" className={styles["menu-item"] + ' ' + styles.blue}><i className="fa fa-anchor"><IconMail/></i></Link>
+			<Link href="#" className={styles["menu-item"] + ' ' + styles.green}><i className="fa fa-coffee"><IconCalendarUp/></i></Link>
+			<Link href="#" className={styles["menu-item"] + ' ' + styles.red}><i className="fa fa-heart"><IconHome/></i></Link>
+			<Link href="#" className={styles["menu-item"] + ' ' + styles.purple}><i className="fa fa-microphone"><IconUsers/></i></Link>
+			<Link href="#" className={styles["menu-item"] + ' ' + styles.orange}><i className="fa fa-star"><IconWritingSign/></i></Link>
+			<Link href="#" className={styles["menu-item"] + ' ' + styles.lightblue}><i className="fa fa-diamond"><IconBellRinging/></i></Link>
 		</nav>
 	</>
   );

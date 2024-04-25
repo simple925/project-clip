@@ -6,7 +6,6 @@ import { modals } from "@mantine/modals";
 import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import { IconBell } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import carouselHover from '@/components/Carousel.module.css';
 
 export function Modal(props: {id:  string }) {
   //   const [opened, { open, close }] = useDisclosure(false);
