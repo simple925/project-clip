@@ -15,7 +15,7 @@ import {
 } from '@tabler/icons-react';
 import classes from './MyPageNav.module.css';
 import { Badge } from '@mantine/core';
-import MyPages from '@/app/MyPages/[id]/page';
+import MyPages from '@/app/MyPages/page';
 import { MyContent } from '../MyContent/MyContent';
 import Link from 'next/link';
 
@@ -24,7 +24,7 @@ export function MyPageNav(props: { id: number; }) {
   const [info, setInfo] = useState<any>([])
   // 사용자 정보 조회
   useEffect(() => {
-    fetch(`http://localhost:9999/board/${props.id}`)
+    fetch(`http://localhost:9999/board/1`)
     .then(res => res.json())
     .then(info => {
       setInfo(info)
@@ -32,9 +32,9 @@ export function MyPageNav(props: { id: number; }) {
   }, []);
   // navbar 메뉴 추가 시 변경 될 데이터 
   const data = [
-    { link: `${props.id}/vacation`, label: '휴가계', icon: IconCalendarUp },
-    { link: `${props.id}/payment`, label: '지출결의서', icon: IconCash },
-    { link: `${props.id}/alarm`, label: '알람', icon: IconBellRinging },
+    { link: '/vacation', label: '휴가계', icon: IconCalendarUp },
+    { link: '/payment', label: '지출결의서', icon: IconCash },
+    { link: '/alarm', label: '알람', icon: IconBellRinging },
     { link: '/email', label: '이메일', icon: IconMail },
     { link: '/setting', label: 'Settings', icon: IconSettings },
     { link: '/employee', label: '사원관리', icon: IconUsers },
@@ -50,7 +50,7 @@ export function MyPageNav(props: { id: number; }) {
       href={item.link}
       key={item.label}
       onClick={(event) => {
-        event.preventDefault();
+        // event.preventDefault();
         setActive(item.label);
         setActiveLink(item.link);
       }}
@@ -65,7 +65,7 @@ export function MyPageNav(props: { id: number; }) {
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
           <IconPaperclip size={25} />
-          <span>{info.userId}</span>
+          <span>newspring</span>
           <Badge color="gray">CLIP</Badge>
         </Group>
         {links}

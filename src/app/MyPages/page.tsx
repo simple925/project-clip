@@ -4,11 +4,10 @@ import { AppShell, rem } from "@mantine/core";
 import { MyPageNav } from "@/components/MyPageNav/MyPageNav";
 import { MyContent } from "@/components/MyContent/MyContent";
 import { MyPageSearchBar } from "@/components/MyPageSearchBar/MyPageSearchBar";
-import { ManageAuth } from "@/components/ManageAuth/ManageAuth";
-import MyVacationPage from "./[vacation]/page";
+import MyVacationPage from "./Vacation/page";
+import { Component } from "react";
 
 export default function MyPages(props: any) {
-
   return (
     <>
       <AppShell.Navbar>
@@ -16,6 +15,7 @@ export default function MyPages(props: any) {
       </AppShell.Navbar>
       <AppShell.Main>
         <MyPageSearchBar mt={20} />
+        {/* <Component {...props.pagesProps} /> */}
         <MyVacationPage />
       </AppShell.Main>
     </>
