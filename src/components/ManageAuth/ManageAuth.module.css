@@ -1,0 +1,10 @@
+.title {
+  font-family:
+    Greycliff CF,
+    var(--mantine-font-family);
+  font-weight: 900;
+}
+.group {
+  border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  height: rem(200px);
+}
