@@ -32,12 +32,12 @@ export function MyPageNav(props: { id: number; }) {
   }, []);
   // navbar 메뉴 추가 시 변경 될 데이터 
   const data = [
-    { link: '/vacation', label: '휴가계', icon: IconCalendarUp },
-    { link: '/payment', label: '지출결의서', icon: IconCash },
-    { link: '/alarm', label: '알람', icon: IconBellRinging },
-    { link: '/email', label: '이메일', icon: IconMail },
-    { link: '/setting', label: 'Settings', icon: IconSettings },
-    { link: '/employee', label: '사원관리', icon: IconUsers },
+    { link: '/MyPages/Vacation', label: '휴가계', icon: IconCalendarUp },
+    { link: '/MyPages/Payment', label: '지출결의서', icon: IconCash },
+    { link: '/MyPages/alarm', label: '알람', icon: IconBellRinging },
+    { link: '/MyPages/email', label: '이메일', icon: IconMail },
+    { link: '/MyPages/setting', label: 'Settings', icon: IconSettings },
+    { link: '/MyPages/employee', label: '사원관리', icon: IconUsers },
   ];
 
   const [active, setActive] = useState('휴가계');
@@ -72,15 +72,15 @@ export function MyPageNav(props: { id: number; }) {
       </div>
 
       <div className={classes.footer}>
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
+        <Link href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
           <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
           <span>Change account</span>
-        </a>
+        </Link>
 
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
+        <Link href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
           <IconLogout className={classes.linkIcon} stroke={1.5} />
           <span>Logout</span>
-        </a>
+        </Link>
       </div>
     </nav>
   );
