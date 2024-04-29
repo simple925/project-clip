@@ -1,25 +1,28 @@
+'use client';
 import React from "react";
-import { AppShell, ColorSchemeScript, rem } from "@mantine/core";
+import { AppShell, Stack, rem } from "@mantine/core";
 import { MyPageNav } from "@/components/MyPageNav/MyPageNav";
+import { MyPageSearchBar } from "@/components/MyPageSearchBar/MyPageSearchBar";
 
 export default function MyPageLayout({ children }: { children: any }) {
   return (
-    <html lang="en">
-      <head>
-        <ColorSchemeScript />
-        <link rel="shortcut icon" href="/favicon.svg" />
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=yes"
-        />
-      </head>
-      <body>
-        <AppShell withBorder={false} navbar={{ width: rem(350), breakpoint: 'sm' }}>
+    <>
+      <AppShell withBorder={false} navbar={{ width: rem(350), breakpoint: 'sm' }}>
+        <AppShell.Header>
+          <Stack
+            align="center"
+          >
+            <MyPageSearchBar mt={20} />
+          </Stack>
+        </AppShell.Header>
+        <AppShell.Navbar>
+          <MyPageNav id={1} />
+        </AppShell.Navbar>
+        <AppShell.Main>
           {children}
-        </AppShell>
-      </body>
-
-    </html>
+        </AppShell.Main>
+      </AppShell>
+    </> 
   )
 
 }
