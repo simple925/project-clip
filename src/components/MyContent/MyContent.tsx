@@ -4,20 +4,20 @@ import classes from './MyContent.module.css';
 import commonApi from '../../../lib/commonApi';
 import { useEffect, useState } from 'react';
 
-export function MyContent(props:any) {
+export function MyContent(props: any) {
   // fetch할 데이터
   const [student, setStudent] = useState([])
   // commonApi로 fetch할 데이터
   const [studentList, setStudentList] = useState<any>([])
   useEffect(() => {
     // Fetch student data
-    fetch('http://localhost:9999/Users')
+    fetch('http://localhost:9990/login')
       .then(res => res.json())
       .then(student => setStudent(student))
       .catch(error => console.error('fetch student에서 오류 발생:', error))
 
     //Fetch commonApi 사용해서 student data 가져옴
-    commonApi('http://localhost:9999/posts')
+    commonApi('http://localhost:9990/posts')
       .then(studentList => setStudentList(studentList))
       .catch(error => console.error('fetch commonApi에서 오류 발생:', error))
   }, [])

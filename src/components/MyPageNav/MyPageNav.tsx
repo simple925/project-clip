@@ -15,8 +15,6 @@ import {
 } from '@tabler/icons-react';
 import classes from './MyPageNav.module.css';
 import { Badge } from '@mantine/core';
-import MyPages from '@/app/MyPages/page';
-import { MyContent } from '../MyContent/MyContent';
 import Link from 'next/link';
 
 export function MyPageNav(props: { id: number; }) {
@@ -24,11 +22,11 @@ export function MyPageNav(props: { id: number; }) {
   const [info, setInfo] = useState<any>([])
   // 사용자 정보 조회
   useEffect(() => {
-    fetch(`http://localhost:9999/board/1`)
-    .then(res => res.json())
-    .then(info => {
-      setInfo(info)
-    })
+    fetch(`http://localhost:9990/board/1`)
+      .then(res => res.json())
+      .then(info => {
+        setInfo(info)
+      })
   }, []);
   // navbar 메뉴 추가 시 변경 될 데이터 
   const data = [
@@ -41,7 +39,7 @@ export function MyPageNav(props: { id: number; }) {
   ];
 
   const [active, setActive] = useState('휴가계');
-  const [activeLink, setActiveLink] = useState('/vacation')
+  const [activeLink, setActiveLink] = useState('/MyPages/Vacation')
 
   const links = data.map((item) => (
     <Link
@@ -49,8 +47,7 @@ export function MyPageNav(props: { id: number; }) {
       data-active={item.label === active || undefined}
       href={item.link}
       key={item.label}
-      onClick={(event) => {
-        // event.preventDefault();
+      onClick={() => {
         setActive(item.label);
         setActiveLink(item.link);
       }}
