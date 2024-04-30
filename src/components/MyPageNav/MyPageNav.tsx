@@ -18,6 +18,10 @@ import { Badge } from '@mantine/core';
 import Link from 'next/link';
 
 export function MyPageNav(props: { id: number; }) {
+  /**
+   * TODO
+   * 1. navbar active 현재 링크와 match
+   */
   // type 추가
   const [info, setInfo] = useState<any>([])
   // 사용자 정보 조회
@@ -32,10 +36,10 @@ export function MyPageNav(props: { id: number; }) {
   const data = [
     { link: '/MyPages/Vacation', label: '휴가계', icon: IconCalendarUp },
     { link: '/MyPages/Payment', label: '지출결의서', icon: IconCash },
-    { link: '/MyPages/alarm', label: '알람', icon: IconBellRinging },
-    { link: '/MyPages/email', label: '이메일', icon: IconMail },
-    { link: '/MyPages/setting', label: 'Settings', icon: IconSettings },
-    { link: '/MyPages/employee', label: '사원관리', icon: IconUsers },
+    { link: '/MyPages/Alram', label: '알람', icon: IconBellRinging },
+    { link: 'https://mail.cluedin.co.kr/', label: '이메일', icon: IconMail, target: '_blank' },
+    { link: '/MyPages/Setting', label: 'Settings', icon: IconSettings },
+    { link: '/MyPages/Employee', label: '사원관리', icon: IconUsers },
   ];
 
   const [active, setActive] = useState('휴가계');
@@ -46,6 +50,7 @@ export function MyPageNav(props: { id: number; }) {
       className={classes.link}
       data-active={item.label === active || undefined}
       href={item.link}
+      target={item.target}
       key={item.label}
       onClick={() => {
         setActive(item.label);

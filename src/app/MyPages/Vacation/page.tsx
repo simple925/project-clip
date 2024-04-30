@@ -1,12 +1,13 @@
 import { MyContent } from "@/components/MyContent/MyContent"
+import { Container, Title } from "@mantine/core"
 
-export default function VacationPage(props:any) {
+export default function VacationPage() {
   console.log("My Vacation Page!!!")
   return (
-    <>
+    <Container>
+      <Title ta="center" mt={100}>휴가계</Title>
       <MyContent />
-      {/*휴가계 태그 작성*/}
-    </>
+    </Container>
   )
 
 }

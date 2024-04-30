@@ -22,13 +22,8 @@ export function MyContent(props: any) {
       .catch(error => console.error('fetch commonApi에서 오류 발생:', error))
   }, [])
 
-  const [title, setTitle] = useState([])
-
   return (
     <Container size="sm" className={classes.wrapper}>
-      <Title ta="center" className={classes.title}>
-        {props.title}
-      </Title>
       <ScrollArea w={800} h={530}>
         <Accordion w={700} variant="separated">
           {studentList.map((data: any) => (
