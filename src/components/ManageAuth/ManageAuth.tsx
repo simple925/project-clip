@@ -31,24 +31,11 @@ const elements = [
 export function ManageAuth() {
   // 체크박스 전체 선택 컨트롤
   const [values, handlers] = useListState(elements);
-  console.log("values > ", values)
   const allChecked = values.every((value) => value.checked);
   const indeterminate = values.some((value) => value.checked) && !allChecked;
 
-  const items = values.map((value, index) => (
-    <Checkbox
-      mt="xs"
-      ml={33}
-      key={value.key}
-      checked={value.checked}
-      onChange={(event) => handlers.setItemProp(index, 'checked', event.currentTarget.checked)}
-    />
-  ));
-
   // 체크박스 row 컨트롤
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  
-  console.log("selectedRows >", selectedRows)
 
   const rows = values.map((element) => (
     <Table.Tr
@@ -60,13 +47,15 @@ export function ManageAuth() {
       }
     >
       <Table.Td>
-         <Checkbox
+        <Checkbox
           checked={selectedRows.includes(element.key)}
           onChange={(event) =>
             setSelectedRows(
-              event.currentTarget.checked ? [...selectedRows, element.key] : selectedRows.filter((key) => key !== element.key)
-              )
-            }
+              event.currentTarget.checked
+                ? [...selectedRows, element.key]
+                : selectedRows.filter((key) => key !== element.key)
+            )
+          }
         />
       </Table.Td>
       <Table.Td>{element.name}</Table.Td>
@@ -129,16 +118,19 @@ export function ManageAuth() {
                         checked={allChecked}
                         indeterminate={indeterminate}
                         label="전체 선택"
-                        onChange={() => 
-                          handlers.setState((current) =>{
-                            const check = current.map((value) => ({ ...value, checked: !value.checked })) 
-                            allChecked ? setSelectedRows([]) :  setSelectedRows(check.map(v => v.key))
+                        onChange={() =>
+                          handlers.setState((current) => {
+                            const check = current.map((value) => ({
+                              ...value,
+                              checked: !value.checked,
+                            }));
+                            allChecked
+                              ? setSelectedRows([])
+                              : setSelectedRows(check.map((v) => v.key));
                             // onChange() 종료 이후에 allChecked 값이 변경됨
                             // console.log("allChecked >> ", allChecked)
-                            return check
-                          }
-                            
-                          )
+                            return check;
+                          })
                         }
                       />
                     </Table.Th>
