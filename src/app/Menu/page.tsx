@@ -10,10 +10,7 @@ export default function MenuTestPage() {
 
   return (
     <>
-    {/* <div style={{height:"500px"}}>
-
-    </div>
-    <MenuBar ></MenuBar> */}
+    {/* 테스트 페이지 */}
     <AppShell
       header={{ height: 60 }}
       navbar={{
