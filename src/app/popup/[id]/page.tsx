@@ -7,7 +7,9 @@ export default function HomePage(props) {
 
   return (
     <>
+      <div>
       <Modal id={props.params.id}/>
+      </div>
     </>
   );
 }

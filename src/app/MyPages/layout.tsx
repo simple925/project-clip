@@ -8,7 +8,7 @@ import { MenuBar } from "@/components/MenuBar/MenuBar"
 export default function MyPageLayout({ children }: { children: any }) {
   return (
     <>
-      <AppShell withBorder={false} navbar={{ width: rem(350), breakpoint: 'sm' }} footer={{height: 120}} >
+      <AppShell withBorder={false} navbar={{ width: rem(350), breakpoint: 'sm' }} footer={{height: 90}} >
         <AppShell.Header>
           <Stack align="flex-end">
             <MyPageSearchBar mt={20} mr={20} />
@@ -19,9 +19,8 @@ export default function MyPageLayout({ children }: { children: any }) {
         </AppShell.Navbar>
         <AppShell.Main>
           {children}
-          
         </AppShell.Main>
-        <AppShell.Footer bg="orange.1"><MenuBar ></MenuBar></AppShell.Footer>
+        <AppShell.Footer><MenuBar ></MenuBar></AppShell.Footer>
       </AppShell>
     </>
   )
