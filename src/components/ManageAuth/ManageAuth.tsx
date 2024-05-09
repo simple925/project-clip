@@ -69,14 +69,14 @@ export function ManageAuth() {
     </UnstyledButton>
   ));
 
-  /** 권한 목록 List */
-  // 체크박스 전체 선택 컨트롤
-  const [values, handlers] = useListState(elements);
-  const allChecked = values.every((value) => value.checked);
-  const indeterminate = values.some((value) => value.checked) && !allChecked;
-
+  /** 권한 목록 List */  
   // 체크박스 row 컨트롤
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  
+  // 체크박스 전체 선택 컨트롤
+  const [values, handlers] = useListState(elements);
+  const allChecked = (selectedRows.length == values.length) ? true : false;
+  const indeterminate = values.some((value) => value.checked) && !allChecked;
 
   const rows = values.map((element) => (
     <Table.Tr

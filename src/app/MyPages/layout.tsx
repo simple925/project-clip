@@ -15,9 +15,9 @@ export default function MyPageLayout({ children }: { children: any }) {
     <>
       <AppShell withBorder={false} navbar={{ width: rem(350), breakpoint: 'sm' }} footer={{height: 90}} >
         <AppShell.Header>
-          <Stack align="flex-end">
-            <MyPageSearchBar mt={20} mr={20} />
-          </Stack>
+          {/* <Stack align="flex-end">
+            <MyPageSearchBar />
+          </Stack> */}
         </AppShell.Header>
         <AppShell.Navbar>
           <MyPageNav id={1} />
