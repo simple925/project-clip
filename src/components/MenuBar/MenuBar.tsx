@@ -11,7 +11,7 @@ import {
   IconWritingSign
 } from '@tabler/icons-react';
 
-export function MenuBar() {
+export function MenuBar(prop: any) {
 
  // 스타일을 object 형태로 만들었기 때문에
  // key : value 형태의 접근이 가능함
@@ -24,7 +24,7 @@ export function MenuBar() {
     { link: '/MyPages/Vacation', styleName: styles.red, icon: IconHome }, //홈
     { link: '/MyPages/Vacation', styleName: styles.purple, icon: IconUsers }, //메일
     { link: '/Write', styleName: styles.orange, icon: IconWritingSign }, //작성
-    { link: '/popup/userId', styleName: styles.lightblue, icon: IconBellRinging }, //알림
+    { link: '', styleName: styles.lightblue, icon: IconBellRinging }, //알림
   ];
 
    const links = data.map((item,i) => (
@@ -32,7 +32,10 @@ export function MenuBar() {
 		<i className="fa fa-anchor"><item.icon/></i>
 	</Link> 
   ));
-
+  const handleClick = () => {
+	const value = true
+	prop.onValue(value)
+  }
  return (
 	 <>
 		<nav className={styles.menu}>
@@ -52,15 +55,15 @@ export function MenuBar() {
 				<span className={styles.lines + ' ' + styles["line-2"]}></span>
 				<span className={styles.lines + ' ' + styles["line-3"]}></span>
 			</label>
-			{/* <Link href="#" className={styles["menu-item"] + ' ' + styles.blue}><i className="fa fa-anchor"><IconMail/></i></Link>
+			<Link href="#" className={styles["menu-item"] + ' ' + styles.blue}><i className="fa fa-anchor"><IconMail/></i></Link>
 			<Link href="#" className={styles["menu-item"] + ' ' + styles.green}><i className="fa fa-coffee"><IconCalendarUp/></i></Link>
 			<Link href="#" className={styles["menu-item"] + ' ' + styles.red}><i className="fa fa-heart"><IconHome/></i></Link>
 			<Link href="#" className={styles["menu-item"] + ' ' + styles.purple}><i className="fa fa-microphone"><IconUsers/></i></Link>
 			<Link href="#" className={styles["menu-item"] + ' ' + styles.orange}><i className="fa fa-star"><IconWritingSign/></i></Link>
-			<Link href="#" className={styles["menu-item"] + ' ' + styles.lightblue}><i className="fa fa-diamond"><IconBellRinging/></i>
-			</Link> */}
+			<Link href="#" className={styles["menu-item"] + ' ' + styles.lightblue} onClick={handleClick}><i className="fa fa-diamond"><IconBellRinging/></i>
+			</Link>
 			{/* 링크 리스트 가져오기 */}
-			{ links }
+			{/* links */}
 			{/* 알림에 들어가는 뱃지 설정 */}
 			<span className={styles.alramBadge}>
 				<Badge
