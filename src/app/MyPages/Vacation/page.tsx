@@ -1,13 +1,16 @@
-import { MyContent } from "@/components/MyContent/MyContent"
-import { Container, Title } from "@mantine/core"
+"use client";
+import { MyContent } from "@/components/MyContent/MyContent";
+import { MyPageSearchBar } from "@/components/MyPageSearchBar/MyPageSearchBar";
+import { Container, Title } from "@mantine/core";
 
 export default function VacationPage() {
-  console.log("My Vacation Page!!!")
   return (
     <Container>
-      <Title ta="center" mt={100}>휴가계</Title>
+      <Title ta="center" mt={100}>
+        휴가계
+      </Title>
+      <MyPageSearchBar />
       <MyContent />
     </Container>
-  )
-
+  );
 }
