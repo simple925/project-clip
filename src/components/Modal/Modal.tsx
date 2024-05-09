@@ -7,26 +7,58 @@ import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import { IconBell } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
-export function Modal(props: {id:  string }) {
+export function Modal(props: {id:  string , clickState: any}) {
   //   const [opened, { open, close }] = useDisclosure(false);
   const TRANSITION_DURATION = 50;
-  const [data, setData] = useState<any>(null);
+  // const [data, setData] = useState<any>(null);
   const [embla, setEmbla] = useState<any | null>(null);
 
   useAnimationOffsetEffect(embla, TRANSITION_DURATION);
   //한번만 호출
-  useEffect(() => {
-    fetch('http://localhost:9999/comments')
-      .then(res => res.json())
-      .then(data => {
-            setData(data)
-      });
-    },[]);
+  // useEffect(() => {
+  //   fetch('http://localhost:9999/comments')
+  //     .then(res => res.json())
+  //     .then(data => {
+  //           setData(data)
+  //     });
+  //   },[]);
 
-  if (!data) return <p>No profile data</p>
+    const data = [
+    {
+      "id": 1,
+      "title": "첫번째 알림의 제목입니다",
+      "content": "첫번째 내용......",
+      "postId": 1
+    },
+    {
+      "id": 2,
+      "title": "두번째 알림의 제목입니다",
+      "content": "두번째 내용......",
+      "postId": 2
+    },
+    {
+      "id": 3,
+      "title": "세번째 알림의 제목입니다",
+      "content": "세번째 내용......",
+      "postId": 3
+    },
+    {
+      "id": 4,
+      "title": "네번째 알림의 제목입니다",
+      "content": "네번째 내용......",
+      "postId": 4
+    },
+    {
+      "id": 5,
+      "title": "다섯번째 알림의 제목입니다",
+      "content": "다섯번째 내용......",
+      "postId": 5
+    }
+  ]
+
+  // if (!data) return <p>No profile data</p>
 
   const openModal = () => {
-    console.log("dddd")
   
     modals.open({
       title: (
@@ -79,7 +111,10 @@ export function Modal(props: {id:  string }) {
       ),
     });
   }
-  openModal();
+  // openModal();
+  if(props.clickState){
+      openModal();
+  }
   return (
     <></>
   );
