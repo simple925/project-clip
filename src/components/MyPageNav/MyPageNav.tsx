@@ -25,13 +25,13 @@ export function MyPageNav(props: { id: number; }) {
   // type 추가
   const [info, setInfo] = useState<any>([])
   // 사용자 정보 조회
-  useEffect(() => {
-    fetch(`http://localhost:9990/board/1`)
-      .then(res => res.json())
-      .then(info => {
-        setInfo(info)
-      })
-  }, []);
+  // useEffect(() => {
+  //   fetch(`http://localhost:9990/board/1`)
+  //     .then(res => res.json())
+  //     .then(info => {
+  //       setInfo(info)
+  //     })
+  // }, []);
   // navbar 메뉴 추가 시 변경 될 데이터 
   const data = [
     { link: '/MyPages/Vacation', label: '휴가계', icon: IconCalendarUp },

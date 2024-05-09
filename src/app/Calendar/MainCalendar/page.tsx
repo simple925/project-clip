@@ -1,14 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { MyCalendar } from "@/components/MyCalendar/MyCalendar";
-import "./MainCalendar.module.css";
+import MainCalendarSideNav from "@/components/MainCalendarSideNav/MainCalendarSideNav";
+import { MainCalendarSideCalendar } from "@/components/MainCalendarSideCalendar/MainCalendarSideCalendar";
+import { MainGroup } from "@/components/MainGroup/MainGroup";
+import styles from "./MainCalendar.module.css";
 
 export default function MainCalendar() {
+  // 현재 선택된 날짜 
+  const [selectedDate, setSelectedDate] = useState(null);
+
   return (
-    <>
-      {/* <h1>오늘 날짜 기준 달력</h1> */}
-      <MyCalendar />
-    </>
+    <div className={styles.main}>
+      <div className={styles.main_sideNav}>
+        <MainCalendarSideCalendar selectedDate={selectedDate} />
+        <MainGroup />
+      </div>
+      <div className={styles.main_content}>
+        <MyCalendar selectedDate={selectedDate} />
+      </div>
+    </div>
   );
 }

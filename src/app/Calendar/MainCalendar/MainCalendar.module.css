@@ -1,0 +1,17 @@
+.main {
+  display: flex;
+}
+
+.main_sideNav {
+  margin: 0.8rem;
+  width: 22rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.main_content {
+  flex: 1;
+  margin: 2rem;
+  /* display: flex; */
+  justify-content: center;
+}

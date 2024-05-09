@@ -1,12 +1,12 @@
 "use client";
 
 import { Accordion } from "@mantine/core";
+import styles from "./MainGroup.module.css";
 
 const calendarItems = [
   {
     value: "내 캘린더",
-    description:
-      "Crisp and refreshing fruit. Apples are known for their versatility and nutritional benefits. They come in a variety of flavors and are great for snacking, baking, or adding to salads.",
+    description: "생일",
   },
 ];
 
@@ -18,5 +18,9 @@ export function MainGroup() {
     </Accordion.Item>
   ));
 
-  return <Accordion defaultValue="내 캘린더">{items}</Accordion>;
+  return (
+    <div className={styles.MainGroup}>
+      <Accordion defaultValue="내 캘린더">{items}</Accordion>;
+    </div>
+  );
 }
