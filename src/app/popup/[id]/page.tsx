@@ -1,14 +1,15 @@
+'use client'
 // import { Welcome } from '../components/Welcome/Welcome';
 import { Modal } from "@/components/Modal/Modal";
 
-export default function HomePage(props) {
-  // console.log(props);
-  // console.log(props.params.id);
+export default function popup(props: any) {
+  console.log(props);
+  console.log(props.params.id);
 
   return (
     <>
       <div>
-      <Modal id={props.params.id}/>
+        <Modal id={props.params.id} clickState={true}/>
       </div>
     </>
   );
