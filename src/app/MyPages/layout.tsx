@@ -14,7 +14,6 @@ export default function MyPageLayout({ children }: { children: any }) {
   }
   return (
     <>
-        <ModalsProvider>{children}</ModalsProvider>
         <AppShell withBorder={false} navbar={{ width: rem(350), breakpoint: 'sm' }} footer={{height: 90}} >
           <AppShell.Header>
             {/* <Stack align="flex-end">
@@ -25,7 +24,7 @@ export default function MyPageLayout({ children }: { children: any }) {
             <MyPageNav id={1} />
           </AppShell.Navbar>
           <AppShell.Main>
-            {children}
+            <ModalsProvider>{children}</ModalsProvider>
           </AppShell.Main>
           <AppShell.Footer><MenuBar onValue={handleValue} isOpen={!clickState}></MenuBar><Modal id={"sdfs"} clickState={clickState}></Modal></AppShell.Footer>
         </AppShell>
