@@ -20,12 +20,18 @@ const dayRenderer: DatePickerProps["renderDay"] = (date) => {
   );
 };
 
-export function MainCalendarSideCalendar() {
+export function MainCalendarSideCalendar({ selectedDate, onSelectDate }) {
+  const [localSelectedDate, setLocalSelectedDate] = useState<Date | null>(null);
+  // 날짜 선택시
+  const handleDateSelect = (date) => {
+    onSelectDate(date); // 선택 날짜를 부모 컴포넌트로 전달
+    console.log('###현재 선택 날짜 :', date)
+  };
   return (
     <div className={styles.MainCalendarSideNav}>
       <div className={styles.MainCalendarSideCalendar}>
         <div className={styles.calendar}>
-          <DatePicker renderDay={dayRenderer}></DatePicker>
+          <DatePicker value={selectedDate} renderDay={dayRenderer} onChange={handleDateSelect}></DatePicker>
         </div>
       </div>
     </div>
