@@ -1,38 +1,60 @@
-'use client';
-import { Container, Title, Accordion, ScrollArea } from '@mantine/core';
-import classes from './MyContent.module.css';
-import commonApi from '../../../lib/commonApi';
-import { useEffect, useState } from 'react';
+"use client";
+import {
+  Container,
+  Accordion,
+  ScrollArea,
+  ActionIcon,
+  Group,
+} from "@mantine/core";
+import classes from "./MyContent.module.css";
+import commonApi from "../../../lib/commonApi";
+import { useEffect, useState } from "react";
+import { IconTrash } from "@tabler/icons-react";
 
 export function MyContent(props: any) {
   // fetch할 데이터
-  const [student, setStudent] = useState([])
+  const [student, setStudent] = useState([]);
   // commonApi로 fetch할 데이터
-  const [studentList, setStudentList] = useState<any>([])
+  const [studentList, setStudentList] = useState<any>([]);
   useEffect(() => {
     // Fetch student data
-    fetch('http://localhost:9990/login')
-      .then(res => res.json())
-      .then(student => setStudent(student))
-      .catch(error => console.error('fetch student에서 오류 발생:', error))
+    fetch("http://localhost:9990/login")
+      .then((res) => res.json())
+      .then((student) => setStudent(student))
+      .catch((error) => console.error("fetch student에서 오류 발생:", error));
 
     //Fetch commonApi 사용해서 student data 가져옴
-    commonApi('http://localhost:9990/posts')
-      .then(studentList => setStudentList(studentList))
-      .catch(error => console.error('fetch commonApi에서 오류 발생:', error))
-  }, [])
+    commonApi("http://localhost:9990/posts")
+      .then((studentList) => setStudentList(studentList))
+      .catch((error) => console.error("fetch commonApi에서 오류 발생:", error));
+  }, []);
 
   return (
-    <Container size="sm" className={classes.wrapper}>
-      <ScrollArea w={800} h={530}>
-        <Accordion w={700} variant="separated">
-          {studentList.map((data: any) => (
-            <Accordion.Item className={classes.item} value={data.title} key={data.id}>
-              <Accordion.Control>{data.title}</Accordion.Control>
-              <Accordion.Panel>{data.author}</Accordion.Panel>
-            </Accordion.Item>
-          ))}
-        </Accordion>
+    <Container size="md" className={classes.wrapper}>
+      <ScrollArea w={900} h={530} variant="default">
+        <Group justify="center" h={50}>
+          <Accordion w={650} variant="separated">
+            {studentList.map((data: any) => (
+              <Accordion.Item
+                className={classes.item}
+                value={data.title}
+                key={data.id}
+              >
+                <Accordion.Control>{data.title}</Accordion.Control>
+                <Accordion.Panel>{data.author}</Accordion.Panel>
+              </Accordion.Item>
+            ))}
+          </Accordion>
+          <ActionIcon variant="default" size="lg" mb={20} aria-label="Delete">
+            <IconTrash
+              stroke={1.5}
+              onClick={() => {
+                // 삭제 api 연결 필요
+                console.log("게시물 삭제 클릭!");
+              }}
+            />
+          </ActionIcon>
+        </Group>
       </ScrollArea>
     </Container>
   );
