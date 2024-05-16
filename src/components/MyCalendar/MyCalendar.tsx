@@ -1,16 +1,17 @@
 'use client';
-import React from "react";
+import React, { useMemo } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { CalendarToolbar } from "../CalendarToolbar/CalendarToolbar";
+import { MainCalendarHeader } from "../MainCalendarHeader/MainCalendarHeader";
 
 const localizer = momentLocalizer(moment)
 
 
-export function MyCalendar({ selectedDate , onSelectDate }) {
+export function MyCalendar({ selectedDate, onSelectDate }) {
     // 부모 컴포넌트의 date로 현재값 설정
     const today = selectedDate;
-
     // 선택된 날짜 변경시 부모 컴포넌트로 전달
     const handleDateSelect = (date) => {
         onSelectDate(date);
@@ -25,14 +26,18 @@ export function MyCalendar({ selectedDate , onSelectDate }) {
     ]
 
     return (
-        <div style={{height: 500}}>
+        <div style={{ height: 500 }}>
             <Calendar
+                defaultDate={today}
                 localizer={localizer}
                 events={events}
                 startAccessor="start"
                 endAccessor="end"
-                style={{margin: 20}}
+                style={{ margin: 20 }}
                 onSelectSlot={(slotInfo) => handleDateSelect(slotInfo.start)}
+                components={{
+                    toolbar: CalendarToolbar
+                }}
             />
         </div>
     )

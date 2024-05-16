@@ -43,7 +43,7 @@ export function MainCalendarHeader() {
       <Container className={classes.mainSection}>
         <Group justify="space-between">
           <IconPaperclip size={28} />
-          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+          {/* <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <Menu
             width={260}
             position="bottom-end"
@@ -68,9 +68,9 @@ export function MainCalendarHeader() {
                   />
                 </Group>
               </UnstyledButton>
-            </Menu.Target>
+            </Menu.Target> */}
             {/* 드롭다운 메뉴바로 일간, 주간, 월간 표기 */}
-            <Menu.Dropdown>
+            {/* <Menu.Dropdown>
               <Menu.Item
                 leftSection={
                   <IconBoxMultiple1
@@ -105,7 +105,7 @@ export function MainCalendarHeader() {
                 월간
               </Menu.Item>
             </Menu.Dropdown>
-          </Menu>
+          </Menu> */}
         </Group>
       </Container>
       <Container>
