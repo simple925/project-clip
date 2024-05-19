@@ -6,10 +6,11 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { CalendarToolbar } from "../CalendarToolbar/CalendarToolbar";
 import { MainCalendarHeader } from "../MainCalendarHeader/MainCalendarHeader";
 
-const localizer = momentLocalizer(moment)
-
 
 export function MyCalendar({ selectedDate, onSelectDate }) {
+    moment.locale('ko-KR');
+    const localizer = momentLocalizer(moment);
+
     // 부모 컴포넌트의 date로 현재값 설정
     const today = selectedDate;
     // 선택된 날짜 변경시 부모 컴포넌트로 전달
