@@ -48,7 +48,8 @@ export default function LoginInput() {
     }
   };
   return (
-      <div className={style["input-layer"]}>
+      // <div className={style["input-layer"]}>
+      <>
       <Autocomplete
         value={value}
         data={data}
@@ -63,6 +64,7 @@ export default function LoginInput() {
         label="Password"
       />
       <LoginButton className={style["login-btn"]}>로그인</LoginButton>
-      </div>
+      {/* </div> */}
+      </>
   );
 }
