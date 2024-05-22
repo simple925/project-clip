@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import cx from "clsx";
-import { useState } from "react";
 import {
   Container,
   UnstyledButton,
@@ -23,11 +22,12 @@ import {
 } from "@tabler/icons-react";
 import classes from "./MainCalendarHeader.module.css";
 import { IconBrowserCheck } from "@tabler/icons-react";
+import { View, Views } from "react-big-calendar";
 
 const range = { label: "일간" };
 const tabs = ["전체", "휴가", "일정"];
 
-export function MainCalendarHeader() {
+export function MainCalendarHeader(prop:any) {
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
@@ -38,12 +38,23 @@ export function MainCalendarHeader() {
     </Tabs.Tab>
   ));
 
+  /* start
+    calendarView handle
+  */
+  const [ calendarView, setCalendarView ] = useState<View>(Views.MONTH)
+  useEffect(() => {
+    console.log('잇히 ', calendarView)
+    prop.calendarState(calendarView)
+  }, [calendarView])
+  /* end
+    calendarView handle
+  */
   return (
     <div className={classes.header}>
       <Container className={classes.mainSection}>
         <Group justify="space-between">
           <IconPaperclip size={28} />
-          {/* <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <Menu
             width={260}
             position="bottom-end"
@@ -68,9 +79,9 @@ export function MainCalendarHeader() {
                   />
                 </Group>
               </UnstyledButton>
-            </Menu.Target> */}
+            </Menu.Target>
             {/* 드롭다운 메뉴바로 일간, 주간, 월간 표기 */}
-            {/* <Menu.Dropdown>
+            <Menu.Dropdown>
               <Menu.Item
                 leftSection={
                   <IconBoxMultiple1
@@ -79,6 +90,10 @@ export function MainCalendarHeader() {
                     stroke={1.5}
                   />
                 }
+                onClick={() => {
+                  setCalendarView(Views.DAY)
+                  range.label = '일간'
+                }}
               >
                 일간
               </Menu.Item>
@@ -90,6 +105,10 @@ export function MainCalendarHeader() {
                     stroke={1.5}
                   />
                 }
+                onClick={() => {
+                  setCalendarView(Views.WEEK)
+                  range.label = '주간'
+                }}
               >
                 주간
               </Menu.Item>
@@ -101,11 +120,30 @@ export function MainCalendarHeader() {
                     stroke={1.5}
                   />
                 }
+                onClick={() => {
+                  setCalendarView(Views.MONTH)
+                  range.label = '월간'
+                }}
               >
                 월간
               </Menu.Item>
+              <Menu.Item
+                leftSection={
+                  <IconBrowserCheck
+                    style={{ width: rem(16), height: rem(16) }}
+                    color={theme.colors.green[6]}
+                    stroke={1.5}
+                  />
+                }
+                onClick={() => {
+                  setCalendarView(Views.AGENDA)
+                  range.label = '일정목록'
+                }}
+              >
+                일정목록
+              </Menu.Item>
             </Menu.Dropdown>
-          </Menu> */}
+          </Menu>
         </Group>
       </Container>
       <Container>
