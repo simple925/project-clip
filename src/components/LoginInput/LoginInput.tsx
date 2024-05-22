@@ -10,7 +10,7 @@ import {
   ButtonProps,
 } from "@mantine/core";
 import style from "./LoginInput.module.css";
-
+import { useRouter } from "next/navigation";
 
 export function LoginButton(
   props: ButtonProps & React.ComponentPropsWithoutRef<"button">
@@ -24,8 +24,12 @@ export default function LoginInput() {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<string[]>([]);
-
-  
+  const router = useRouter()
+  const loginEvent = () => {
+    console.log('인증성공!')
+    // 로그인 후 마이 페이지로 이동 이벤트
+    router.push('/MyPages')
+  }  
   const handleChange = (val: string) => {
     window.clearTimeout(timeoutRef.current);
     setValue(val);
@@ -63,7 +67,7 @@ export default function LoginInput() {
         id="user-password"
         label="Password"
       />
-      <LoginButton className={style["login-btn"]}>로그인</LoginButton>
+      <LoginButton className={style["login-btn"]} onClick={() => loginEvent()}>로그인</LoginButton>
       {/* </div> */}
       </>
   );
