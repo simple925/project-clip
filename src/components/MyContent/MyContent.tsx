@@ -10,8 +10,10 @@ import classes from "./MyContent.module.css";
 import commonApi from "../../../lib/commonApi";
 import { useEffect, useState } from "react";
 import { IconTrash } from "@tabler/icons-react";
+import { UserInfo } from "@/components/UserInfo/UserInfo";
 
 export function MyContent(props: any) {
+  /*
   // fetch할 데이터
   const [student, setStudent] = useState([]);
   // commonApi로 fetch할 데이터
@@ -28,12 +30,12 @@ export function MyContent(props: any) {
       .then((studentList) => setStudentList(studentList))
       .catch((error) => console.error("fetch commonApi에서 오류 발생:", error));
   }, []);
-
+*/
   return (
-    <Container size="md" className={classes.wrapper}>
+    <Container mt={20} size="md" className={classes.wrapper}>
       <ScrollArea w={900} h={530} variant="default">
         <Group justify="center" h={50}>
-          <Accordion w={650} variant="separated">
+          {/* <Accordion w={650} variant="separated">
             {studentList.map((data: any) => (
               <Accordion.Item
                 className={classes.item}
@@ -44,16 +46,10 @@ export function MyContent(props: any) {
                 <Accordion.Panel>{data.author}</Accordion.Panel>
               </Accordion.Item>
             ))}
+          </Accordion> */}
+          <Accordion chevronPosition="left" w={650} variant="separated">
+            {props.userInfo}
           </Accordion>
-          <ActionIcon variant="default" size="lg" mb={20} aria-label="Delete">
-            <IconTrash
-              stroke={1.5}
-              onClick={() => {
-                // 삭제 api 연결 필요
-                console.log("게시물 삭제 클릭!");
-              }}
-            />
-          </ActionIcon>
         </Group>
       </ScrollArea>
     </Container>

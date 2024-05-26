@@ -28,7 +28,7 @@ const data = [
 	{ link: 'https://mail.cluedin.co.kr/', styleName: styles.blue, icon: IconMail, onClick: ()=>console.log('클루드인메일 click!!!') }, //메일
 	{ link: '/Calendar/MainCalendar', styleName: styles.green, icon: IconCalendarUp, onClick: ()=>console.log('캘린더 click!!!') }, //캘린더
 	{ link: '/MyPages/Vacation', styleName: styles.red, icon: IconHome, onClick: ()=>console.log('홈 click!!!') }, //홈
-	{ link: '/MyPages/Vacation', styleName: styles.purple, icon: IconUsers, onClick: ()=>console.log('메일 click!!!')}, //메일
+	{ link: '/MyPages/Employee', styleName: styles.purple, icon: IconUsers, onClick: ()=>console.log('메일 click!!!')}, //사원관리
 	{ link: '/Write', styleName: styles.orange, icon: IconWritingSign, onClick: ()=>console.log('작성 click!!!') }, //작성
 	{ link: '', styleName: styles.lightblue, icon: IconBellRinging, onClick: handleClick }, //알림
 	];
