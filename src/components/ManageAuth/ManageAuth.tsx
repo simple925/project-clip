@@ -1,5 +1,5 @@
 "use client";
-import cx from 'clsx';
+import cx from "clsx";
 import {
   Paper,
   Title,
@@ -11,12 +11,12 @@ import {
   Checkbox,
   ScrollArea,
   Table,
-  UnstyledButton,
   Stack,
   Button,
   Flex,
   Group,
   Divider,
+  CloseButton,
 } from "@mantine/core";
 import classes from "./ManageAuth.module.css";
 import { IconUserPlus } from "@tabler/icons-react";
@@ -25,57 +25,102 @@ import { useListState } from "@mantine/hooks";
 
 /**
  * @todo
- * 1. 권한 대상 추가 시 Insert 후 목록 상단에 추가한 대상 위치 하도록 로직 추가 필요
- * 2. 권한 대상 클릭 시 대상이 갖고 있는 권한들의 체크 박스 활성화하는 로직 추가 필요
+ * 1. 권한 대상 클릭 시 대상이 갖고 있는 권한들의 체크 박스 활성화하는 로직 추가 필요
+ * 2. 저장 클릭 시 DB Insert 또는 Update
+ * 3. 초기화 버튼 추가 필요 (변경 사항 모두 reset)
+ * 4. 권한 대상 삭제 버튼 필요(삭제 후 grid 자체를 지워야함 + 연속으로 삭제 가능하도록 해야함)
+ * 5. 현재 페이지는 사용자 권한 관리 페이지이므로 권한만 따로 관리하는 팝업(화면) 필요
  */
 
-/** 권한 대상 영역 */
-const obj = [
-  { label: 'Usage', link: '#usage', order: 1 },
-  { label: 'Position and placement', link: '#position', order: 1 },
-  { label: 'With other overlays', link: '#overlays', order: 1 },
-  { label: 'Manage focus', link: '#focus1', order: 1 },
-  { label: 'Manage focus', link: '#focus2', order: 1 },
-  { label: 'Manage focus', link: '#focus3', order: 1 },
-];
-
-const active = '#overlays';
-
-/** 권한 목록 영역 */
-const elements = [
-  { key: 1, name: "Carbon", checked: false },
-  { key: 2, name: "Nitrogen", checked: false },
-  { key: 3, name: "Yttrium", checked: false },
-  { key: 4, name: "Barium", checked: false },
-  { key: 5, name: "aaaa", checked: false },
-  { key: 6, name: "bbbb", checked: false },
-  { key: 7, name: "bccc", checked: false },
-  { key: 8, name: "dddddd", checked: false },
-];
-
 export function ManageAuth() {
-  /** 권한 대상 List  */
-  const [activeObj, setActiveObj] = useState(0)
+  /* 대상 입력 값 */
+  const [input, setInput] = useState({
+    name: "",
+    uuid: "",
+  });
+
+  /* 권한 대상 테이블에 신규 대상 추가 */
+  function plusObject(props: any) {
+    if (props.name === null || props.name === "") {
+      alert("권한 대상을 입력하세요.");
+    } else {
+      const newInput = { name: props.name, uuid: props.uuid };
+      setObj([newInput, ...obj]);
+      setInput({
+        name: "",
+        uuid: "",
+      });
+    }
+  }
+
+  /* 권한 대상 삭제 */
+  function removeObject(props: any) {
+    console.log(props);
+    const newObjList = [
+      {
+        name: input.name,
+        uuid: input.uuid,
+      },
+    ];
+    obj.forEach((item) => {
+      if (item.uuid !== props.uuid) {
+        newObjList.push(item);
+      }
+    });
+    setObj(newObjList);
+  }
+
+  /* 권한 대상 영역 */
+  const [obj, setObj] = useState([
+    { name: "김ㅇㅇ", uuid: "uuid1" },
+    { name: "이ㅇㅇ", uuid: "uuid2" },
+    { name: "박ㅇㅇ", uuid: "uuid3" },
+    { name: "정ㅇㅇ", uuid: "uuid4" },
+    { name: "배ㅇㅇ", uuid: "uuid5" },
+    { name: "최ㅇㅇ", uuid: "uuid6" },
+  ]);
+
+  /* 권한 목록 영역 */
+  const elements = [
+    { key: 1, name: "권한1", checked: false },
+    { key: 2, name: "권한2", checked: false },
+    { key: 3, name: "권한3", checked: false },
+    { key: 4, name: "권한4", checked: false },
+    { key: 5, name: "권한5", checked: false },
+    { key: 6, name: "권한6", checked: false },
+    { key: 7, name: "권한7", checked: false },
+    { key: 8, name: "권한8", checked: false },
+  ];
+
+  /* 권한 대상 List  */
+  const [activeObj, setActiveObj] = useState(0);
 
   const items = obj.map((item, index) => (
-    <UnstyledButton key={item.link}
-      className={cx(classes.link, { [classes.linkActive]: activeObj === index })}
-      style={{ paddingLeft: `calc(${item.order} * var(--mantine-spacing-md))` }}
+    <Grid
+      grow
+      key={item.uuid}
+      className={cx(classes.link, {
+        [classes.linkActive]: activeObj === index,
+      })}
       onClick={(event) => {
-        event.preventDefault()
-        setActiveObj(index)
-      }}>
-      {item.label}
-    </UnstyledButton>
+        event.preventDefault();
+        setActiveObj(index);
+      }}
+    >
+      <Grid.Col span={9}>{item.name}</Grid.Col>
+      <Grid.Col span={1}>
+        <CloseButton size={20} onClick={() => removeObject(item)} />
+      </Grid.Col>
+    </Grid>
   ));
 
-  /** 권한 목록 List */  
+  /* 권한 목록 List */
   // 체크박스 row 컨트롤
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  
+
   // 체크박스 전체 선택 컨트롤
   const [values, handlers] = useListState(elements);
-  const allChecked = (selectedRows.length == values.length) ? true : false;
+  const allChecked = selectedRows.length == values.length ? true : false;
   const indeterminate = values.some((value) => value.checked) && !allChecked;
 
   const rows = values.map((element) => (
@@ -120,9 +165,7 @@ export function ManageAuth() {
               style={{ height: "90%" }}
             >
               <Group>
-                <Text size="sm">
-                  권한 대상
-                </Text>
+                <Text size="sm">권한 대상</Text>
               </Group>
               <Divider my="xs" />
               <ScrollArea
@@ -130,13 +173,7 @@ export function ManageAuth() {
                 h={200}
                 scrollbarSize={4}
               >
-                <Stack style={{
-                  transform: `translateY(calc(${active} * var(--link-height) + var(--indicator-offset)))`,
-                  gap: 'inherit'
-                }}>
-                  {items}
-                </Stack>
-
+                <Stack style={{ gap: "inherit" }}>{items}</Stack>
               </ScrollArea>
             </Paper>
           </Grid.Col>
@@ -150,9 +187,24 @@ export function ManageAuth() {
               style={{ height: "90%" }}
             >
               <Group mt={-10}>
-                <Text size="sm" mr={20}>권한 추가</Text>
-                <Input size="xs" w="250" placeholder="대상을 입력하세요." />
-                <ActionIcon variant="filled">
+                <Text size="sm" mr={20}>
+                  권한 추가
+                </Text>
+                <Input
+                  size="xs"
+                  w="250"
+                  placeholder="대상을 입력하세요."
+                  value={input.name}
+                  onChange={(event) => {
+                    event.preventDefault();
+                    setInput({
+                      name: event.currentTarget.value,
+                      uuid: "#plus",
+                      // link --> 사용자uuid로 추후 변경 필요
+                    });
+                  }}
+                />
+                <ActionIcon variant="filled" onClick={() => plusObject(input)}>
                   <IconUserPlus style={{ width: "60%", height: "60%" }} />
                 </ActionIcon>
               </Group>
@@ -165,11 +217,10 @@ export function ManageAuth() {
                 <Table>
                   <Table.Thead>
                     <Table.Tr>
-                      <Table.Th>
+                      <Table.Th w={20}>
                         <Checkbox
                           checked={allChecked}
                           indeterminate={indeterminate}
-                          label="전체 선택"
                           onChange={() =>
                             handlers.setState((current) => {
                               const check = current.map((value) => ({
@@ -196,8 +247,12 @@ export function ManageAuth() {
           </Grid.Col>
         </Grid>
         <Flex gap="md" direction="row" wrap="wrap" mt={15}>
-          <Button variant="filled" radius="xl">저장</Button>
-          <Button variant="filled" color="gray" radius="xl">취소</Button>
+          <Button variant="filled" radius="xl">
+            저장
+          </Button>
+          <Button variant="filled" color="gray" radius="xl">
+            취소
+          </Button>
         </Flex>
       </Group>
     </Container>
