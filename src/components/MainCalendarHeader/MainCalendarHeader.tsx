@@ -2,35 +2,24 @@
 
 import React, { useEffect, useState } from "react";
 import cx from "clsx";
-import {
-  Container,
-  UnstyledButton,
-  Group,
-  Text,
-  Menu,
-  Tabs,
-  Burger,
-  rem,
-  useMantineTheme,
-} from "@mantine/core";
+import { Container, UnstyledButton, Group, Text, Menu, Tabs, Burger, rem, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconPaperclip,
-  IconChevronDown,
-  IconBoxMultiple1,
-  IconBoxMultiple7,
-} from "@tabler/icons-react";
-import classes from "./MainCalendarHeader.module.css";
+import { IconPaperclip, IconChevronDown, IconBoxMultiple1, IconBoxMultiple7 } from "@tabler/icons-react";
 import { IconBrowserCheck } from "@tabler/icons-react";
+import classes from "./MainCalendarHeader.module.css";
 import { View, Views } from "react-big-calendar";
+// ==> react-big-calendar의 view 속성 참고
+// https://jquense.github.io/react-big-calendar/examples/index.html?path=/docs/props--view
+// https://jquense.github.io/react-big-calendar/examples/index.html?path=/docs/props--cal-views
 
-const range = { label: "일간" };
+const range = { label: "월간" }; // default 값 월간으로 지정 
 const tabs = ["전체", "휴가", "일정"];
 
-export function MainCalendarHeader(prop:any) {
+export function MainCalendarHeader(calendarState:any) {
+
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
-  const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const [userMenuOpened, setUserMenuOpened] = useState(false);  // 메뉴바 open 관리
 
   const items = tabs.map((tab) => (
     <Tabs.Tab value={tab} key={tab}>
@@ -39,13 +28,13 @@ export function MainCalendarHeader(prop:any) {
   ));
 
   /* start
-    calendarView handle
+  calendarView handle
   */
-  const [ calendarView, setCalendarView ] = useState<View>(Views.MONTH)
+  const [ calendarView, setCalendarView ] = useState<View>(Views.MONTH) //View 속성 지정 관리: 초기값 설정(Views.MONTH)
   useEffect(() => {
-    console.log('잇히 ', calendarView)
-    prop.calendarState(calendarView)
-  }, [calendarView])
+    console.log('잇히 ', calendarView) // 1) console에 현재 calendarView값 로깅(MainCalendarHeader.tsx에서 찍힘)  
+    calendarState.calendarState(calendarView) // 2) calendarState값을 상위 컴포넌트에 전달(prop)
+  }, [calendarView]) // calendarView가 변경될 때마다 해당 작업을 수행한다.
   /* end
     calendarView handle
   */
@@ -91,7 +80,7 @@ export function MainCalendarHeader(prop:any) {
                   />
                 }
                 onClick={() => {
-                  setCalendarView(Views.DAY)
+                  setCalendarView(Views.DAY) // 클릭시 일간 Views 설정
                   range.label = '일간'
                 }}
               >
@@ -106,7 +95,7 @@ export function MainCalendarHeader(prop:any) {
                   />
                 }
                 onClick={() => {
-                  setCalendarView(Views.WEEK)
+                  setCalendarView(Views.WEEK)  // 클릭시 주간 Views 설정
                   range.label = '주간'
                 }}
               >
@@ -121,8 +110,8 @@ export function MainCalendarHeader(prop:any) {
                   />
                 }
                 onClick={() => {
-                  setCalendarView(Views.MONTH)
-                  range.label = '월간'
+                  setCalendarView(Views.MONTH)  // 클릭시 월간 Views 설정(해당 속성 default)
+                  range.label = '월간' 
                 }}
               >
                 월간
@@ -136,7 +125,7 @@ export function MainCalendarHeader(prop:any) {
                   />
                 }
                 onClick={() => {
-                  setCalendarView(Views.AGENDA)
+                  setCalendarView(Views.AGENDA) // 클릭시 일정 목록 Views 설정
                   range.label = '일정목록'
                 }}
               >

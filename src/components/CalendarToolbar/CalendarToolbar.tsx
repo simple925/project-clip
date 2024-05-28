@@ -1,27 +1,9 @@
 'use client';
-
 import React, { useState } from "react";
-import {
-  useMantineTheme,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import {
-  IconBoxMultiple7,
-} from "@tabler/icons-react";
-import { IconBrowserCheck } from "@tabler/icons-react";
 
-
-const range = [
-  { label: "월간", value: "monthly", iconName: IconBrowserCheck, },
-  { label: "주간", value: "weekly", iconName: IconBoxMultiple7, },
-  { label: "일간", value: "daily", iconName: IconBrowserCheck, },
-];
-
+// 이번달, 이전 <-> 다음 월별 이동 툴바
+// TODO 추가 스타일링 필요
 export function CalendarToolbar({ date, onNavigate }:any) {
-  const theme = useMantineTheme();
-  const [opened, { toggle }] = useDisclosure(false);
-  const [userMenuOpened, setUserMenuOpened] = useState(false);
-
   const navigate = (action:any) => {
     onNavigate(action);
   };
