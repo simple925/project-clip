@@ -17,19 +17,22 @@ import {
   Group,
   Divider,
   CloseButton,
+  UnstyledButton,
+  Modal,
 } from "@mantine/core";
 import classes from "./ManageAuth.module.css";
-import { IconUserPlus } from "@tabler/icons-react";
+import { IconRefresh, IconUserCheck, IconUserPlus } from "@tabler/icons-react";
 import { useState } from "react";
-import { useListState } from "@mantine/hooks";
+import { useDisclosure, useListState } from "@mantine/hooks";
+import { IconPencil } from "@tabler/icons-react";
+import { IconTrash } from "@tabler/icons-react";
 
 /**
  * @todo
  * 1. 권한 대상 클릭 시 대상이 갖고 있는 권한들의 체크 박스 활성화하는 로직 추가 필요
  * 2. 저장 클릭 시 DB Insert 또는 Update
- * 3. 초기화 버튼 추가 필요 (변경 사항 모두 reset)
+ * 3. 초기화 버튼 추가 필요 - 로직 추가해야함
  * 4. 권한 대상 삭제 버튼 필요(삭제 후 grid 자체를 지워야함 + 연속으로 삭제 가능하도록 해야함)
- * 5. 현재 페이지는 사용자 권한 관리 페이지이므로 권한만 따로 관리하는 팝업(화면) 필요
  */
 
 export function ManageAuth() {
@@ -148,12 +151,43 @@ export function ManageAuth() {
     </Table.Tr>
   ));
 
+
+  /* 권한관리 modal */
+  const [opened, { open, close }] = useDisclosure(false);
+  const modalRows = values.map((element) => (
+    <Table.Tr
+      key={element.name}
+      bg={
+        selectedRows.includes(element.key)
+          ? "var(--mantine-color-blue-light)"
+          : undefined
+      }
+    >
+      <Table.Td>{element.name}</Table.Td>
+      <Table.Td colSpan={3}>~~권한설명 추가~~</Table.Td>
+      <Table.Td>
+        <ActionIcon variant="outline" color="indigo">
+          <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5}></IconPencil>
+        </ActionIcon>
+      </Table.Td>
+      <Table.Td>
+        <ActionIcon variant="outline" color="red">
+          <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5}></IconTrash>
+        </ActionIcon>
+      </Table.Td>
+    </Table.Tr>
+  ));
+
   return (
     <Container my={40}>
       <Group justify="center">
         <Title ta="center" className={classes.title}>
-          권한 관리
+          사용자별 권한 관리
         </Title>
+        <Flex></Flex>
+        <Button variant="light" color="indigo" size="xs">
+          <IconRefresh style={{ width: '70%', height: '70%' }} stroke={1.5} />초기화
+        </Button>
         <Grid style={{ width: "100%", height: "40%" }} justify="center">
           <Grid.Col span={4}>
             <Paper
@@ -214,7 +248,7 @@ export function ManageAuth() {
                 h={200}
                 scrollbarSize={4}
               >
-                <Table>
+                <Table stickyHeader>
                   <Table.Thead>
                     <Table.Tr>
                       <Table.Th w={20}>
@@ -243,6 +277,9 @@ export function ManageAuth() {
                   <Table.Tbody>{rows}</Table.Tbody>
                 </Table>
               </ScrollArea>
+              <Button variant="light" color="red" size="xs" mt={7} justify="Flex-end" onClick={open}>
+                <IconUserCheck style={{ width: '70%', height: '70%' }} stroke={1.5} />권한 관리
+              </Button>
             </Paper>
           </Grid.Col>
         </Grid>
@@ -255,6 +292,35 @@ export function ManageAuth() {
           </Button>
         </Flex>
       </Group>
+      {/* 권한관리 모달 */}
+      <Modal opened={opened} onClose={close} size="lg">
+        <Container>
+          <Title mb={15}>권한 관리</Title>
+          <Group>
+            <Table className={classes.tableBorder}>
+              <Table.Thead>
+                <Table.Th>권한명</Table.Th>
+                <Table.Th colSpan={3}>권한내용</Table.Th>
+                <Table.Th colSpan={2}>설정</Table.Th>
+              </Table.Thead>
+              <Table.Tbody>{modalRows}</Table.Tbody>
+            </Table>
+            <Flex mih={50}
+              gap="md"
+              justify="center"
+              align="center"
+              direction="row"
+              wrap="wrap">
+              <Button variant="filled" radius="xl">
+                저장
+              </Button>
+              <Button variant="filled" color="gray" radius="xl">
+                취소
+              </Button>
+            </Flex>
+          </Group>
+        </Container>
+      </Modal>
     </Container>
   );
 }
