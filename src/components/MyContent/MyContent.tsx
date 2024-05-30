@@ -10,7 +10,6 @@ import classes from "./MyContent.module.css";
 import commonApi from "../../../lib/commonApi";
 import { useEffect, useState } from "react";
 import { IconTrash } from "@tabler/icons-react";
-import { UserInfo } from "@/components/UserInfo/UserInfo";
 
 export function MyContent(props: any) {
   /*
@@ -34,7 +33,7 @@ export function MyContent(props: any) {
   return (
     <Container mt={20} size="md" className={classes.wrapper}>
       <ScrollArea w={900} h={530} variant="default">
-        <Group justify="center" h={50}>
+        <Group h={50}>
           {/* <Accordion w={650} variant="separated">
             {studentList.map((data: any) => (
               <Accordion.Item

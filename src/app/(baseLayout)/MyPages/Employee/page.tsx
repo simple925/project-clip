@@ -133,9 +133,6 @@ const deleteClick = () => {
   }
 }
 
-
-
-
   {/* 아코디언설정 */}
  const items = userInfoList.map((item) => (
     <>
@@ -193,10 +190,10 @@ const deleteClick = () => {
 
   return (
     <Container>
-      <Title ta="center" mt={50} fw={700}>
+      <Title c="dimmed" mt={50} fw={700} className="title">
         사원관리
       </Title>
-      <MyPageSearchBar />
+      <MyPageSearchBar/>
       {/*
       <Text ta="left" mt={20} fw={700}>
         사원리스트

@@ -3,6 +3,8 @@ import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { theme } from '@/theme';
 
+import './global.css'
+
 export const metadata = {
   title: 'clip',
   description: '모두 도망쳐',

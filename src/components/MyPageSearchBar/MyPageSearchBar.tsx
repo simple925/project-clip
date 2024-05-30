@@ -14,7 +14,7 @@ export function MyPageSearchBar() {
   const [values, setValues] = useState("");
 
   return (
-    <Stack w={800} mt={40} align="flex-end">
+    <Stack w={800} mt={40} >
       <TextInput
         radius="xl"
         size="sm"
