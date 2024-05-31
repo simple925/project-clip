@@ -1,0 +1,23 @@
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav_content {
+    padding: 0.8rem;
+    width: 22rem;
+    display: flex;
+}
+
+.main_nav_content {
+    display: flex;
+    /* justify-content: start; */
+    width: 30rem;
+    /* flex-grow: 1; */
+}
+
+.main_content {
+    display: flex;
+    /* justify-content: center; */
+    width: auto;
+}

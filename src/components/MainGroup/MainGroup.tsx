@@ -15,13 +15,11 @@ export function MainGroup() {
     { key: 1, value: "생일", description: "생일", color: "red" }
   );
 
-  const [checkedColor, setCheckedColor] = useState(true); // 선택
   const [selectedColor, setSelectedColor] = useState(null);
 
   function onSelectedColorBtn(item: any) {
-    setCheckedColor((c) => !c)
     setSelectedColor(item.color);
-    setSelectedEvent(item)
+    setSelectedEvent(item);
     console.log('###현재 선택 이벤트 :', item)
   }
 
@@ -37,16 +35,21 @@ export function MainGroup() {
 
     const colors = (
       <ColorSwatch
-        component="button"
         color={item.color}
         style={{ color: colorBtn, cursor: cursorBtn }}
       >
-        {checkedColor && <CheckIcon style={{ width: rem(12), height: rem(12) }} />}
+        {isActive && <CheckIcon style={{ width: rem(12), height: rem(12) }} />}
       </ColorSwatch>
     );
+
     return (
       <Accordion.Item key={item.value} value={item.value}>
-        <Accordion.Control onClick={() => onSelectedColorBtn(item)}>{colors}{item.value}</Accordion.Control>
+        <Accordion.Control onClick={() => onSelectedColorBtn(item)}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+          {colors}
+          <span>{item.value}</span>
+          </div>
+          </Accordion.Control>
         <Accordion.Panel>{item.color}</Accordion.Panel>
       </Accordion.Item>
     );
@@ -54,7 +57,7 @@ export function MainGroup() {
 
   return (
     <div className={styles.MainGroup}>
-      <Accordion defaultValue="내 캘린더">{items}</Accordion>;
+      <Accordion defaultValue="내 캘린더">{items}</Accordion>
     </div>
   );
 }

@@ -19,6 +19,7 @@ import { View, Views } from "react-big-calendar";
 // ==> react-big-calendar의 view 속성 참고
 // https://jquense.github.io/react-big-calendar/examples/index.html?path=/docs/props--view
 // https://jquense.github.io/react-big-calendar/examples/index.html?path=/docs/props--cal-views
+import style from "./layout.module.css";
 
 
 export default function MyPageLayout({ children }: { children: any }) {
@@ -42,6 +43,7 @@ export default function MyPageLayout({ children }: { children: any }) {
         header={{ height: 85 }}
         withBorder={false}
         footer={{ height: 120 }}
+        className={style["main"]}
       >
         {/* zIndex의 수치를 Header에 더 높이 주어서, 자연스럽게 출력되게끔 조정 */}
         <AppShell.Header zIndex={300}>
@@ -50,13 +52,14 @@ export default function MyPageLayout({ children }: { children: any }) {
           {/* MainCalendarHearder에서 calendarState라는 prop 전달(_calendarState값 전달) */}
         </AppShell.Header>
         {/* 해당 부분 page에 형제 컴포넌트로 만들어 데이터 통신에 용이하게 함 */}
-        <AppShell.Navbar zIndex={100} p="md">
+        <AppShell.Navbar className={style["nav_content"]}>
           <MainCalendarSideCalendar selectedDate={selectedDate} onSelectDate={handleDateSelect} />
           {/* ### MainCalendarSideCalendar: 사이드 달력, 오늘 날짜 자동 선택, 선택할 때마다 동작 */}
           <MainGroup />
           {/* ### MainGroup: 내 캘린더 그룹별 볼 수 있음. 추가적인 기능 정의 필요 */}
         </AppShell.Navbar>
-        <AppShell.Main>
+        <AppShell.Main className={style["main_content"]}>
+          <div className={style["main_nav_content"]} />
           <MyCalendar selectedDate={selectedDate} onSelectDate={handleDateSelect} calendarState={calendarStateValue} />
           {/* ### MyCalendar: react-big-calender 라이브러리 이용한 메인 달력. 오늘 날짜 자동 선택, 선택할 때마다 동작, (MainCalendarHeader에서 변경된)상태 정보 */}
         </AppShell.Main>
