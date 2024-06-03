@@ -37,6 +37,14 @@ export default function MyPageLayout({ children }: { children: any }) {
   const handleDateSelect = (date:any) => {
     setSelectedDate(date); // 선택된 날짜를 상태로 업데이트
   };
+
+  // 현재 선택된 날짜 그룹 공유
+  const [selectedGroupDates, setSelectedGroupDates] = useState([]);
+  // MainGroup에서 선택된 그룹의 날짜 배열을 상태로 설정하는 함수
+  const handleGroupSelect = (group) => {
+    setSelectedGroupDates(group.dates); // group.dates는 선택된 그룹의 날짜 배열을 가정합니다.
+  };
+
   return (
     <>
       <AppShell
@@ -55,7 +63,7 @@ export default function MyPageLayout({ children }: { children: any }) {
         <AppShell.Navbar className={style["nav_content"]}>
           <MainCalendarSideCalendar selectedDate={selectedDate} onSelectDate={handleDateSelect} />
           {/* ### MainCalendarSideCalendar: 사이드 달력, 오늘 날짜 자동 선택, 선택할 때마다 동작 */}
-          <MainGroup />
+          <MainGroup groups={selectedGroupDates} onGroupSelect={handleGroupSelect}/>
           {/* ### MainGroup: 내 캘린더 그룹별 볼 수 있음. 추가적인 기능 정의 필요 */}
         </AppShell.Navbar>
         <AppShell.Main className={style["main_content"]}>
@@ -63,7 +71,7 @@ export default function MyPageLayout({ children }: { children: any }) {
           <MyCalendar selectedDate={selectedDate} onSelectDate={handleDateSelect} calendarState={calendarStateValue} />
           {/* ### MyCalendar: react-big-calender 라이브러리 이용한 메인 달력. 오늘 날짜 자동 선택, 선택할 때마다 동작, (MainCalendarHeader에서 변경된)상태 정보 */}
         </AppShell.Main>
-        <AppShell.Footer bg="orange.1">
+        <AppShell.Footer>
           <MenuBar></MenuBar>
         </AppShell.Footer>
       </AppShell>
