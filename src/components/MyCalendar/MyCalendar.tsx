@@ -1,12 +1,14 @@
 'use client';
-import React, {  useState, useEffect } from "react";
+import React, {  useState, useEffect, use } from "react";
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { CalendarToolbar } from "../CalendarToolbar/CalendarToolbar";
 import style from './MyCalendar.module.css';
+import 'moment-timezone'
+import 'moment/locale/ko' // 한글 옵션을 위해서 import 추가
 
-export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGroupEvent }:any) {
+export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGroupEvent, currentAction }:any) {
     moment.locale('ko-KR');
     const localizer = momentLocalizer(moment);
 
@@ -41,7 +43,7 @@ export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGr
     console.log('현재 선택된 이벤트 리스트:', events)
 
     // 이벤트 스타일링 속성 추가 
-    const eventStyleGetter = (event) => {
+    const eventStyleGetter = (event: any) => {
         const backgroundColor = event.color || '#c8c8a9';
         const style = {
             backgroundColor,
@@ -61,6 +63,8 @@ export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGr
         console.log('얌미 ', calendarState) // 1) console에 calendarState값 로깅
         setCalendarView(calendarState) // 2) calendarView에 불러온 값 담기
     }, [calendarState]) // calendarState가 변경될 때 동작
+
+
     return (
         <div className={style["my_calendar"]}>
             <Calendar
@@ -73,7 +77,11 @@ export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGr
                 onSelectSlot={(slotInfo) => handleDateSelect(slotInfo.start)}
                 view={calendarView} // view 속성
                 components={{
-                    toolbar: CalendarToolbar // 툴바 컴포넌트 사용
+                    // toolbar: CalendarToolbar // 툴바 컴포넌트 사용
+                        toolbar: (props) => {
+                        const toolbarProps = { ...props, currentAction }; // nextMonth 값을 props에 추가
+                        return <CalendarToolbar {...toolbarProps} />; // CalendarToolbar 컴포넌트에 nextMonth 값 전달
+                    },
                 }}
                 eventPropGetter={eventStyleGetter} // 이벤트 스타일 설정 함수 추가
             />

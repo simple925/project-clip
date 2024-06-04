@@ -37,6 +37,11 @@ export default function MyPageLayout({ children }: { children: any }) {
     setSelectedDate(date); // 선택된 날짜를 상태로 업데이트
   };
 
+  const [currentAction, setCurrentAction] = useState("");
+  const handleNavigate = (action : string) => {
+    setCurrentAction(action); // 다음달 상태로 업데이트
+  };
+
   // 현재 선택된 날짜 그룹 공유
   const [selectedGroupDates, setSelectedGroupDates] = useState([]);
   // MainGroup에서 선택된 그룹의 날짜 배열을 상태로 저장합니다
@@ -47,6 +52,7 @@ export default function MyPageLayout({ children }: { children: any }) {
     setSelectedGroupDates(group);
     // console.log('###현재 선택 이벤트 :', group)
   };
+
 
   return (
     <>
@@ -64,14 +70,24 @@ export default function MyPageLayout({ children }: { children: any }) {
         </AppShell.Header>
         {/* 해당 부분 page에 형제 컴포넌트로 만들어 데이터 통신에 용이하게 함 */}
         <AppShell.Navbar className={style["nav_content"]}>
-          <MainCalendarSideCalendar selectedDate={selectedDate} onSelectDate={handleDateSelect} />
+          <MainCalendarSideCalendar
+            selectedDate={selectedDate}
+            onSelectDate={handleDateSelect}
+            onNavigate={handleNavigate} // nextMonth <-> previous 상태 변경
+            />
           {/* ### MainCalendarSideCalendar: 사이드 달력, 오늘 날짜 자동 선택, 선택할 때마다 동작 */}
           <MainGroup groups={selectedGroupDates} onGroupSelect={handleGroupSelect}/>
           {/* ### MainGroup: 내 캘린더 그룹별 볼 수 있음. 추가적인 기능 정의 필요 */}
         </AppShell.Navbar>
         <AppShell.Main className={style["main_content"]}>
           <div className={style["main_nav_content"]} />
-          <MyCalendar selectDate={selectedDate} onSelectDate={handleDateSelect} calendarState={calendarStateValue} selectedGroupEvent={selectedGroupDates} />
+          <MyCalendar
+          selectDate={selectedDate}
+          onSelectDate={handleDateSelect}
+          calendarState={calendarStateValue}
+          selectedGroupEvent={selectedGroupDates}
+          currentAction={currentAction}
+          />
           {/* ### MyCalendar: react-big-calender 라이브러리 이용한 메인 달력. 오늘 날짜 자동 선택, 선택할 때마다 동작, (MainCalendarHeader에서 변경된)상태 정보 */}
         </AppShell.Main>
         <AppShell.Footer>
