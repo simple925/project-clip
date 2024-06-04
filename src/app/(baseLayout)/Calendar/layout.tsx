@@ -32,7 +32,6 @@ export default function MyPageLayout({ children }: { children: any }) {
 
   // 현재 선택된 날짜 
   const [selectedDate, setSelectedDate] = useState(new Date());
-
   // MainCalendarSideCalendar에서 선택된 날짜가 변경될 때 호출되는 콜백 함수
   const handleDateSelect = (date:any) => {
     setSelectedDate(date); // 선택된 날짜를 상태로 업데이트
@@ -40,9 +39,13 @@ export default function MyPageLayout({ children }: { children: any }) {
 
   // 현재 선택된 날짜 그룹 공유
   const [selectedGroupDates, setSelectedGroupDates] = useState([]);
-  // MainGroup에서 선택된 그룹의 날짜 배열을 상태로 설정하는 함수
-  const handleGroupSelect = (group) => {
-    setSelectedGroupDates(group.dates); // group.dates는 선택된 그룹의 날짜 배열을 가정합니다.
+  // MainGroup에서 선택된 그룹의 날짜 배열을 상태로 저장합니다
+  // ==> TODO : 해당 값을 MyCalendar로 전달하여 선택된 그룹의 날짜를 표시
+  // ==> TODO : 해당 값을 MainCalendarSideCalendar로 전달하여 선택된 그룹의 날짜를 표시
+
+  const handleGroupSelect = (group: any) => {
+    setSelectedGroupDates(group);
+    // console.log('###현재 선택 이벤트 :', group)
   };
 
   return (
@@ -68,7 +71,7 @@ export default function MyPageLayout({ children }: { children: any }) {
         </AppShell.Navbar>
         <AppShell.Main className={style["main_content"]}>
           <div className={style["main_nav_content"]} />
-          <MyCalendar selectedDate={selectedDate} onSelectDate={handleDateSelect} calendarState={calendarStateValue} />
+          <MyCalendar selectDate={selectedDate} onSelectDate={handleDateSelect} calendarState={calendarStateValue} selectedGroupEvent={selectedGroupDates} />
           {/* ### MyCalendar: react-big-calender 라이브러리 이용한 메인 달력. 오늘 날짜 자동 선택, 선택할 때마다 동작, (MainCalendarHeader에서 변경된)상태 정보 */}
         </AppShell.Main>
         <AppShell.Footer>

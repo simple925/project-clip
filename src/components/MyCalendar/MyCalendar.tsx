@@ -6,22 +6,55 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { CalendarToolbar } from "../CalendarToolbar/CalendarToolbar";
 import style from './MyCalendar.module.css';
 
-export function MyCalendar({ calendarState, selectedDate, onSelectDate }:any) {
+export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGroupEvent }:any) {
     moment.locale('ko-KR');
     const localizer = momentLocalizer(moment);
 
-    const today = selectedDate;     // 부모 컴포넌트의 date로 현재값 설정
+    const today = selectDate;     // 부모 컴포넌트의 date로 현재값 설정
     const handleDateSelect = (date: any) => {     // 선택된 날짜 변경시 부모 컴포넌트로 전달
         onSelectDate(date);
     };
+    // console.log('###현재 선택된 이벤트 :', selectedGroupEvent)
+    const selectedEvents = selectedGroupEvent && Array.isArray(selectedGroupEvent.selectedDate) // selectedDate 값이 있을 경우에만,
+        ? selectedGroupEvent.selectedDate.map((date: string, index: number) => ({
+            id: index + 1,
+            title: selectedGroupEvent.description,
+            start: new Date(date),
+            end: new Date(date),
+            color: selectedGroupEvent.color
+        }))
+        : [];
 
-    const events = [
+    const initialEvents = [
         {
+            id: 0,
             title: '오늘',
             start: today,
-            end: today
-        }
-    ]
+            end: today,
+        },
+    ];
+    const events = [
+        ...initialEvents,
+        ...selectedEvents
+    ];
+
+    console.log('현재 선택된 이벤트 리스트:', events)
+
+    // 이벤트 스타일링 속성 추가 
+    const eventStyleGetter = (event) => {
+        const backgroundColor = event.color || '#c8c8a9';
+        const style = {
+            backgroundColor,
+            borderRadius: '0px',
+            opacity: 0.8,
+            color: 'white',
+            border: '0px',
+            display: 'block'
+        };
+        return {
+            style: style
+        };
+    };
 
     const [calendarView, setCalendarView] = useState(Views.MONTH) // default Views.MONTH 보여주기 설정
     useEffect(()=>{
@@ -33,7 +66,7 @@ export function MyCalendar({ calendarState, selectedDate, onSelectDate }:any) {
             <Calendar
                 defaultDate={today} // 오늘 날짜(상위 컴포넌트에서 받아옴)
                 localizer={localizer}
-                events={events}
+                events={events} // 모든 이벤트 추가
                 startAccessor="start"
                 endAccessor="end"
                 style={{ margin: 30 }}
@@ -42,6 +75,7 @@ export function MyCalendar({ calendarState, selectedDate, onSelectDate }:any) {
                 components={{
                     toolbar: CalendarToolbar // 툴바 컴포넌트 사용
                 }}
+                eventPropGetter={eventStyleGetter} // 이벤트 스타일 설정 함수 추가
             />
         </div>
     )
