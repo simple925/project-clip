@@ -65,6 +65,9 @@ return (
             <Grid gutter="md">
                 <Grid.Col span={4}>
                     {/* <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} /> */}
+                </Grid.Col>
+                <Grid.Col span={4}>
+                    {/* <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} /> */}
                     <Paper radius="md" withBorder className={StatsCardStyle.card} mt={20}>
                     <ThemeIcon className={StatsCardStyle.icon} size={60} radius={60}>
                         <IconBeach style={{ width: rem(32), height: rem(32) }} stroke={1.5} />
@@ -75,9 +78,9 @@ return (
                     </Text>
 
                     <Group justify="space-between" mt="xs">
-                        {/* <Text fz="sm" c="dimmed">
-                        잔여휴가
-                        </Text> */}
+                        <Text fz="sm" c="dimmed">
+                            잔여휴가
+                        </Text>
                         <Text fz="sm" c="dimmed">
                         {emainingVacationPercentage}%
                         </Text>
@@ -92,10 +95,7 @@ return (
                     </Paper>
                 </Grid.Col>
                 <Grid.Col span={4}>
-                    <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} />
-                </Grid.Col>
-                <Grid.Col span={4}>
-                    <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} />
+                    {/* <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} /> */}
                 </Grid.Col>
                 <Grid.Col>
                     <DragDropContext
