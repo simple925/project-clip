@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button } from '@mantine/core';
 import style from './CalendarToolbar.module.css';
 import { IconArrowRight, IconArrowLeft } from '@tabler/icons-react';
@@ -10,15 +10,26 @@ import { rem } from "@mantine/core";
 
 export function CalendarToolbar({ date, onNavigate, currentAction }:any) {
   
-  const navigate = (action: string) => {
+  // const navigate = (action: string) => {
+  //   onNavigate(action);
+  //   // onActionChange(action)
+  // };
+
+  const navigate = useCallback((action: string) => {
     onNavigate(action);
-    // onActionChange(action)
-  };
+  }, [onNavigate]);
 
   useEffect(() => {
-    console.log('액션 받아옴 ', currentAction) // 1) console에 calendarState값 로깅
-    navigate(currentAction) // 2) calendarView에 불러온 값 담기
-  }, [currentAction]) // calendarState가 변경될 때 동작
+    console.log('액션 받아옴 ', currentAction)
+    if (currentAction) {
+      navigate(currentAction)
+    }
+  }, [currentAction, navigate])
+
+  // useEffect(() => {
+  //   console.log('액션 받아옴 ', currentAction) // 1) console에 calendarState값 로깅
+  //   navigate(currentAction) // 2) calendarView에 불러온 값 담기
+  // }, [currentAction]) // calendarState가 변경될 때 동작
 
   // const navigate = (action:any) => {
   //   onNavigate(action);

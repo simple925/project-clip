@@ -18,16 +18,14 @@ export function MainGroup({groups, onGroupSelect}) {
 
   function onSelectedColorBtn(item: any) {
     setSelectedColor(item.color);
-    // setSelectedEvent(item);
     setSelectedGroupDates(item)
-    // console.log('###현재 선택 이벤트 :', item)
   }
 
   useEffect(() => {
     if (selectedGroupDates) {
       onGroupSelect(selectedGroupDates);
     }
-  }, [selectedGroupDates]);
+  }, [selectedGroupDates, onGroupSelect]);
 
 
   const items = obj.map((item) => {
