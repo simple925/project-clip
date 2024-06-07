@@ -8,12 +8,15 @@ import { IconPaperclip, IconChevronDown, IconBoxMultiple1, IconBoxMultiple7 } fr
 import { IconBrowserCheck } from "@tabler/icons-react";
 import classes from "./MainCalendarHeader.module.css";
 import { View, Views } from "react-big-calendar";
+import { MainCalendarTitle } from "@/components/MainCalendarTitle/MainCalendarTitle";
+
 // ==> react-big-calendar의 view 속성 참고
 // https://jquense.github.io/react-big-calendar/examples/index.html?path=/docs/props--view
 // https://jquense.github.io/react-big-calendar/examples/index.html?path=/docs/props--cal-views
 
 const range = { label: "월간" }; // default 값 월간으로 지정 
 const tabs = ["전체", "휴가", "일정"];
+const today = new Date();
 
 export function MainCalendarHeader(calendarState:any) {
 
@@ -53,19 +56,12 @@ export function MainCalendarHeader(calendarState:any) {
             withinPortal
           >
             <Menu.Target>
-              <UnstyledButton
-                className={cx(classes.range, {
-                  [classes.userActive]: userMenuOpened,
-                })}
-              >
+              <UnstyledButton className={cx(classes.range, {[classes.userActive]: userMenuOpened,})}>
                 <Group gap={7}>
-                  <Text fw={500} size="sm" lh={1} mr={3}>
-                    {range.label}
-                  </Text>
+                  <Text fw={500} size="sm" lh={1} mr={3}>{range.label}</Text>
                   <IconChevronDown
                     style={{ width: rem(12), height: rem(12) }}
-                    stroke={1.5}
-                  />
+                    stroke={1.5}/>
                 </Group>
               </UnstyledButton>
             </Menu.Target>
@@ -136,6 +132,7 @@ export function MainCalendarHeader(calendarState:any) {
         </Group>
       </Container>
       <Container>
+        <MainCalendarTitle date={today} calendarState={calendarView} />
         <Tabs
           defaultValue="전체"
           variant="outline"

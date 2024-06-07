@@ -1,7 +1,7 @@
 /**
  * 메인 캘린더의 layout
  * 
- * MainCalenderHear (메인 헤더 : 전체/휴가/일정 그룹 + 일간/주간/월간/일정목록 메뉴바)
+ * MainCalenderHear (메인 헤더 : 오늘 날짜 month 네비게이션 + 전체/휴가/일정 그룹 + 일간/주간/월간/일정목록 메뉴바)
  * MainCalendarSideCalendar (사이드 달력 : 현재 날짜, onSelect 동작)
  * MainGroup (사이드 그룹 : 내 캘린더 그룹 보기. TODO : 추가 기능 정의 필요)
  * MyCalendar (중앙 메인 달력 : react-big-calendar. 현재 날짜, onSelect 동작, calendarStateValue)
@@ -57,7 +57,7 @@ export default function MyPageLayout({ children }: { children: any }) {
   return (
     <>
       <AppShell
-        header={{ height: 85 }}
+        header={{ height: 120 }}
         withBorder={false}
         footer={{ height: 120 }}
         className={style["main"]}
