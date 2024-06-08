@@ -3,22 +3,32 @@
 import { Accordion, ColorSwatch, CheckIcon, rem } from "@mantine/core";
 import styles from "./MainGroup.module.css";
 import { useEffect, useState } from "react";
+import getData from "@api/commonApi";
 
 export function MainGroup({groups, onGroupSelect}) {
 
   // 선택된 그룹의 배열 상태
   const [selectedGroupDates, setSelectedGroupDates] = useState([]);
 
-  const [obj, setObj] = useState([
-    { key: 1, value: "생일", description: "생일", color: "#fe4365", selectedDate: ["2024-06-10 00:00:00", "2024-06-18 00:00:00",] },
-    { key: 2, value: "여름 휴가", description: "여름 휴가", color: "#fc9d9a", selectedDate: ["2024-06-12 00:00:00", "2024-06-19 00:00:00",] },
-    { key: 3, value: "프로젝트 회의", description: "프로젝트 회의", color: "#f9cdad", selectedDate: ["2024-06-03 00:00:00", "2024-06-05 00:00:00",] },
-  ]);
+  const [groupDatas, setGroupDatas] = useState([]);
+  useEffect(() => {
+    getData(`http://localhost:9999/myGroup`)
+      .then(group => setGroupDatas(group))
+      .catch(error => {
+      console.error('fetch commonApi에서 오류 발생:', error);
+      setGroupDatas([
+        { key: 1, value: "생일", description: "생일", color: "#fe4365", selectedDate: ["2024-06-10 00:00:00", "2024-06-18 00:00:00",] },
+        { key: 2, value: "여름 휴가", description: "여름 휴가", color: "#fc9d9a", selectedDate: ["2024-06-12 00:00:00", "2024-06-19 00:00:00",] },
+        { key: 3, value: "프로젝트 회의", description: "프로젝트 회의", color: "#f9cdad", selectedDate: ["2024-06-03 00:00:00", "2024-06-05 00:00:00",] },
+      ]);
+  })
+}, [])
+
   const [selectedColor, setSelectedColor] = useState(null);
 
   function onSelectedColorBtn(item: any) {
     setSelectedColor(item.color);
-    setSelectedGroupDates(item)
+    setSelectedGroupDates(item);
   }
 
   useEffect(() => {
@@ -28,7 +38,7 @@ export function MainGroup({groups, onGroupSelect}) {
   }, [selectedGroupDates, onGroupSelect]);
 
 
-  const items = obj.map((item) => {
+  const items = groupDatas.map((item) => {
     const isActive = item.color === selectedColor;
     const colorBtn = isActive ? '#fff' : 'none';
     const cursorBtn = isActive ? 'pointer' : 'default';

@@ -1,7 +1,7 @@
 "use client";
 import type { Metadata } from "next"
 import { Suspense, useEffect, useState } from "react"
-import getData from "../../../../lib/commonApi"
+import getData from "@api/commonApi"
 
 type Props = {
     promise: Promise<Users>

@@ -1,4 +1,28 @@
 {
+  "myGroup": [
+    {
+      "key": 1,
+      "value": "생일",
+      "description": "생일",
+      "color": "#fe4365",
+      "selectedDate": ["2024-06-10 00:00:00", "2024-06-18 00:00:00"]
+    },
+    {
+      "key": 2,
+      "value": "여름 휴가",
+      "description": "여름 휴가",
+      "color": "#fc9d9a",
+      "selectedDate": ["2024-06-12 00:00:00", "2024-06-19 00:00:00"]
+    },
+    {
+      "key": 3,
+      "value": "프로젝트 회의",
+      "description": "프로젝트 회의",
+      "color": "#f9cdad",
+      "selectedDate": ["2024-06-03 00:00:00", "2024-06-05 00:00:00"]
+    }
+  ],
+
   "posts": [
     {
       "id": 3,
@@ -22,15 +46,15 @@
     {
       "id": 1,
       "contents": "some contents",
-      "boardId": 1      
+      "boardId": 1
     },
-        {
+    {
       "id": 2,
       "contents": "some contents",
-      "boardId": 2   
+      "boardId": 2
     }
   ],
-  "Users" :[ 
+  "Users": [
     {
       "id": 1,
       "userUUID": "1234",
@@ -43,8 +67,8 @@
         "city": "seoul",
         "zipcode": "12345",
         "geo": {
-          "lat" : "lat",
-          "lng" : "lng"
+          "lat": "lat",
+          "lng": "lng"
         }
       },
       "phone": "01012345678",
@@ -67,8 +91,8 @@
         "city": "광명시",
         "zipcode": "12345",
         "geo": {
-          "lat" : "lat",
-          "lng" : "lng"
+          "lat": "lat",
+          "lng": "lng"
         }
       },
       "phone": "01012345678",

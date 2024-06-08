@@ -7,7 +7,7 @@ import {
   Group,
 } from "@mantine/core";
 import classes from "./MyContent.module.css";
-import commonApi from "../../../lib/commonApi";
+import commonApi from "@api/commonApi";
 import { useEffect, useState } from "react";
 import { IconTrash } from "@tabler/icons-react";
 
