@@ -63,8 +63,8 @@ export function MainCalendarHeader(calendarState:any) {
           {/* <IconPaperclip size={28} /> */}
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <Menu
-            width={260}
-            position="bottom-end"
+            width={120}
+            // position="bottom-end"
             transitionProps={{ transition: "pop-top-right" }}
             onClose={() => setUserMenuOpened(false)}
             onOpen={() => setUserMenuOpened(true)}

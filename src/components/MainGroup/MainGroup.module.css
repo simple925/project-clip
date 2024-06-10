@@ -1,19 +1,59 @@
 .MainGroup {
-  width: 22rem; /* approximately rem(350) */
+  width: 20rem;
+  border: 1px solid #ddd; /* Light border around the container */
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; /* Ensures content doesn't spill out of rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted effect */
+  background-color: #f9f9f9; /* Light background for contrast */
 }
 
 .MainGroup .mantine-accordion {
-
+  border-top: 1px solid #ddd; /* Border between items */
 }
 
 .MainGroup .mantine-accordion-item {
-
+  border-bottom: 1px solid #ddd; /* Border between items */
 }
 
 .MainGroup .mantine-accordion-control {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem; /* Padding for clickable area */
+  cursor: pointer; /* Pointer cursor to indicate clickable */
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
 
+.MainGroup .mantine-accordion-control:hover {
+  background-color: #e6e6e6; /* Light gray background on hover */
+}
+
+.MainGroup .mantine-accordion-control div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Space between color swatch and text */
+}
+
+.MainGroup .mantine-accordion-control .mantine-ColorSwatch-root {
+  border-radius: 50%; /* Round color swatch */
+  transition: transform 0.3s ease; /* Smooth transition on active state */
+}
+
+.MainGroup .mantine-accordion-control .mantine-ColorSwatch-root:hover {
+  transform: scale(1.1); /* Slightly enlarge on hover */
 }
 
 .MainGroup .mantine-accordion-panel {
+  padding: 1rem; /* Padding inside the panel */
+  background-color: #fff; /* White background for the panel */
+  transition: background-color 0.3s ease; /* Smooth transition on open */
+}
 
+.MainGroup .mantine-accordion-panel:hover {
+  background-color: #f0f0f0; /* Slightly darker background on hover */
+}
+
+.MainGroup .mantine-accordion-control span {
+  font-size: 1rem; /* Font size for the text */
+  font-weight: 500; /* Medium weight font */
+  color: #333; /* Dark text color */
 }

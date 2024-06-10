@@ -57,7 +57,7 @@ export default function MyPageLayout({ children }: { children: any }) {
   return (
     <>
       <AppShell
-        header={{ height: 120 }}
+        header={{ height: 130 }}
         withBorder={false}
         footer={{ height: 120 }}
         className={style["main"]}

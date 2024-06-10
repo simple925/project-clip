@@ -64,7 +64,11 @@ export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGr
         setCalendarView(calendarState) // 2) calendarView에 불러온 값 담기
     }, [calendarState]) // calendarState가 변경될 때 동작
 
-
+    const CalendarToolbar_off = () => {
+        return (
+            <></>
+        );
+    }
     return (
         <div className={style["my_calendar"]}>
             <Calendar
@@ -73,15 +77,15 @@ export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGr
                 events={events} // 모든 이벤트 추가
                 startAccessor="start"
                 endAccessor="end"
-                style={{ margin: 30 }}
+                style={{ margin: 30, height: 500, width: 900 }}
                 onSelectSlot={(slotInfo) => handleDateSelect(slotInfo.start)}
                 view={calendarView} // view 속성
                 components={{
-                    // toolbar: CalendarToolbar // 툴바 컴포넌트 사용
-                        toolbar: (props) => {
-                        const toolbarProps = { ...props, currentAction }; // nextMonth 값을 props에 추가
-                        return <CalendarToolbar {...toolbarProps} />; // CalendarToolbar 컴포넌트에 nextMonth 값 전달
-                    },
+                    toolbar: CalendarToolbar_off // 툴바 컴포넌트 사용
+                    //     toolbar: (props) => {
+                    //     const toolbarProps = { ...props, currentAction }; // nextMonth 값을 props에 추가
+                    //     return <CalendarToolbar {...toolbarProps} />; // CalendarToolbar 컴포넌트에 nextMonth 값 전달
+                    // },
                 }}
                 eventPropGetter={eventStyleGetter} // 이벤트 스타일 설정 함수 추가
             />

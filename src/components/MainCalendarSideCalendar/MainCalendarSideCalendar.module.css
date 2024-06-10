@@ -1,13 +1,17 @@
 .MainCalendarSideNav {
-  width: 22rem; /* approximately rem(350) */
+  width: 20rem; /* approximately rem(350) */
+  overflow: hidden; /* Ensures content doesn't spill out of rounded corners */
+  
 }
 
 .MainCalendarSideCalendar {
   display: flex;
   justify-content: center;
+  padding: 1rem; /* Padding for spacing */
 }
 
 .MainCalendarSideCalendar .mantine-accordion {
+  border-top: 1px solid #ddd; /* Border between items */
 }
 
 .header {
