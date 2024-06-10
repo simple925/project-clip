@@ -42,10 +42,25 @@ export function MainCalendarHeader(calendarState:any) {
     calendarView handle
   */
   return (
-    <div className={classes.header}>
-      <Container className={classes.mainSection}>
-        <Group justify="space-between">
-          <IconPaperclip size={28} />
+    <div className={classes.header} >
+      <Container>
+        <MainCalendarTitle date={today} calendarState={calendarView} />
+        <div className={classes.container}>
+        <Tabs
+          defaultValue="전체"
+          variant="outline"
+          visibleFrom="sm"
+          className="tabs"
+          classNames={{
+            root: classes.tabs,
+            list: classes.tabsList,
+            tab: classes.tab,
+          }}
+        >
+          <Tabs.List>{items}</Tabs.List>
+        </Tabs>
+        <Group className="group">
+          {/* <IconPaperclip size={28} /> */}
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <Menu
             width={260}
@@ -56,12 +71,12 @@ export function MainCalendarHeader(calendarState:any) {
             withinPortal
           >
             <Menu.Target>
-              <UnstyledButton className={cx(classes.range, {[classes.userActive]: userMenuOpened,})}>
+              <UnstyledButton className={cx(classes.range, { [classes.userActive]: userMenuOpened, })}>
                 <Group gap={7}>
                   <Text fw={500} size="sm" lh={1} mr={3}>{range.label}</Text>
                   <IconChevronDown
                     style={{ width: rem(12), height: rem(12) }}
-                    stroke={1.5}/>
+                    stroke={1.5} />
                 </Group>
               </UnstyledButton>
             </Menu.Target>
@@ -107,7 +122,7 @@ export function MainCalendarHeader(calendarState:any) {
                 }
                 onClick={() => {
                   setCalendarView(Views.MONTH)  // 클릭시 월간 Views 설정(해당 속성 default)
-                  range.label = '월간' 
+                  range.label = '월간'
                 }}
               >
                 월간
@@ -130,21 +145,7 @@ export function MainCalendarHeader(calendarState:any) {
             </Menu.Dropdown>
           </Menu>
         </Group>
-      </Container>
-      <Container>
-        <MainCalendarTitle date={today} calendarState={calendarView} />
-        <Tabs
-          defaultValue="전체"
-          variant="outline"
-          visibleFrom="sm"
-          classNames={{
-            root: classes.tabs,
-            list: classes.tabsList,
-            tab: classes.tab,
-          }}
-        >
-          <Tabs.List>{items}</Tabs.List>
-        </Tabs>
+      </div>
       </Container>
     </div>
   );

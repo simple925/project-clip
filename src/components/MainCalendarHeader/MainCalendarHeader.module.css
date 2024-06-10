@@ -8,6 +8,21 @@
   padding-bottom: var(--mantine-spacing-sm);
 }
 
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.group {
+  order: 2;
+  align-self: flex-end;
+}
+
+.tabs {
+  order: 1;
+  align-self: flex-start;
+}
+
 .range {
   color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0));
   padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
