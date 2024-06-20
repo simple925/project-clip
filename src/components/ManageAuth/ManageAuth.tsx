@@ -33,6 +33,7 @@ import { IconTrash } from "@tabler/icons-react";
  * 1. 권한 대상 클릭 시 대상이 갖고 있는 권한들의 체크 박스 활성화하는 로직 추가 필요
  * 2. 저장 클릭 시 DB Insert 또는 Update
  * 3. 초기화 버튼 추가 필요 - 로직 추가해야함
+ * 4. 동일한 사용자 입력 시 --> 이미 존재함 alert
  */
 
 export function ManageAuth() {
@@ -94,13 +95,7 @@ export function ManageAuth() {
       setInput({ name: "", uuid: "" });
     }
   }
-
-  /* 권한 대상 삭제 */
-  function removeObject(uuid: String) {
-    const newObjList = obj.filter((item) => item.uuid !== uuid);
-    setObj(newObjList);
-  }
-
+  
   /* 권한 대상 영역 */
   const [obj, setObj] = useState([
     { name: "김ㅇㅇ", uuid: "uuid1" },
@@ -110,7 +105,7 @@ export function ManageAuth() {
     { name: "배ㅇㅇ", uuid: "uuid5" },
     { name: "최ㅇㅇ", uuid: "uuid6" },
   ]);
-
+  
   /* 권한 목록 영역 */
   const elements = [
     { key: 1, name: "권한1", checked: false },
@@ -122,6 +117,12 @@ export function ManageAuth() {
     { key: 7, name: "권한7", checked: false },
     { key: 8, name: "권한8", checked: false },
   ];
+
+  /* 권한 대상 삭제 */
+  function removeObject(uuid: String) {
+    const newObjList = obj.filter((item) => item.uuid !== uuid);
+    setObj(newObjList);
+  }
 
   /* 권한 대상 List  */
   const [activeObj, setActiveObj] = useState(0);
