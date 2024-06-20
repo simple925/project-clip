@@ -2,13 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import cx from "clsx";
-import { Container, UnstyledButton, Group, Text, Menu, Tabs, Burger, rem, useMantineTheme } from "@mantine/core";
+import { Container, UnstyledButton, Group, Text, Menu, Tabs, Burger, rem, useMantineTheme, Button, Title, } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPaperclip, IconChevronDown, IconBoxMultiple1, IconBoxMultiple7 } from "@tabler/icons-react";
 import { IconBrowserCheck } from "@tabler/icons-react";
 import classes from "./MainCalendarHeader.module.css";
 import { View, Views } from "react-big-calendar";
 import { MainCalendarTitle } from "@/components/MainCalendarTitle/MainCalendarTitle";
+import { IconArrowRight, IconArrowLeft } from '@tabler/icons-react';
+
 
 // ==> react-big-calendar의 view 속성 참고
 // https://jquense.github.io/react-big-calendar/examples/index.html?path=/docs/props--view
@@ -18,7 +20,7 @@ const range = { label: "월간" }; // default 값 월간으로 지정
 const tabs = ["전체", "휴가", "일정"];
 const today = new Date();
 
-export function MainCalendarHeader(calendarState:any) {
+export function MainCalendarHeader({ date, onNavigate, currentAction, calendarState }:any) {
 
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
@@ -34,17 +36,28 @@ export function MainCalendarHeader(calendarState:any) {
   calendarView handle
   */
   const [ calendarView, setCalendarView ] = useState<View>(Views.MONTH) //View 속성 지정 관리: 초기값 설정(Views.MONTH)
-  useEffect(() => {
-    console.log('잇히 ', calendarView) // 1) console에 현재 calendarView값 로깅(MainCalendarHeader.tsx에서 찍힘)  
-    calendarState.calendarState(calendarView) // 2) calendarState값을 상위 컴포넌트에 전달(prop)
-  }, [calendarView]) // calendarView가 변경될 때마다 해당 작업을 수행한다.
+  // useEffect(() => {
+  //  console.log('잇히 ', calendarView) // 1) console에 현재 calendarView값 로깅(MainCalendarHeader.tsx에서 찍힘)  
+  //  calendarState.calendarState(calendarView) // 2) calendarState값을 상위 컴포넌트에 전달(prop)
+  //}, [calendarView]) // calendarView가 변경될 때마다 해당 작업을 수행한다.
   /* end
     calendarView handle
   */
   return (
     <div className={classes.header} >
       <Container>
-        <MainCalendarTitle date={today} calendarState={calendarView} />
+        {/* <MainCalendarTitle date={today} calendarState={calendarView} /> */}
+        <div className={classes.toolbar}>
+          <Group>
+            <IconArrowLeft className={classes.arrowIcon} />
+            <div className={classes.dateTitle}>
+              <span className={classes.year}>{`${today.getFullYear()}년`}</span>
+              <span className={classes.month}>{`${today.getMonth() + 1}월`}</span>
+            </div>
+            <IconArrowRight className={classes.arrowIcon}  />
+            <Button variant="default" className={classes.todayButton} >이번달</Button>
+          </Group>
+        </div>
         <div className={classes.container}>
         <Tabs
           defaultValue="전체"
