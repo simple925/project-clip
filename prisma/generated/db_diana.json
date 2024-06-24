@@ -1,0 +1,16 @@
+{
+  "Users": [
+    {
+      "id": 1,
+      "userUUID": "1234",
+      "name": "백지연",
+      "username": "diana"
+    },
+    {
+      "id": 2,
+      "userUUID": "1234",
+      "name": "이수진",
+      "username": "sujin"
+    }
+  ]
+}
