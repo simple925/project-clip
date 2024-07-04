@@ -1,12 +1,37 @@
-"use client";
+// "use client";
 // use client 사용해야 함
 import LoginInput from "@/components/LoginInput/LoginInput"
 import { useState, useRef } from "react";
 import Image from 'next/image';
 import style from "./Login.module.css";
+import { PrismaClient } from '@prisma/client'
 
 // export default function으로 외부 출력해주어야 합니다
 export default function loginPage() {
+
+  // await는 순차적으로 받고, then은 비동기로 받는다. 
+  // then은 await보다 먼저 실행된다.
+  const prisma = new PrismaClient();
+  // const result = 
+  
+  async function selectApi(tableName: string){
+    (prisma as any)[`${tableName}`].findMany()
+      .then(
+        (result:any) => {
+          console.log(result)
+        }
+      )
+      .catch(
+        (e:any) => {
+          console.error(e)
+        }
+      )
+  }
+  
+
+  
+
+  // console.log(result)
 
   return (
     <div className={style.container}>
