@@ -1,13 +1,17 @@
-"use client";
+// "use client";
 // use client 사용해야 함
 import LoginInput from "@/components/LoginInput/LoginInput"
 import { useState, useRef } from "react";
 import Image from 'next/image';
 import style from "./Login.module.css";
-
+import { fetchAccounts } from '@/api/fetchData/account'
 // export default function으로 외부 출력해주어야 합니다
 export default function loginPage() {
-
+  console.log('fetch => ',)
+  fetchAccounts().then(e => {
+    console.log(e)
+  })
+  debugger
   return (
     <div className={style.container}>
       <div className={style["logo-layer"]}>
