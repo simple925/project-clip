@@ -20,6 +20,11 @@
     "@prisma/generator-helper": "^4.0.0",
     "@prisma/internals": "^4.0.0",
     "@tabler/icons-react": "^2.47.0",
+    "@tanstack/react-query": "^5.51.1",
+    "@trpc/client": "^11.0.0-rc.456",
+    "@trpc/next": "^11.0.0-rc.456",
+    "@trpc/react-query": "^11.0.0-rc.456",
+    "@trpc/server": "^11.0.0-rc.456",
     "@types/moment": "^2.13.0",
     "@types/react-big-calendar": "^1.8.9",
     "dayjs": "^1.11.10",
@@ -30,7 +35,8 @@
     "prisma-json-server-generator": "^0.2.0",
     "react": "^18.2.0",
     "react-big-calendar": "^1.11.6",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",
