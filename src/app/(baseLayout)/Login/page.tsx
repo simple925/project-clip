@@ -1,10 +1,10 @@
-"use client";
+// "use client";
 // use client 사용해야 함
 import LoginInput from "@/components/LoginInput/LoginInput"
 import { useState, useRef, useEffect } from "react";
 import Image from 'next/image';
 import style from "./Login.module.css";
-
+import { fetchAccounts } from '@/api/fetchData/account'
 // export default function으로 외부 출력해주어야 합니다
 export default function LoginPage() {
 
