@@ -1,0 +1,215 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator json_server {
+  provider       = "prisma-json-server-generator"
+  outputFileName = "db_sj.json"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model AccountDeletions {
+  deletion_id     Int       @id @default(autoincrement())
+  account_id      String?   @db.Char(32)
+  deleted_at      DateTime? @default(now()) @db.Timestamp(0)
+  deletion_reason String?   @db.Text
+  Accounts        Accounts? @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AccountDeletions_ibfk_1")
+
+  @@index([account_id], map: "account_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Accounts {
+  id               String             @id @db.Char(32)
+  username         String             @unique(map: "username") @db.VarChar(50)
+  password         String             @db.VarChar(255)
+  created_at       DateTime?          @default(now()) @db.Timestamp(0)
+  updated_at       DateTime?          @default(now()) @db.Timestamp(0)
+  last_login       DateTime?          @db.Timestamp(0)
+  is_deleted       Boolean?           @default(false)
+  comment          String?            @db.Text
+  AccountDeletions AccountDeletions[]
+  Members          Members[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model CalendarEvents {
+  id                String          @id @db.Char(32)
+  created_by        String?         @db.Char(32)
+  calendar_group_id String?         @db.Char(32)
+  title             String          @db.VarChar(255)
+  description       String?         @db.Text
+  start_date        DateTime        @db.Date
+  end_date          DateTime        @db.Date
+  created_at        DateTime?       @default(now()) @db.Timestamp(0)
+  updated_at        DateTime?       @default(now()) @db.Timestamp(0)
+  CalendarGroups    CalendarGroups? @relation(fields: [calendar_group_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CalendarEvents_ibfk_1")
+  Members           Members?        @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CalendarEvents_ibfk_2")
+
+  @@index([calendar_group_id], map: "calendar_group_id")
+  @@index([created_by], map: "created_by")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model CalendarGroups {
+  id             String           @id @db.Char(32)
+  name           String           @db.VarChar(255)
+  description    String?          @db.Text
+  created_at     DateTime?        @default(now()) @db.Timestamp(0)
+  updated_at     DateTime?        @default(now()) @db.Timestamp(0)
+  created_by     String           @db.Char(32)
+  CalendarEvents CalendarEvents[]
+  Members        Members          @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CalendarGroups_ibfk_1")
+
+  @@index([created_by], map: "created_by")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ExpenseReports {
+  id                                          String    @id @db.Char(32)
+  created_by                                  String?   @db.Char(32)
+  resolved_by                                 String?   @db.Char(32)
+  report_date                                 DateTime? @db.Date
+  content                                     String?   @db.Text
+  total_amount                                Decimal?  @db.Decimal(10, 2)
+  approved                                    Boolean?  @default(false)
+  created_at                                  DateTime? @default(now()) @db.Timestamp(0)
+  updated_at                                  DateTime? @default(now()) @db.Timestamp(0)
+  Members_ExpenseReports_created_byToMembers  Members?  @relation("ExpenseReports_created_byToMembers", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ExpenseReports_ibfk_1")
+  Members_ExpenseReports_resolved_byToMembers Members?  @relation("ExpenseReports_resolved_byToMembers", fields: [resolved_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ExpenseReports_ibfk_2")
+
+  @@index([created_by], map: "created_by")
+  @@index([resolved_by], map: "resolved_by")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Feature_Permissions {
+  feature_id    String      @db.Char(32)
+  permission_id String      @db.Char(32)
+  notes         String?     @db.Text
+  Features      Features    @relation(fields: [feature_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Feature_Permissions_ibfk_1")
+  Permissions   Permissions @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Feature_Permissions_ibfk_2")
+
+  @@id([feature_id, permission_id])
+  @@index([permission_id], map: "permission_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Features {
+  id                  String                @id @db.Char(32)
+  name                String                @unique(map: "name") @db.VarChar(100)
+  created_at          DateTime?             @default(now()) @db.Timestamp(0)
+  updated_at          DateTime?             @default(now()) @db.Timestamp(0)
+  is_deleted          Boolean?              @default(false)
+  notes               String?               @db.Text
+  Feature_Permissions Feature_Permissions[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model LeaveRequests {
+  id                                         String    @id @db.Char(32)
+  created_by                                 String?   @db.Char(32)
+  resolved_by                                String?   @db.Char(32)
+  start_date                                 DateTime? @db.Date
+  end_date                                   DateTime? @db.Date
+  reason                                     String?   @db.Text
+  approved                                   Boolean?  @default(false)
+  created_at                                 DateTime? @default(now()) @db.Timestamp(0)
+  updated_at                                 DateTime? @default(now()) @db.Timestamp(0)
+  Members_LeaveRequests_created_byToMembers  Members?  @relation("LeaveRequests_created_byToMembers", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "LeaveRequests_ibfk_1")
+  Members_LeaveRequests_resolved_byToMembers Members?  @relation("LeaveRequests_resolved_byToMembers", fields: [resolved_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "LeaveRequests_ibfk_2")
+
+  @@index([created_by], map: "created_by")
+  @@index([resolved_by], map: "resolved_by")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Members {
+  id                                                 String                @id @db.Char(32)
+  account_id                                         String?               @db.Char(32)
+  created_at                                         DateTime?             @default(now()) @db.Timestamp(0)
+  updated_at                                         DateTime?             @default(now()) @db.Timestamp(0)
+  name                                               String?               @db.VarChar(255)
+  position                                           String?               @db.VarChar(100)
+  hire_date                                          DateTime?             @db.Date
+  birth_date                                         DateTime?             @db.Date
+  contact_number                                     String?               @db.VarChar(20)
+  image                                              Bytes?                @db.Blob
+  email                                              String?               @db.VarChar(255)
+  emergency_contact_number                           String?               @db.VarChar(20)
+  address                                            String?               @db.Text
+  notes                                              String?               @db.Text
+  CalendarEvents                                     CalendarEvents[]
+  CalendarGroups                                     CalendarGroups[]
+  ExpenseReports_ExpenseReports_created_byToMembers  ExpenseReports[]      @relation("ExpenseReports_created_byToMembers")
+  ExpenseReports_ExpenseReports_resolved_byToMembers ExpenseReports[]      @relation("ExpenseReports_resolved_byToMembers")
+  LeaveRequests_LeaveRequests_created_byToMembers    LeaveRequests[]       @relation("LeaveRequests_created_byToMembers")
+  LeaveRequests_LeaveRequests_resolved_byToMembers   LeaveRequests[]       @relation("LeaveRequests_resolved_byToMembers")
+  Accounts                                           Accounts?             @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Members_ibfk_1")
+  Members_Permissions                                Members_Permissions[]
+  Notifications                                      Notifications[]
+  WeeklyReports_WeeklyReports_created_byToMembers    WeeklyReports[]       @relation("WeeklyReports_created_byToMembers")
+  WeeklyReports_WeeklyReports_resolved_byToMembers   WeeklyReports[]       @relation("WeeklyReports_resolved_byToMembers")
+
+  @@index([account_id], map: "account_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Members_Permissions {
+  member_id     String      @db.Char(32)
+  permission_id String      @db.Char(32)
+  Members       Members     @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Members_Permissions_ibfk_1")
+  Permissions   Permissions @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Members_Permissions_ibfk_2")
+
+  @@id([member_id, permission_id])
+  @@index([permission_id], map: "permission_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Notifications {
+  id         String    @id @db.Char(32)
+  created_by String?   @db.Char(32)
+  title      String    @db.VarChar(255)
+  content    String    @db.Text
+  type       String    @db.Char(2)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  updated_at DateTime? @default(now()) @db.Timestamp(0)
+  is_deleted Boolean?  @default(false)
+  notes      String?   @db.Text
+  Members    Members?  @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Notifications_ibfk_1")
+
+  @@index([created_by], map: "created_by")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Permissions {
+  id                  String                @id @db.Char(32)
+  name                String                @unique(map: "name") @db.VarChar(100)
+  created_at          DateTime?             @default(now()) @db.Timestamp(0)
+  updated_at          DateTime?             @default(now()) @db.Timestamp(0)
+  is_deleted          Boolean?              @default(false)
+  notes               String?               @db.Text
+  Feature_Permissions Feature_Permissions[]
+  Members_Permissions Members_Permissions[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model WeeklyReports {
+  id                                         String    @id @db.Char(32)
+  created_by                                 String?   @db.Char(32)
+  resolved_by                                String?   @db.Char(32)
+  report_date                                DateTime? @db.Date
+  content                                    String?   @db.Text
+  created_at                                 DateTime? @default(now()) @db.Timestamp(0)
+  updated_at                                 DateTime? @default(now()) @db.Timestamp(0)
+  Members_WeeklyReports_created_byToMembers  Members?  @relation("WeeklyReports_created_byToMembers", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "WeeklyReports_ibfk_1")
+  Members_WeeklyReports_resolved_byToMembers Members?  @relation("WeeklyReports_resolved_byToMembers", fields: [resolved_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "WeeklyReports_ibfk_2")
+
+  @@index([created_by], map: "created_by")
+  @@index([resolved_by], map: "resolved_by")
+}

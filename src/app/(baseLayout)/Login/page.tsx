@@ -1,12 +1,17 @@
-"use client";
+
 // use client 사용해야 함
 import LoginInput from "@/components/LoginInput/LoginInput"
 import { useState, useRef } from "react";
 import Image from 'next/image';
 import style from "./Login.module.css";
+import { prisma } from "@/app";
+// import { PrismaClient } from "@prisma/client";
 
 // export default function으로 외부 출력해주어야 합니다
-export default function loginPage() {
+export default async function loginPage() {
+
+    let result = await prisma.accounts.findMany()
+    console.log(result);
 
   return (
     <div className={style.container}>

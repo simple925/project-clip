@@ -190,9 +190,7 @@ const deleteClick = () => {
 
   return (
     <Container>
-      <Title c="dimmed" mt={50} fw={700} className="title">
-        사원관리
-      </Title>
+      <h1 className="title" style={{marginLeft: '15px'}}>사원관리</h1>
       <MyPageSearchBar/>
       {/*
       <Text ta="left" mt={20} fw={700}>
