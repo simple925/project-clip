@@ -16,6 +16,7 @@ import {
 import classes from './MyPageNav.module.css';
 import { Badge } from '@mantine/core';
 import Link from 'next/link';
+import { useRouter } from "next/navigation";
 
 export function MyPageNav(props: { id: number; }) {
   /**
@@ -68,12 +69,13 @@ export function MyPageNav(props: { id: number; }) {
       <span>{item.label}</span>
     </Link>
   ));
-
+  // router
+  const router = useRouter()
   return (
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
-          <IconPaperclip size={25} />
+          <IconPaperclip size={25} onClick={() => {router.push('/MyPages')}} />
           <span>newspring</span>
           <Badge color="gray">CLIP</Badge>
         </Group>
