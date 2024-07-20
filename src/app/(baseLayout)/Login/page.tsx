@@ -1,20 +1,33 @@
-// "use client";
+"use client";
 // use client 사용해야 함
+// 프리즈마로 fetchData 사용했을 땐 use client를 주석처리 했습니다.
 import LoginInput from "@/components/LoginInput/LoginInput"
 import { useState, useRef, useEffect } from "react";
 import Image from 'next/image';
 import style from "./Login.module.css";
-import { fetchAccounts } from '@/api/fetchData/account'
+//import { fetchAccounts } from '@/api/fetchData/account'
+import { trpc } from '@/server/client';
+
+
 // export default function으로 외부 출력해주어야 합니다
 export default function LoginPage() {
+  // const helloWorld = trpc.user.hello.useQuery({});
+  const getUser = trpc.user.list.useQuery({ limit: 1 });
+  console.log(getUser.data)
 
+
+
+
+  // const utils = trpc.user.list.useQuery
+  //const userName = trpc.user.list.useQuery(['getUserName', 'hello']);
+  // const userData = trpc.user.list.useQuery({ limit: 1 });
   // await는 순차적으로 받고, then은 비동기로 받는다. 
   // then은 await보다 먼저 실행된다.
-
+  
   // const prisma = new PrismaClient();
   // const result = 
-  
   // async function selectApi(tableName: string){
+  
   //   (prisma as any)[`${tableName}`].findMany()
   //     .then(
   //       (result:any) => {
@@ -31,20 +44,20 @@ export default function LoginPage() {
   // console.log(result)
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    async function fetchData(){
-      try {
-        const res = await fetch('@/server/api/index?tableName=Users')
-        const data = await res.json()
-        console.log(data);
-        setData(data);
-      } catch (error) {
-        console.error('에러 발생', error);
-      }
-    }
+  // useEffect(() => {
+  //   async function fetchData(){
+  //     try {
+  //       const res = await fetch('@/server/api/index?tableName=Users')
+  //       const data = await res.json()
+  //       console.log(data);
+  //       setData(data);
+  //     } catch (error) {
+  //       console.error('에러 발생', error);
+  //     }
+  //   }
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   return (
     <div className={style.container}>

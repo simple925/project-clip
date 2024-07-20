@@ -1,16 +1,15 @@
+import { TRPCProvider,  } from "@/components/providers";
 import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { theme } from '@/theme';
+import type { NextPage } from 'next';
+import type { AppType, AppProps } from 'next/app';
+import type { ReactElement, ReactNode } from 'react';
 
 import './global.css'
 
-export const metadata = {
-  title: 'clip',
-  description: '모두 도망쳐',
-};
-
-export default function RootLayout({ children }: { children: any }) {
+function RootLayout({ children }: { children: any }) {
   return (
     <html>
       <head>
@@ -22,8 +21,14 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <TRPCProvider>
+        <MantineProvider theme={theme}>
+          {children}
+          </MantineProvider>
+        </TRPCProvider>
       </body>
     </html>
   );
 }
+
+export default (RootLayout);
