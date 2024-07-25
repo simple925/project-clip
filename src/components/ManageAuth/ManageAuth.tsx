@@ -27,6 +27,7 @@ import { useState } from "react";
 import { useDisclosure, useListState } from "@mantine/hooks";
 import { IconPencil } from "@tabler/icons-react";
 import { IconTrash } from "@tabler/icons-react";
+import { trpc } from "@/server/client"; 
 
 /**
  * @todo
@@ -37,6 +38,8 @@ import { IconTrash } from "@tabler/icons-react";
  */
 
 export function ManageAuth() {
+  const user = trpc.accounts.getAllUsers.useQuery()
+  
   /* 사용자 정보 */
   const usersData: Record<string, { image: string; email: string }> = {
     "Emily Johnson": {
