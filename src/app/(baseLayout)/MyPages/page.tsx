@@ -11,8 +11,12 @@ import DndListStyle from './DndList.module.css';
 // 현황 태그 import
 import { IconSwimming, IconBeach } from '@tabler/icons-react';
 import StatsCardStyle from './StatsCard.module.css';
+import { trpc } from '@/server/client';
 
 export default function MyPages() {
+    const getUser = trpc.user.list.useQuery({ limit: 1 });
+    console.log("#####", getUser.data)
+
     const PRIMARY_COL_HEIGHT = rem(300);
     const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`
 
