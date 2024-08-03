@@ -6,10 +6,12 @@ import { theme } from '@/theme';
 import type { NextPage } from 'next';
 import type { AppType, AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
+import ReduxProvider from './reduxProvider'; // 실제 파일 경로에 맞게 수정
 
 import './global.css'
 
 function RootLayout({ children }: { children: any }) {
+
   return (
     <html>
       <head>
@@ -22,9 +24,11 @@ function RootLayout({ children }: { children: any }) {
       </head>
       <body>
         <TRPCProvider>
-        <MantineProvider theme={theme}>
-          {children}
-          </MantineProvider>
+          <MantineProvider theme={theme}>
+              <ReduxProvider>
+                {children}
+              </ReduxProvider>
+            </MantineProvider>
         </TRPCProvider>
       </body>
     </html>
