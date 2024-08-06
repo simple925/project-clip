@@ -6,6 +6,7 @@ import { theme } from '@/theme';
 import type { NextPage } from 'next';
 import type { AppType, AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
+import ReduxProvider from "./reduxProvider";
 
 import './global.css'
 
@@ -21,11 +22,13 @@ function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
+        <ReduxProvider>
         <TRPCProvider>
-        <MantineProvider theme={theme}>
-          {children}
+          <MantineProvider theme={theme}>
+              {children}
           </MantineProvider>
         </TRPCProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

@@ -17,6 +17,7 @@
     "@mantine/modals": "^7.7.1",
     "@next/bundle-analyzer": "^14.1.0",
     "@prisma/client": "^5.15.1",
+    "@reduxjs/toolkit": "^2.2.7",
     "@tabler/icons-react": "^2.47.0",
     "@tanstack/react-query": "^5.51.1",
     "@trpc/client": "^11.0.0-rc.456",
@@ -38,6 +39,7 @@
     "react": "^18.2.0",
     "react-big-calendar": "^1.11.6",
     "react-dom": "^18.2.0",
+    "react-redux": "^9.1.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {

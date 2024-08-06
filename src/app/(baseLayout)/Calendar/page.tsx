@@ -19,23 +19,27 @@ import { View, Views } from "react-big-calendar";
 // ==> react-big-calendar의 view 속성 참고
 // https://jquense.github.io/react-big-calendar/examples/index.html?path=/docs/props--view
 // https://jquense.github.io/react-big-calendar/examples/index.html?path=/docs/props--cal-views
-import style from "./layout.module.css";
-
+import style from "./Calendar.module.css";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, useAppDispatch, useAppSelector } from "@/store/index";
+import { setSelectedDate } from "@/store/dateStore";
+import dayjs from "dayjs";
 
 export default function MyPageLayout({ children }: { children: any }) {
+  const selectedStoreDate = useAppSelector((state: RootState) => state.dateStore.selectedDate);
+  const dispatch = useAppDispatch();
+
+  const handleStoreDateChange = (newDate: Date) => {
+    // 날짜를 YYYY-MM-DD 형식으로 변환하여 저장
+    dispatch(setSelectedDate(dayjs(newDate).format("YYYY-MM-DD")));
+    console.log('###스토어 날짜 변경 :', dayjs(newDate).format("YYYY-MM-DD"))
+  };
 
   const [calendarStateValue, setCalendarStateValue] = useState<View>(Views.MONTH) // Views 상태 관리( MainCalendarHeader와 MyCalendar에서 공유)
   const _calendarState = (state:View) => { // MainCalendarHeader.calendarView<View> 값이 변할 경우 호출됨
     console.log('드갈께~ ', state)
     setCalendarStateValue(state) // MainCalendarHeader에서 변경된 state 값을 setCalendarStateValue에 담는다
   }
-
-  // 현재 선택된 날짜 
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  // MainCalendarSideCalendar에서 선택된 날짜가 변경될 때 호출되는 콜백 함수
-  const handleDateSelect = (date:any) => {
-    setSelectedDate(date); // 선택된 날짜를 상태로 업데이트
-  };
 
   const [currentAction, setCurrentAction] = useState("");
   const handleNavigate = (action : string) => {
@@ -52,7 +56,6 @@ export default function MyPageLayout({ children }: { children: any }) {
     setSelectedGroupDates(group);
     // console.log('###현재 선택 이벤트 :', group)
   };
-
 
   return (
     <>
@@ -71,8 +74,8 @@ export default function MyPageLayout({ children }: { children: any }) {
         {/* 해당 부분 page에 형제 컴포넌트로 만들어 데이터 통신에 용이하게 함 */}
         <AppShell.Navbar className={style["nav_content"]}>
           <MainCalendarSideCalendar
-            selectedDate={selectedDate}
-            onSelectDate={handleDateSelect}
+            selectedDate={dayjs(selectedStoreDate).toDate()}
+            onSelectDate={handleStoreDateChange}
             onNavigate={handleNavigate} // nextMonth <-> previous 상태 변경
             />
           {/* ### MainCalendarSideCalendar: 사이드 달력, 오늘 날짜 자동 선택, 선택할 때마다 동작 */}
@@ -82,11 +85,11 @@ export default function MyPageLayout({ children }: { children: any }) {
         <AppShell.Main className={style["main_content"]}>
           <div className={style["main_nav_content"]} />
           <MyCalendar
-          selectDate={selectedDate}
-          onSelectDate={handleDateSelect}
-          calendarState={calendarStateValue}
-          selectedGroupEvent={selectedGroupDates}
-          currentAction={currentAction}
+            selectDate={dayjs(selectedStoreDate).toDate()}
+            onSelectDate={handleStoreDateChange}
+            calendarState={calendarStateValue}
+            selectedGroupEvent={selectedGroupDates}
+            currentAction={currentAction}
           />
           {/* ### MyCalendar: react-big-calender 라이브러리 이용한 메인 달력. 오늘 날짜 자동 선택, 선택할 때마다 동작, (MainCalendarHeader에서 변경된)상태 정보 */}
         </AppShell.Main>
