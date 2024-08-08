@@ -2,7 +2,7 @@ import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { theme } from '@/theme';
-
+import ReduxProvider from "./reduxProvider";
 import './global.css'
 
 export const metadata = {
@@ -22,7 +22,9 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
+        <ReduxProvider>
         <MantineProvider theme={theme}>{children}</MantineProvider>
+        </ReduxProvider>
       </body>
     </html>
   );
