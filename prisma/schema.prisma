@@ -21,13 +21,6 @@ datasource db {
  url = env("DATABASE_URL")
 }
 
-model User {
-  id       Int    @id @default(autoincrement())
-  userUUID String
-  name     String
-  username String
-}
-
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model AccountDeletions {
   deletion_id     Int       @id @default(autoincrement())

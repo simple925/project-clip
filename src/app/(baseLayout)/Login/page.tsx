@@ -5,21 +5,23 @@ import LoginInput from "@/components/LoginInput/LoginInput"
 import { useState, useRef, useEffect } from "react";
 import Image from 'next/image';
 import style from "./Login.module.css";
-//import { fetchAccounts } from '@/api/fetchData/account'
-import { trpc } from '@/server/client';
+// import { fetchAccounts } from '@/api/fetchData/account'
+// import { trpc } from '@/server/client';
 
 
 // export default function으로 외부 출력해주어야 합니다
 export default function LoginPage() {
   const [altText, setAltText] = useState('symbol mark'); // Initial alt value
 
+  // trpc를 통해 api 호출 예시
   // const helloWorld = trpc.user.hello.useQuery({});
   
-  const getUser = trpc.user.list.useQuery({ limit: 1 });
-  console.log(getUser.data)
+  // const getUser = trpc.user.list.useQuery({ limit: 1 });
+  // console.log(getUser.data)
+
 
   // const utils = trpc.user.list.useQuery
-  //const userName = trpc.user.list.useQuery(['getUserName', 'hello']);
+  // const userName = trpc.user.list.useQuery(['getUserName', 'hello']);
   // const userData = trpc.user.list.useQuery({ limit: 1 });
   // await는 순차적으로 받고, then은 비동기로 받는다. 
   // then은 await보다 먼저 실행된다.
@@ -82,7 +84,7 @@ export default function LoginPage() {
       </div>
       </div>
       <div className={style["input-layer"]}>
-      <LoginInput></LoginInput>
+        <LoginInput />
       </div>
     </div>
   );

@@ -3,58 +3,20 @@ import { router, procedure } from '@/server/trpc';
 import { Prisma } from '@prisma/client'
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-
+// 테이블 별로 작업
 // vo 만든다고 생각하세용
 const defaultUserSelect = {
-  id: true,
   userUUID: true,
-  name: true,
-  username: true,
+  userName: true,
+  userPhoneNm: true,
+  userDepartment: true,
+  userGrade: true,
+  totalVacation: true,
+  usedVacation: true,
 } satisfies Prisma.UserSelect;
 
 export const userRouter = router({
-  hello: procedure
-    .input(z.object({})) // No input needed for this endpoint
-    .query(async () => {
-      console.log("Hello world!"); // Log to server console
-      return "Hello world!"; // Return the message
-    }),
-  list: procedure
-    .input(
-      z.object({
-        limit: z.number().min(1).max(100).nullish(),
-        cursor: z.string().nullish(),
-      })
-    )
-    .query(async ({ input }) => {
-      const limit = input.limit ?? 50;
-      const { cursor } = input;
-
-      const items = await prisma.user.findMany({
-        select: defaultUserSelect,
-        take: limit + 1,
-        cursor: cursor
-          ? {
-            id: parseInt(cursor),
-          }
-          : undefined,
-        orderBy: {
-          id: 'desc',
-        },
-      });
-      let nextCursor: typeof cursor | undefined = undefined;
-      if (items.length > limit) {
-        const nextItem = items.pop()!;
-        nextCursor = nextItem.id.toString();
-      }
-
-      return {
-        items: items.reverse(),
-        nextCursor,
-      };
-    }),
-
-  byId: procedure
+  getUserById: procedure
     .input(
       z.object({
         id: z.string(),
@@ -75,7 +37,44 @@ export const userRouter = router({
       return user;
     }),
 
-  add: procedure
+  // List users with pagination
+  list: procedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.number().nullish(), // Cursor as userUUID
+      })
+    )
+    .query(async ({ input }) => {
+      const limit = input.limit ?? 50;
+      const { cursor } = input;
+
+      const users = await prisma.user.findMany({
+        select: defaultUserSelect,
+        take: limit + 1,
+        cursor: cursor
+          ? {
+            userUUID: cursor,
+          }
+          : undefined,
+        orderBy: {
+          userUUID: 'desc',
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (users.length > limit) {
+        const nextItem = users.pop()!;
+        nextCursor = nextItem.userUUID;
+      }
+
+      return {
+        users: users.reverse(),
+        nextCursor,
+      };
+    }),
+
+  createUser: procedure
     .input(
       z.object({
         id: z.number().min(1).max(32),
@@ -90,42 +89,6 @@ export const userRouter = router({
         select: defaultUserSelect,
       });
       return user;
-    }),
-
-  getAllUser: procedure.query(async () => {
-    const users = await prisma.user.findMany({
-      select: defaultUserSelect,
-    });
-    return users;
-  }),
-
-  getMemberById: procedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .query(async ({ input }) => {
-      return prisma.user.findUnique({
-        where: { id: parseInt(input.id) },
-      });
-    }),
-
-  createMember: procedure
-    .input(
-      z.object({
-        name: z.string(),
-        username: z.string(),
-      })
-    )
-    .mutation(async ({ input }) => {
-      return prisma.user.create({
-        data: {
-          userUUID: generateUserUUID(),
-          name: input.name,
-          username: input.username,
-        },
-      });
     }),
 
   updateUser: procedure
@@ -157,48 +120,41 @@ export const userRouter = router({
         where: { id: parseInt(input.id) },
       });
     }),
+
+  // Login procedure
+  login: procedure
+    .input(
+      z.object({
+        username: z.string().min(1),
+        password: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const user = await prisma.user.findUnique({
+        where: { username: input.username },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Invalid username or password',
+        });
+      }
+
+      const passwordMatch = await bcrypt.compare(input.password, user.password);
+
+      if (!passwordMatch) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Invalid username or password',
+        });
+      }
+
+      return {
+        id: user.id,
+        userUUID: user.userUUID,
+        name: user.name,
+        username: user.username,
+      };
+    }),
 });
-function generateUserUUID(): any {
-  throw new Error("에러!");
-}
-/*
-const membersRouter = router({
-    getAllMembers: async () => {
-      return prisma.members.findMany();
-    },
-
-    getMemberById: async ({ id }: { id: string }) => {
-      return prisma.members.findUnique({
-        where: { id },
-      });
-    },
-
-    createMember: async ({ name, email }: { name: string; email: string }) => {
-      return prisma.members.create({
-        data: {
-          name,
-          email,
-        },
-      });
-    },
-
-    updateMember: async ({ id, name, email }: { id: string; name?: string; email?: string }) => {
-      return prisma.members.update({
-        where: { id },
-        data: {
-          name,
-          email,
-        },
-      });
-    },
-
-    deleteMember: async ({ id }: { id: string }) => {
-      return prisma.members.delete({
-        where: { id },
-      });
-    },
-  });
-  export type MembersRouter = typeof membersRouter;
-  
-  export default membersRouter;
-  */

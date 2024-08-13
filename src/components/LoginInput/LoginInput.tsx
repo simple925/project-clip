@@ -11,6 +11,8 @@ import {
 } from "@mantine/core";
 import style from "./LoginInput.module.css";
 import { useRouter } from "next/navigation";
+import { trpc } from '@/server/client'; // trpc client import
+import { showNotification } from '@mantine/notifications'; // To show notifications for success/error
 
 export function LoginButton(
   props: ButtonProps & React.ComponentPropsWithoutRef<"button">
@@ -21,18 +23,33 @@ export function LoginButton(
 // export default function으로 외부 출력해주어야 합니다
 export default function LoginInput() {
   const timeoutRef = useRef<number>(-1);
-  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<string[]>([]);
-  const router = useRouter()
-  const loginEvent = () => {
-    console.log('인증성공!')
-    // 로그인 후 마이 페이지로 이동 이벤트
-    router.push('/MyPages')
-  }  
+  const router = useRouter();
+
+  const loginMutation = trpc.accounts.login.useMutation({
+    onSuccess: (data: any) => {
+      showNotification({
+        title: '로그인 성공',
+        message: '로그인에 성공했습니다!',
+        color: 'green',
+      });
+      router.push('/MyPages');
+    },
+    onError: (error: Error) => {
+      showNotification({
+        title: '로그인 실패',
+        message: error.message,
+        color: 'red',
+      });
+    },
+  });
+
   const handleChange = (val: string) => {
     window.clearTimeout(timeoutRef.current);
-    setValue(val);
+    setEmail(val);
     setData([]);
 
     if (val.trim().length === 0 || val.includes("@")) {
@@ -51,11 +68,20 @@ export default function LoginInput() {
       }, 1000);
     }
   };
+
+  const handleLogin = () => {
+    loginMutation.mutate({
+      id: email,
+      password: password,
+    });
+    console.log(email, password);
+  };
+
   return (
       // <div className={style["input-layer"]}>
       <>
       <Autocomplete
-        value={value}
+        value={email}
         data={data}
         onChange={handleChange}
         rightSection={loading ? <Loader size="1rem" /> : null}
@@ -64,10 +90,11 @@ export default function LoginInput() {
       />
       <PasswordInput
         placeholder="비밀번호를 입력하세요."
-        id="user-password"
+        value={password}
+        onChange={(event) => setPassword(event.currentTarget.value)}
         label="Password"
       />
-      <LoginButton className={style["login-btn"]} onClick={() => loginEvent()}>로그인</LoginButton>
+      <LoginButton className={style["login-btn"]} onClick={handleLogin}>로그인</LoginButton>
       {/* </div> */}
       </>
   );
