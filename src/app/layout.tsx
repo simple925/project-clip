@@ -2,7 +2,7 @@ import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { theme } from '@/theme';
-import ReduxProvider from "./reduxProvider";
+import ReduxProvider from "../components/Provider/reduxProvider";
 import './global.css'
 
 export const metadata = {
@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: any }) {
   return (
-    <html>
+    <html lang='en'>
       <head>
         <ColorSchemeScript />
         <link rel="shortcut icon" href="/favicon.svg" />
