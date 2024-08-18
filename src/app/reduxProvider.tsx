@@ -2,12 +2,9 @@
 
 import { store } from "@/store/index";
 import { Provider } from "react-redux";
+import { ReactNode } from "react";
 
-type ReduxProviderProps = {
-    children: React.ReactNode;
-};
-
-const ReduxProvider: React.FC<ReduxProviderProps> = ({ children }) => {
+const ReduxProvider = ({ children }: { children: ReactNode }) => {
     return (
         <Provider store={store}>{children}</Provider>
     );
