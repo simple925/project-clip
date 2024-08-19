@@ -141,13 +141,14 @@ export const accountsRouter = router({
     login: procedure
         .input(
             z.object({
-                id: z.string().min(1),
+                username: z.string().min(1),
                 password: z.string().min(1),
             })
         )
         .mutation(async ({ input }) => {
+            console.log('로그인 시도:', input.username, input.password);
             const account = await prisma.accounts.findUnique({
-                where: { id: input.id },
+                where: { username: input.username },
             });
 
             if (!account) {
@@ -158,6 +159,9 @@ export const accountsRouter = router({
             }
 
             const passwordMatch = await bcrypt.compare(input.password, account.password);
+            console.log('입력된 비밀번호:', input.password);
+            console.log('저장된 해시된 비밀번호:', account.password);
+            console.log('비교 결과:', passwordMatch);
 
             if (!passwordMatch) {
                 throw new TRPCError({

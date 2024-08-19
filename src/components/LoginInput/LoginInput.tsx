@@ -52,26 +52,26 @@ export default function LoginInput() {
     setEmail(val);
     setData([]);
 
-    if (val.trim().length === 0 || val.includes("@")) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-      timeoutRef.current = window.setTimeout(() => {
-        setLoading(false);
-        setData(
-          // ["gmail.com", "outlook.com", "yahoo.com"].map(
-          // 이메일 형식 자동으로 작성, 현재 cluedin.co.kr만 옵션값 세팅
-            ["cluedin.co.kr"].map(
-            (provider) => `${val}@${provider}`
-          )
-        );
-      }, 1000);
-    }
+    // if (val.trim().length === 0 || val.includes("@")) {
+    //   setLoading(false);
+    // } else {
+    //   setLoading(true);
+    //   timeoutRef.current = window.setTimeout(() => {
+    //     setLoading(false);
+    //     setData(
+    //       // ["gmail.com", "outlook.com", "yahoo.com"].map(
+    //       // 이메일 형식 자동으로 작성, 현재 cluedin.co.kr만 옵션값 세팅
+    //         ["cluedin.co.kr"].map(
+    //         (provider) => `${val}@${provider}`
+    //       )
+    //     );
+    //   }, 1000);
+    // }
   };
 
   const handleLogin = () => {
     loginMutation.mutate({
-      id: email,
+      username: email,
       password: password,
     });
     console.log(email, password);
