@@ -1,12 +1,12 @@
+import { accountStore } from './accountStore';
 import { dateStore } from './dateStore';
-import { memberStore } from './memberStore'
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 export const store = configureStore({
     reducer: {
         dateStore: dateStore.reducer,
-        memberStore: memberStore.reducer,
+        accountStore: accountStore.reducer,
     },
 });
 

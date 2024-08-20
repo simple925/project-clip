@@ -14,6 +14,10 @@ import { useRouter } from "next/navigation";
 import { trpc } from '@/server/client'; // trpc client import
 import { showNotification } from '@mantine/notifications'; // To show notifications for success/error
 
+import { useAppDispatch } from "@/store"; // 스토어 저장을 위한 import
+import { setAccountData } from "@/store/accountStore"; // 계정 uuid를 스토어에 저장하기 위한 import
+
+
 export function LoginButton(
   props: ButtonProps & React.ComponentPropsWithoutRef<"button">
 ) {
@@ -28,6 +32,7 @@ export default function LoginInput() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<string[]>([]);
   const router = useRouter();
+  const dispatch = useAppDispatch(); // Redux dispatch 사용
 
   const loginMutation = trpc.accounts.login.useMutation({
     onSuccess: (data: any) => {
@@ -36,6 +41,10 @@ export default function LoginInput() {
         message: '로그인에 성공했습니다!',
         color: 'green',
       });
+      
+      // 로그인 성공 시 UUID를 Redux 스토어에 저장
+      dispatch(setAccountData(data.id)); // API로부터 반환된 id 사용
+
       router.push('/MyPages');
     },
     onError: (error: Error) => {

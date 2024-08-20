@@ -12,10 +12,21 @@ import DndListStyle from './DndList.module.css';
 import { IconSwimming, IconBeach } from '@tabler/icons-react';
 import StatsCardStyle from './StatsCard.module.css';
 import { trpc } from '@/server/client';
+import { useAppSelector } from '@/store'; // Redux 스토어에서 상태를 가져오기 위한 import
 
 export default function MyPages() {
-    const getUser = trpc.user.list.useQuery({ limit: 1 });
-    console.log("#####", getUser.data)
+    // Redux 스토어에서 계정 ID 가져오기
+    const accountId = useAppSelector((state) => state.accountStore.accountData);
+
+    // account_id로 멤버 정보 조회
+    const { data: memberData, isLoading, error } = trpc.members.getMemberByAccountId.useQuery(
+        { account_id: accountId },
+        {
+            enabled: !!accountId, // account_id가 있을 때만 쿼리 실행
+        }
+    );
+    console.log(memberData);
+
 
     const PRIMARY_COL_HEIGHT = rem(300);
     const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`

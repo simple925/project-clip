@@ -18,6 +18,26 @@ const defaultMemberSelect = {
 } satisfies Prisma.MembersSelect;
 
 export const membersRouter = router({
+  getMemberByAccountId: procedure
+    .input(
+      z.object({
+        account_id: z.string(), // account_id를 입력으로 받음
+      })
+    )
+    .query(async ({ input }) => {
+      const { account_id } = input;
+      const member = await prisma.members.findFirst({
+        where: { account_id }, // account_id로 조회
+        select: defaultMemberSelect,
+      });
+      if (!member) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `해당 계정 ID의 멤버 없음 '${account_id}'`,
+        });
+      }
+      return member;
+    }),
   getMemberById: procedure
     .input(
       z.object({
