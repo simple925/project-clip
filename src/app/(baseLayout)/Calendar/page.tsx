@@ -8,7 +8,7 @@
  */
 
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppShell, Stack, rem, MantineProvider } from '@mantine/core';
 import { MenuBar } from "@/components/MenuBar/MenuBar";
 import { MainCalendarHeader } from "@/components/MainCalendarHeader/MainCalendarHeader";
@@ -39,8 +39,26 @@ export default function MyPageLayout({ children }: { children: any }) {
       enabled: !!accountId, // account_id가 있을 때만 쿼리 실행
     }
   );
-  console.log(memberData);
+  // console.log(memberData);
   
+  // account_id로 캘린더 그룹 조회
+  const { data: groupData } = trpc.calendarGroups.getCalendarGroupsByAccountId.useQuery(
+    { account_id: accountId },
+    {
+      enabled: !!accountId, // account_id가 있을 때만 쿼리 실행
+    }
+  );
+  console.log('##################', groupData);
+
+  // 현재 선택된 날짜 그룹 공유
+  const [selectedGroupDates, setSelectedGroupDates] = useState<any[]>([]);
+  // groupData가 변경될 때마다 selectedGroupDates 업데이트
+  useEffect(() => {
+    if (groupData) {
+      setSelectedGroupDates(groupData);
+    }
+  }, [groupData]);
+
   const handleStoreDateChange = (newDate: Date) => {
     // 날짜를 YYYY-MM-DD 형식으로 변환하여 저장
     dispatch(setSelectedDate(dayjs(newDate).format("YYYY-MM-DD")));
@@ -57,12 +75,6 @@ export default function MyPageLayout({ children }: { children: any }) {
   const handleNavigate = (action : string) => {
     setCurrentAction(action); // 다음달 상태로 업데이트
   };
-
-  // 현재 선택된 날짜 그룹 공유
-  const [selectedGroupDates, setSelectedGroupDates] = useState([]);
-  // MainGroup에서 선택된 그룹의 날짜 배열을 상태로 저장합니다
-  // ==> TODO : 해당 값을 MyCalendar로 전달하여 선택된 그룹의 날짜를 표시
-  // ==> TODO : 해당 값을 MainCalendarSideCalendar로 전달하여 선택된 그룹의 날짜를 표시
 
   const handleGroupSelect = (group: any) => {
     setSelectedGroupDates(group);
@@ -91,7 +103,7 @@ export default function MyPageLayout({ children }: { children: any }) {
             onNavigate={handleNavigate} // nextMonth <-> previous 상태 변경
             />
           {/* ### MainCalendarSideCalendar: 사이드 달력, 오늘 날짜 자동 선택, 선택할 때마다 동작 */}
-          <MainGroup groups={selectedGroupDates} onGroupSelect={handleGroupSelect}/>
+          <MainGroup calendarGroups={selectedGroupDates} onGroupSelect={handleGroupSelect}/>
           {/* ### MainGroup: 내 캘린더 그룹별 볼 수 있음. 추가적인 기능 정의 필요 */}
         </AppShell.Navbar>
         <AppShell.Main className={style["main_content"]}>

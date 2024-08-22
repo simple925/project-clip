@@ -1,28 +1,23 @@
-"use client";
-
 import { Accordion, ColorSwatch, CheckIcon, rem } from "@mantine/core";
 import styles from "./MainGroup.module.css";
 import { useEffect, useState } from "react";
-import getData from "@api/commonApi";
 
-export function MainGroup({groups, onGroupSelect}) {
-
+export function MainGroup({ calendarGroups, onGroupSelect }) {
   // 선택된 그룹의 배열 상태
-  const [selectedGroupDates, setSelectedGroupDates] = useState([]);
+  const [selectedGroupDates, setSelectedGroupDates] = useState(null);
 
+  // calendarGroups를 상태로 관리 (초기값을 빈 배열로 설정)
   const [groupDatas, setGroupDatas] = useState([]);
+
+  // calendarGroups가 변경될 때 groupDatas 상태 업데이트
   useEffect(() => {
-    getData(`http://localhost:9999/myGroup`)
-      .then(group => setGroupDatas(group))
-      .catch(error => {
-      console.error('fetch commonApi에서 오류 발생:', error);
-      setGroupDatas([
-        { key: 1, value: "생일", description: "생일", color: "#fe4365", selectedDate: ["2024-06-10 00:00:00", "2024-06-18 00:00:00",] },
-        { key: 2, value: "여름 휴가", description: "여름 휴가", color: "#fc9d9a", selectedDate: ["2024-06-12 00:00:00", "2024-06-19 00:00:00",] },
-        { key: 3, value: "프로젝트 회의", description: "프로젝트 회의", color: "#f9cdad", selectedDate: ["2024-06-03 00:00:00", "2024-06-05 00:00:00",] },
-      ]);
-  })
-}, [])
+    if (Array.isArray(calendarGroups)) {
+      setGroupDatas(calendarGroups);
+    } else {
+      console.error("calendarGroups is not an array:", calendarGroups);
+      setGroupDatas([]); // 잘못된 데이터가 들어온 경우 빈 배열로 초기화
+    }
+  }, [calendarGroups]);
 
   const [selectedColor, setSelectedColor] = useState(null);
 
@@ -31,13 +26,14 @@ export function MainGroup({groups, onGroupSelect}) {
     setSelectedGroupDates(item);
   }
 
+  // 선택된 그룹 날짜가 변경될 때 부모 컴포넌트에 전달
   useEffect(() => {
     if (selectedGroupDates) {
       onGroupSelect(selectedGroupDates);
     }
   }, [selectedGroupDates, onGroupSelect]);
 
-
+  // groupDatas 상태를 기반으로 Accordion 항목 생성
   const items = groupDatas.map((item) => {
     const isActive = item.color === selectedColor;
     const colorBtn = isActive ? '#fff' : 'none';
@@ -53,14 +49,14 @@ export function MainGroup({groups, onGroupSelect}) {
     );
 
     return (
-      <Accordion.Item key={item.value} value={item.value}>
+      <Accordion.Item key={item.id} value={item.name}>
         <Accordion.Control onClick={() => onSelectedColorBtn(item)}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-          {colors}
-          <span>{item.value}</span>
+            {colors}
+            <span>{item.name}</span>
           </div>
-          </Accordion.Control>
-        <Accordion.Panel>{item.color}</Accordion.Panel>
+        </Accordion.Control>
+        <Accordion.Panel>{item.description || item.color}</Accordion.Panel>
       </Accordion.Item>
     );
   });

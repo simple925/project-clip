@@ -24,6 +24,7 @@ const defaultCalendarGroups = {
 } satisfies Prisma.CalendarGroupsSelect;
 
 export const calendarGroupsRouter = router({
+
   getCalendarGroupsByAccountId: procedure
     .input(
       z.object({
@@ -32,20 +33,28 @@ export const calendarGroupsRouter = router({
     )
     .query(async ({ input }) => {
       const { account_id } = input;
+
+      // Members 테이블에서 account_id로 조회하여 관련된 CalendarGroups 가져오기
       const member = await prisma.members.findFirst({
-        where: { account_id }, // account_id로 조회
-        select: defaultCalendarGroups,
+        where: { account_id },
+        select: {
+          CalendarGroups: {
+            select: defaultCalendarGroups,
+          },
+        },
       });
-      if (!member) {
+
+      if (!member || !member.CalendarGroups) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: `해당 계정 ID의 캘린더 그룹 없음 '${account_id}'`,
         });
       }
-      return member;
+      return member.CalendarGroups;
     }),
+
   // CalendarGroup ID로 조회
-  getLeaveRequestById: procedure
+  getCalendarGroupById: procedure
     .input(
       z.object({
         id: z.string(), // ID는 문자열로 입력받음
@@ -53,17 +62,17 @@ export const calendarGroupsRouter = router({
     )
     .query(async ({ input }) => {
       const { id } = input;
-      const leaveRequest = await prisma.leaveRequests.findUnique({
+      const calendarGroups = await prisma.calendarGroups.findUnique({
         where: { id: id },
         select: defaultCalendarGroups,
       });
-      if (!leaveRequest) {
+      if (!calendarGroups) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: `No leave request with id '${id}'`,
         });
       }
-      return leaveRequest;
+      return calendarGroups;
     }),
 
   // 캘린더 그룹 목록 조회 (페이지네이션)

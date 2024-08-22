@@ -3,6 +3,8 @@ import { membersRouter } from './routers/members'; // Import the value of UserRo
 import { accountsRouter } from './routers/accounts';
 import { notificationsRouter } from './routers/notifications';
 import { leaveRequestsRouter } from "./routers/leaveRequests";
+import { calendarGroupsRouter } from './routers/calendarGroups';
+import { calendarEventsRouter } from './routers/calendarEvents';
 
 export const appRouter = router({
   // 우리가 사용할 api
@@ -11,6 +13,8 @@ export const appRouter = router({
   members: membersRouter,
   notifications: notificationsRouter,
   leaveRequests: leaveRequestsRouter,
+  calendarGroups: calendarGroupsRouter,
+  calendarEventsRouter: calendarEventsRouter,
 });
 
 export const createCaller = createCallerFactory(appRouter);
