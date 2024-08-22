@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
 import { accountsRouter } from './accounts';
+import { membersRouter } from './members';
 
 export const appRouter = router({
   // 프로시저 추가
@@ -17,6 +18,7 @@ export const appRouter = router({
       };
     }),
     accounts: accountsRouter,
+    members: membersRouter,
 });
 
 // export type definition of API

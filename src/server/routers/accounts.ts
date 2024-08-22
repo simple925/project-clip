@@ -17,10 +17,11 @@ const defaultAccountSelect = {
 
 export const accountsRouter = router({
 
-  getAllUsers: procedure.query(async () => {
-    console.log("hello world!")
-    const users = await prisma.accounts.findMany();
-    console.log(users)
+  getAcuntInfo: procedure.query(async () => {
+    const users = await prisma.accounts.findMany({
+      select: defaultAccountSelect,
+    });
+    // console.log("user: ", users)
     return users;
   })
 })

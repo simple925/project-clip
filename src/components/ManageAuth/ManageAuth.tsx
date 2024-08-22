@@ -38,7 +38,22 @@ import { trpc } from "@/server/client";
  */
 
 export function ManageAuth() {
-  const user = trpc.accounts.getAllUsers.useQuery()
+  const insertMutation = trpc.members.inputMembers.useMutation()
+  const insertHandler = () => {
+    insertMutation.mutate({
+      id: 'abcdefg123adr3k1234jakldja', name: 'sbson', email: 'sbson@cluedin.co.kr'
+      // id: 'abcdefg123adr3k11111aaaaaa', name: 'aaaa222', email: 'aaaa222@cluedin.co.kr'
+    })
+    console.log("insert 호출 됨")
+  }
+  
+  const updateMutation = trpc.members.updateMembers.useMutation()
+  const updateHandler = () => {
+    updateMutation.mutate({
+        id: 'abcdefg123adr3k1234jakldja', name: 'sbson11', email: 'sbson11@cluedin.co.kr', updated_at: new Date()
+    })
+    console.log("useMutation 호출됨")
+  }
   
   /* 사용자 정보 */
   const usersData: Record<string, { image: string; email: string }> = {
@@ -343,10 +358,10 @@ export function ManageAuth() {
           </Grid.Col>
         </Grid>
         <Flex gap="md" direction="row" wrap="wrap" mt={15}>
-          <Button variant="filled" radius="xl">
+          <Button variant="filled" radius="xl" onClick={updateHandler}>
             저장
           </Button>
-          <Button variant="filled" color="gray" radius="xl">
+          <Button variant="filled" color="gray" radius="xl" onClick={insertHandler}>
             취소
           </Button>
         </Flex>
