@@ -3,6 +3,7 @@ import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { theme } from '@/theme';
 import ReduxProvider from "../components/Provider/reduxProvider";
+import { Provider } from "../components/Provider/trcProvider";
 import './global.css'
 
 export const metadata = {
@@ -23,7 +24,9 @@ export default function RootLayout({ children }: { children: any }) {
       </head>
       <body>
         <ReduxProvider>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+          <Provider>
+            <MantineProvider theme={theme}>{children}</MantineProvider>
+          </Provider>
         </ReduxProvider>
       </body>
     </html>
