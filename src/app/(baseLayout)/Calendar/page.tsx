@@ -24,11 +24,23 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/index";
 import { setSelectedDate } from "@/store/dateStore";
 import dayjs from "dayjs";
+import { trpc } from '@/server/client';
 
 export default function MyPageLayout({ children }: { children: any }) {
   const selectedStoreDate = useAppSelector((state: RootState) => state.dateStore.selectedDate);
   const dispatch = useAppDispatch();
+  // Redux 스토어에서 계정 ID 가져오기
+  const accountId = useAppSelector((state) => state.accountStore.accountData);
 
+  // account_id로 멤버 정보 조회
+  const { data: memberData } = trpc.members.getMemberByAccountId.useQuery(
+    { account_id: accountId },
+    {
+      enabled: !!accountId, // account_id가 있을 때만 쿼리 실행
+    }
+  );
+  console.log(memberData);
+  
   const handleStoreDateChange = (newDate: Date) => {
     // 날짜를 YYYY-MM-DD 형식으로 변환하여 저장
     dispatch(setSelectedDate(dayjs(newDate).format("YYYY-MM-DD")));

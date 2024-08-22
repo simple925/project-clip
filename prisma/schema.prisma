@@ -69,6 +69,7 @@ model CalendarGroups {
   id             String           @id @db.Char(32)
   name           String           @db.VarChar(255)
   description    String?          @db.Text
+  color          String?          @db.VarChar(10)
   created_at     DateTime?        @default(now()) @db.Timestamp(0)
   updated_at     DateTime?        @default(now()) @db.Timestamp(0)
   created_by     String           @db.Char(32)

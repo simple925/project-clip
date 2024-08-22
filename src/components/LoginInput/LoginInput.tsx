@@ -44,8 +44,8 @@ export default function LoginInput() {
       
       // 로그인 성공 시 UUID를 Redux 스토어에 저장
       dispatch(setAccountData(data.id)); // API로부터 반환된 id 사용
-
-      router.push('/MyPages');
+  
+      router.push('/Calendar');
     },
     onError: (error: Error) => {
       showNotification({

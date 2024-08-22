@@ -4,21 +4,27 @@ import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-// 기본적으로 선택할 LeaveRequests 필드 정의
-const defaultLeaveRequestSelect = {
+// 기본적으로 선택할 CalendarGroup 필드 정의
+const defaultCalendarGroups = {
   id: true,
-  created_by: true,
-  resolved_by: true,
-  start_date: true,
-  end_date: true,
-  reason: true,
-  approved: true,
+  name: true,
+  description: true,
+  color: true, // 필드 추가
   created_at: true,
   updated_at: true,
-} satisfies Prisma.LeaveRequestsSelect;
+  created_by: true,
+  CalendarEvents: true,
+  Members: {
+    select: {
+      id: true,
+      account_id: true,
+      name: true,
+    },
+  },
+} satisfies Prisma.CalendarGroupsSelect;
 
-export const leaveRequestsRouter = router({
-  getLeaveRequestByAccountId: procedure
+export const calendarGroupsRouter = router({
+  getCalendarGroupsByAccountId: procedure
     .input(
       z.object({
         account_id: z.string(), // account_id를 입력으로 받음
@@ -28,17 +34,17 @@ export const leaveRequestsRouter = router({
       const { account_id } = input;
       const member = await prisma.members.findFirst({
         where: { account_id }, // account_id로 조회
-        select: defaultLeaveRequestSelect,
+        select: defaultCalendarGroups,
       });
       if (!member) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: `해당 계정 ID의 휴가계 없음 '${account_id}'`,
+          message: `해당 계정 ID의 캘린더 그룹 없음 '${account_id}'`,
         });
       }
       return member;
     }),
-  // 휴가계 ID로 조회
+  // CalendarGroup ID로 조회
   getLeaveRequestById: procedure
     .input(
       z.object({
@@ -49,7 +55,7 @@ export const leaveRequestsRouter = router({
       const { id } = input;
       const leaveRequest = await prisma.leaveRequests.findUnique({
         where: { id: id },
-        select: defaultLeaveRequestSelect,
+        select: defaultCalendarGroups,
       });
       if (!leaveRequest) {
         throw new TRPCError({
@@ -60,8 +66,8 @@ export const leaveRequestsRouter = router({
       return leaveRequest;
     }),
 
-  // 휴가계 목록 조회 (페이지네이션)
-  listLeaveRequests: procedure
+  // 캘린더 그룹 목록 조회 (페이지네이션)
+  listCalendarGroups: procedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).nullish(),
@@ -72,8 +78,8 @@ export const leaveRequestsRouter = router({
       const limit = input.limit ?? 50;
       const { cursor } = input;
 
-      const leaveRequests = await prisma.leaveRequests.findMany({
-        select: defaultLeaveRequestSelect,
+      const calendarGroups = await prisma.calendarGroups.findMany({
+        select: defaultCalendarGroups,
         take: limit + 1,
         cursor: cursor
           ? {
@@ -86,94 +92,82 @@ export const leaveRequestsRouter = router({
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
-      if (leaveRequests.length > limit) {
-        const nextItem = leaveRequests.pop()!;
+      if (calendarGroups.length > limit) {
+        const nextItem = calendarGroups.pop()!;
         nextCursor = nextItem.id;
       }
 
       return {
-        leaveRequests: leaveRequests.reverse(),
+        calendarGroups: calendarGroups.reverse(),
         nextCursor,
       };
     }),
 
-  // 휴가계 생성
-  createLeaveRequest: procedure
+  // 캘린더 그룹 생성
+  createCalendarGroup: procedure
     .input(
       z.object({
-        created_by: z.string().nullish(),
-        resolved_by: z.string().nullish(),
-        start_date: z.date(),
-        end_date: z.date(),
-        reason: z.string(),
+        name: z.string(),
+        description: z.string().nullish(),
+        color: z.string().nullish(),
+        created_by: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      const leaveRequest = await prisma.leaveRequests.create({
+      const calendarGroup = await prisma.calendarGroups.create({
         data: {
+          name: input.name,
+          description: input.description,
+          color: input.color,
           created_by: input.created_by,
-          resolved_by: input.resolved_by,
-          start_date: input.start_date,
-          end_date: input.end_date,
-          reason: input.reason,
         },
-        select: defaultLeaveRequestSelect,
+        select: defaultCalendarGroups,
       });
 
-      return leaveRequest;
+      return calendarGroup;
     }),
 
-  // 휴가계 정보 수정
-  updateLeaveRequest: procedure
+  // 캘린더 그룹 수정
+  updateCalendarGroup: procedure
     .input(
       z.object({
         id: z.string(),
-        resolved_by: z.string().optional(),
-        start_date: z.date().optional(),
-        end_date: z.date().optional(),
-        reason: z.string().optional(),
-        approved: z.boolean().optional(),
+        name: z.string().optional(),
+        description: z.string().optional(),
+        color: z.string().optional(),
       })
     )
     .mutation(async ({ input }) => {
-      const updateData: Prisma.LeaveRequestsUpdateInput = {};
+      const updateData: Prisma.CalendarGroupsUpdateInput = {};
 
-      if (input.resolved_by) {
-        updateData.resolved_by = input.resolved_by;
+      if (input.name) {
+        updateData.name = input.name;
       }
 
-      if (input.start_date) {
-        updateData.start_date = input.start_date;
+      if (input.description) {
+        updateData.description = input.description;
       }
 
-      if (input.end_date) {
-        updateData.end_date = input.end_date;
+      if (input.color) {
+        updateData.color = input.color;
       }
 
-      if (input.reason) {
-        updateData.reason = input.reason;
-      }
-
-      if (typeof input.approved !== "undefined") {
-        updateData.approved = input.approved;
-      }
-
-      return prisma.leaveRequests.update({
+      return prisma.calendarGroups.update({
         where: { id: input.id },
         data: updateData,
-        select: defaultLeaveRequestSelect,
+        select: defaultCalendarGroups,
       });
     }),
 
-  // 휴가계 삭제
-  deleteLeaveRequest: procedure
+  // 캘린더 그룹 삭제
+  deleteCalendarGroup: procedure
     .input(
       z.object({
         id: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      return prisma.leaveRequests.delete({
+      return prisma.calendarGroups.delete({
         where: { id: input.id },
       });
     }),
