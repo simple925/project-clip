@@ -1,5 +1,5 @@
 import { prisma } from "@/server/prisma";
-import { router, procedure } from "@/server/trpc";
+import { router, publicProcedure } from "@/server/trpc";
 import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -24,7 +24,7 @@ const defaultCalendarGroups = {
 } satisfies Prisma.CalendarGroupsSelect;
 
 export const calendarGroupsRouter = router({
-  getCalendarGroupsByAccountId: procedure
+  getCalendarGroupsByAccountId: publicProcedure
     .input(
       z.object({
         account_id: z.string(), // account_id를 입력으로 받음
@@ -45,7 +45,7 @@ export const calendarGroupsRouter = router({
       return member;
     }),
   // CalendarGroup ID로 조회
-  getLeaveRequestById: procedure
+  getLeaveRequestById: publicProcedure
     .input(
       z.object({
         id: z.string(), // ID는 문자열로 입력받음
@@ -67,7 +67,7 @@ export const calendarGroupsRouter = router({
     }),
 
   // 캘린더 그룹 목록 조회 (페이지네이션)
-  listCalendarGroups: procedure
+  listCalendarGroups: publicProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).nullish(),
@@ -104,7 +104,7 @@ export const calendarGroupsRouter = router({
     }),
 
   // 캘린더 그룹 생성
-  createCalendarGroup: procedure
+  createCalendarGroup: publicProcedure
     .input(
       z.object({
         name: z.string(),
@@ -128,7 +128,7 @@ export const calendarGroupsRouter = router({
     }),
 
   // 캘린더 그룹 수정
-  updateCalendarGroup: procedure
+  updateCalendarGroup: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -160,7 +160,7 @@ export const calendarGroupsRouter = router({
     }),
 
   // 캘린더 그룹 삭제
-  deleteCalendarGroup: procedure
+  deleteCalendarGroup: publicProcedure
     .input(
       z.object({
         id: z.string(),

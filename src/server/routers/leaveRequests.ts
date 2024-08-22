@@ -1,5 +1,5 @@
 import { prisma } from "@/server/prisma";
-import { router, procedure } from "@/server/trpc";
+import { router, publicProcedure } from "@/server/trpc";
 import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -18,7 +18,7 @@ const defaultLeaveRequestSelect = {
 } satisfies Prisma.LeaveRequestsSelect;
 
 export const leaveRequestsRouter = router({
-    getLeaveRequestByAccountId: procedure
+    getLeaveRequestByAccountId: publicProcedure
         .input(
             z.object({
                 account_id: z.string(), // account_id를 입력으로 받음
@@ -39,7 +39,7 @@ export const leaveRequestsRouter = router({
             return member;
         }),
     // 휴가계 ID로 조회
-    getLeaveRequestById: procedure
+    getLeaveRequestById: publicProcedure
         .input(
             z.object({
                 id: z.string(), // ID는 문자열로 입력받음
@@ -61,7 +61,7 @@ export const leaveRequestsRouter = router({
         }),
 
     // 휴가계 목록 조회 (페이지네이션)
-    listLeaveRequests: procedure
+    listLeaveRequests: publicProcedure
         .input(
             z.object({
                 limit: z.number().min(1).max(100).nullish(),
@@ -98,7 +98,7 @@ export const leaveRequestsRouter = router({
         }),
 
     // 휴가계 생성
-    createLeaveRequest: procedure
+    createLeaveRequest: publicProcedure
         .input(
             z.object({
                 created_by: z.string().nullish(),
@@ -124,7 +124,7 @@ export const leaveRequestsRouter = router({
         }),
 
     // 휴가계 정보 수정
-    updateLeaveRequest: procedure
+    updateLeaveRequest: publicProcedure
         .input(
             z.object({
                 id: z.string(),
@@ -166,7 +166,7 @@ export const leaveRequestsRouter = router({
         }),
 
     // 휴가계 삭제
-    deleteLeaveRequest: procedure
+    deleteLeaveRequest: publicProcedure
         .input(
             z.object({
                 id: z.string(),

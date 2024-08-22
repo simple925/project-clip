@@ -1,5 +1,5 @@
 import { prisma } from "@/server/prisma";
-import { router, procedure } from "@/server/trpc";
+import { router, publicProcedure } from "@/server/trpc";
 import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -18,7 +18,7 @@ const defaultMemberSelect = {
 } satisfies Prisma.MembersSelect;
 
 export const membersRouter = router({
-    getMemberByAccountId: procedure
+    getMemberByAccountId: publicProcedure
         .input(
             z.object({
                 account_id: z.string(), // account_id를 입력으로 받음
@@ -38,7 +38,7 @@ export const membersRouter = router({
             }
             return member;
         }),
-    getMemberById: procedure
+    getMemberById: publicProcedure
         .input(
             z.object({
                 id: z.string(), // id는 string으로 처리합니다
@@ -60,7 +60,7 @@ export const membersRouter = router({
         }),
 
     // List members with pagination
-    list: procedure
+    list: publicProcedure
         .input(
             z.object({
                 limit: z.number().min(1).max(100).nullish(),
@@ -96,7 +96,7 @@ export const membersRouter = router({
             };
         }),
 
-    createMember: procedure
+    createMember: publicProcedure
         .input(
             z.object({
                 id: z.string().min(1).max(32),
@@ -119,7 +119,7 @@ export const membersRouter = router({
             return member;
         }),
 
-    updateMember: procedure
+    updateMember: publicProcedure
         .input(
             z.object({
                 id: z.string(),
@@ -146,7 +146,7 @@ export const membersRouter = router({
             });
         }),
 
-    deleteMember: procedure
+    deleteMember: publicProcedure
         .input(
             z.object({
                 id: z.string(),
@@ -159,7 +159,7 @@ export const membersRouter = router({
         }),
 
     // Login procedure
-    login: procedure
+    login: publicProcedure
         .input(
             z.object({
                 username: z.string().min(1),

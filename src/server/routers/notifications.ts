@@ -1,5 +1,5 @@
 import { prisma } from "@/server/prisma";
-import { router, procedure } from "@/server/trpc";
+import { router, publicProcedure } from "@/server/trpc";
 import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -19,7 +19,7 @@ const defaultNotificationSelect = {
 
 export const notificationsRouter = router({
     // 공지사항 ID로 조회
-    getNotificationById: procedure
+    getNotificationById: publicProcedure
         .input(
             z.object({
                 id: z.string(), // ID는 문자열로 입력받음
@@ -41,7 +41,7 @@ export const notificationsRouter = router({
         }),
 
     // 공지사항 목록 조회 (페이지네이션)
-    listNotifications: procedure
+    listNotifications: publicProcedure
         .input(
             z.object({
                 limit: z.number().min(1).max(100).nullish(),
@@ -78,7 +78,7 @@ export const notificationsRouter = router({
         }),
 
     // 공지사항 생성
-    createNotification: procedure
+    createNotification: publicProcedure
         .input(
             z.object({
                 id: z.string().min(1).max(32),
@@ -106,7 +106,7 @@ export const notificationsRouter = router({
         }),
 
     // 공지사항 정보 수정
-    updateNotification: procedure
+    updateNotification: publicProcedure
         .input(
             z.object({
                 id: z.string(),
@@ -147,7 +147,7 @@ export const notificationsRouter = router({
         }),
 
     // 공지사항 삭제
-    deleteNotification: procedure
+    deleteNotification: publicProcedure
         .input(
             z.object({
                 id: z.string(),

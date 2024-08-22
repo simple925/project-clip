@@ -1,5 +1,5 @@
 import { prisma } from "@/server/prisma";
-import { router, procedure } from '@/server/trpc';
+import { router, publicProcedure } from '@/server/trpc';
 import { Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
@@ -16,7 +16,7 @@ const defaultAccountSelect = {
 
 export const accountsRouter = router({
     // 사용자 ID로 계정 조회
-    getAccountById: procedure
+    getAccountById: publicProcedure
         .input(
             z.object({
                 id: z.string(), // ID는 문자열로 입력받음
@@ -38,7 +38,7 @@ export const accountsRouter = router({
         }),
 
     // 계정 목록 조회 (페이지네이션)
-    listAccounts: procedure
+    listAccounts: publicProcedure
         .input(
             z.object({
                 limit: z.number().min(1).max(100).nullish(),
@@ -75,7 +75,7 @@ export const accountsRouter = router({
         }),
 
     // 계정 생성
-    createAccount: procedure
+    createAccount: publicProcedure
         .input(
             z.object({
                 id: z.string().min(1).max(32),
@@ -99,7 +99,7 @@ export const accountsRouter = router({
         }),
 
     // 계정 정보 수정
-    updateAccount: procedure
+    updateAccount: publicProcedure
         .input(
             z.object({
                 id: z.string(),
@@ -125,7 +125,7 @@ export const accountsRouter = router({
         }),
 
     // 계정 삭제
-    deleteAccount: procedure
+    deleteAccount: publicProcedure
         .input(
             z.object({
                 id: z.string(),
@@ -138,7 +138,7 @@ export const accountsRouter = router({
         }),
 
     // 로그인 절차
-    login: procedure
+    login: publicProcedure
         .input(
             z.object({
                 username: z.string().min(1),
