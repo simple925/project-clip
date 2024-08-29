@@ -16,7 +16,7 @@ export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGr
     const handleDateSelect = (date: any) => {     // 선택된 날짜 변경시 부모 컴포넌트로 전달
         onSelectDate(date);
     };
-    // console.log('###현재 선택된 이벤트 :', selectedGroupEvent)
+
     const selectedEvents = selectedGroupEvent && Array.isArray(selectedGroupEvent.selectedDate) // selectedDate 값이 있을 경우에만,
         ? selectedGroupEvent.selectedDate.map((date: string, index: number) => ({
             id: index + 1,
@@ -40,7 +40,7 @@ export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGr
         ...selectedEvents
     ];
 
-    console.log('현재 선택된 이벤트 리스트:', events)
+    // console.log('현재 선택된 이벤트 리스트:', events)
 
     // 이벤트 스타일링 속성 추가 
     const eventStyleGetter = (event: any) => {

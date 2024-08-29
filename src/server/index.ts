@@ -14,7 +14,7 @@ export const appRouter = router({
   notifications: notificationsRouter,
   leaveRequests: leaveRequestsRouter,
   calendarGroups: calendarGroupsRouter,
-  calendarEventsRouter: calendarEventsRouter,
+  calendarEvents: calendarEventsRouter,
 });
 
 export const createCaller = createCallerFactory(appRouter);

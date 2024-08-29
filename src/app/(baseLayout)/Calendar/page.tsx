@@ -31,15 +31,14 @@ export default function MyPageLayout({ children }: { children: any }) {
   const dispatch = useAppDispatch();
   // Redux 스토어에서 계정 ID 가져오기
   const accountId = useAppSelector((state) => state.accountStore.accountData);
-
   // account_id로 멤버 정보 조회
+
   const { data: memberData } = trpc.members.getMemberByAccountId.useQuery(
     { account_id: accountId },
     {
       enabled: !!accountId, // account_id가 있을 때만 쿼리 실행
     }
   );
-  // console.log(memberData);
   
   // account_id로 캘린더 그룹 조회
   const { data: groupData } = trpc.calendarGroups.getCalendarGroupsByAccountId.useQuery(
@@ -48,10 +47,11 @@ export default function MyPageLayout({ children }: { children: any }) {
       enabled: !!accountId, // account_id가 있을 때만 쿼리 실행
     }
   );
-  console.log('##################', groupData);
+  console.log(groupData);
 
   // 현재 선택된 날짜 그룹 공유
-  const [selectedGroupDates, setSelectedGroupDates] = useState<any[]>([]);
+  const [selectedGroupDates, setSelectedGroupDates] = useState<any[]>(groupData || []);
+  console.log(selectedGroupDates);
   // groupData가 변경될 때마다 selectedGroupDates 업데이트
   useEffect(() => {
     if (groupData) {
@@ -78,7 +78,6 @@ export default function MyPageLayout({ children }: { children: any }) {
 
   const handleGroupSelect = (group: any) => {
     setSelectedGroupDates(group);
-    // console.log('###현재 선택 이벤트 :', group)
   };
 
   return (
