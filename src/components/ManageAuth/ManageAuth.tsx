@@ -352,6 +352,7 @@ export function ManageAuth() {
       <Modal opened={opened} onClose={close} size="lg">
         <Container>
           <Title mb={15}>권한 관리</Title>
+          <Button>권한 추가</Button>
           <Group>
             <Table className={classes.tableBorder}>
               <Table.Thead>
