@@ -26,13 +26,13 @@ export const membersRouter = router({
       name: z.string(),
       email: z.string()
     }),
-  ).mutation(async (opts) => {
+  ).mutation(async ({input}) => {
     const inputData = await prisma.members.createMany({
       data: [
         {
-        id: opts.input.id,
-        name: opts.input.name,
-        email: opts.input.email
+        id: input.id,
+        name: input.name,
+        email: input.email
         }
       ],
       skipDuplicates: true,
@@ -44,22 +44,28 @@ export const membersRouter = router({
       id: z.string(),
       name: z.string(),
       email: z.string(),
-      updated_at: z.date(),
       // 사원 정보 수정 시 필요한 데이터들 추후 추가
     }),
-  ).mutation(async (opts) => {
-    // console.log("opts > ", opts)
+  ).mutation(async ({input}) => {
     const updateData = await prisma.members.update({
       where: {
-        id: opts.input.id,
+        id: input.id,
       },
       data: {
-        name: opts.input.name,
-        email: opts.input.email,
-        updated_at: opts.input.updated_at,
+        name: input.name,
+        email: input.email,
       },
     })
-    // return { success: true }
-    // return updateData;
+  }),
+  deleteMembers: procedure.input(
+    z.object({
+      id: z.string(),
+    }),
+  ).mutation(async ({input}) => {
+    const deleteData = await prisma.members.delete({
+      where: {
+        id: input.id
+      }
+    })
   })
 })

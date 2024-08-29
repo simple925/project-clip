@@ -41,7 +41,7 @@ export function ManageAuth() {
   const insertMutation = trpc.members.inputMembers.useMutation()
   const insertHandler = () => {
     insertMutation.mutate({
-      id: 'abcdefg123adr3k1234jakldja', name: 'sbson', email: 'sbson@cluedin.co.kr'
+      id: 'zzzzzzzzzzzzzzzzzzzz', name: 'akdkkakkdk', email: 'z_z_z_@cluedin.co.kr'
       // id: 'abcdefg123adr3k11111aaaaaa', name: 'aaaa222', email: 'aaaa222@cluedin.co.kr'
     })
     console.log("insert 호출 됨")
@@ -50,9 +50,16 @@ export function ManageAuth() {
   const updateMutation = trpc.members.updateMembers.useMutation()
   const updateHandler = () => {
     updateMutation.mutate({
-        id: 'abcdefg123adr3k1234jakldja', name: 'sbson11', email: 'sbson11@cluedin.co.kr', updated_at: new Date()
-    })
+        id: 'zzzzzzzzzzzzzzzzzzzz', name: 'sbson33', email: 'sbson33@cluedin.co.kr' })
     console.log("useMutation 호출됨")
+  }
+
+  const deleteMutation = trpc.members.deleteMembers.useMutation()
+  const deleteHandler = () => {
+    deleteMutation.mutate({
+      id: 'zzzzzzzzzzzzzzzzzzzz'
+    })
+    console.log("delete 호출 됨")
   }
   
   /* 사용자 정보 */
@@ -237,7 +244,7 @@ export function ManageAuth() {
           사용자별 권한 관리
         </Title>
         <Flex></Flex>
-        <Button variant="light" color="indigo" size="xs">
+        <Button variant="light" color="indigo" size="xs" onClick={deleteHandler}>
           <IconRefresh style={{ width: "70%", height: "70%" }} stroke={1.5} />
           초기화
         </Button>
