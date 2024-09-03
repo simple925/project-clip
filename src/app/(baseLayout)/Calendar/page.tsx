@@ -31,6 +31,8 @@ export default function MyPageLayout({ children }: { children: any }) {
   const dispatch = useAppDispatch();
   // Redux 스토어에서 계정 ID 가져오기
   const accountId = useAppSelector((state) => state.accountStore.accountData);
+  console.log('aaaaaaaaaaaa '+localStorage.getItem('accountId'))
+  
   // account_id로 멤버 정보 조회
 
   const { data: memberData } = trpc.members.getMemberByAccountId.useQuery(
