@@ -33,7 +33,12 @@ export default function LoginInput() {
   const [data, setData] = useState<string[]>([]);
   const router = useRouter();
   const dispatch = useAppDispatch(); // Redux dispatch 사용
-
+  const a = trpc.accounts.createAccount.useMutation({
+    onSuccess: (data: any) => {
+      console.log('jyd 계정 드감')
+    }
+  })
+  
   const loginMutation = trpc.accounts.login.useMutation({
     onSuccess: (data: any) => {
       showNotification({
@@ -43,11 +48,12 @@ export default function LoginInput() {
       });
       
       // 로그인 성공 시 UUID를 Redux 스토어에 저장
+      localStorage.setItem('accountId', data.id)
       dispatch(setAccountData(data.id)); // API로부터 반환된 id 사용
   
       router.push('/Calendar');
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       showNotification({
         title: '로그인 실패',
         message: error.message,
@@ -77,7 +83,9 @@ export default function LoginInput() {
     //   }, 1000);
     // }
   };
-
+  const insertUser = () => {
+    a.mutate({id:'1234',username:'jyd',password:'qwer1234!'})
+  }
   const handleLogin = () => {
     loginMutation.mutate({
       username: email,
@@ -104,6 +112,7 @@ export default function LoginInput() {
         label="Password"
       />
       <LoginButton className={style["login-btn"]} onClick={handleLogin}>로그인</LoginButton>
+      <LoginButton className={style["login-btn"]} onClick={insertUser}>가입</LoginButton>
       {/* </div> */}
       </>
   );
