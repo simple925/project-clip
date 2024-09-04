@@ -1,5 +1,5 @@
 'use client';
-import React, {  useState, useEffect, use } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -8,23 +8,28 @@ import style from './MyCalendar.module.css';
 import 'moment-timezone'
 import 'moment/locale/ko' // 한글 옵션을 위해서 import 추가
 
-export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGroupEvent, currentAction }:any) {
+export function MyCalendar({ selectDate, onSelectDate, calendarState, calendarEvents }: any) {
     moment.locale('ko-KR');
     const localizer = momentLocalizer(moment);
 
     const today = selectDate;     // 부모 컴포넌트의 date로 현재값 설정
+
     const handleDateSelect = (date: any) => {     // 선택된 날짜 변경시 부모 컴포넌트로 전달
         onSelectDate(date);
     };
+    // calendarEvents에서 group과 events 분리
+    const { group, events: eventList } = calendarEvents || {};
 
-    const selectedEvents = selectedGroupEvent && Array.isArray(selectedGroupEvent.selectedDate) // selectedDate 값이 있을 경우에만,
-        ? selectedGroupEvent.selectedDate.map((date: string, index: number) => ({
-            id: index + 1,
-            title: selectedGroupEvent.description,
-            start: new Date(date),
-            end: new Date(date),
-            color: selectedGroupEvent.color
-        }))
+    const selectedEvents = eventList
+        ? eventList.map((event: any, index: number) => (
+            // console.log(event),
+            {
+                id: index + 1,
+                title: event.CalendarGroups.name || event.title,
+                start: new Date(event.start_date),
+                end: new Date(event.end_date),
+                color: event.CalendarGroups.color
+            }))
         : [];
 
     const initialEvents = [
@@ -59,7 +64,7 @@ export function MyCalendar({ calendarState, selectDate, onSelectDate, selectedGr
     };
 
     const [calendarView, setCalendarView] = useState(Views.MONTH) // default Views.MONTH 보여주기 설정
-    useEffect(()=>{
+    useEffect(() => {
         console.log('얌미 ', calendarState) // 1) console에 calendarState값 로깅
         setCalendarView(calendarState) // 2) calendarView에 불러온 값 담기
     }, [calendarState]) // calendarState가 변경될 때 동작

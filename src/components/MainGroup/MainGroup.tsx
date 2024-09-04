@@ -3,7 +3,7 @@ import styles from "./MainGroup.module.css";
 import { useEffect, useState } from "react";
 import { trpc } from '@/server/client';
 
-export function MainGroup({ calendarGroups }) {
+export function MainGroup({ calendarGroups = [], onGroupSelect }) {
   const [selectedColor, setSelectedColor] = useState(null); // 선택된 색상
   const [activeGroupId, setActiveGroupId] = useState(""); // 현재 선택된 그룹 ID
   const [selectedEvents, setSelectedEvents] = useState({}); // 그룹별 이벤트 데이터 저장
@@ -12,10 +12,10 @@ export function MainGroup({ calendarGroups }) {
 
   // calendarGroups가 변경될 때 상태 업데이트
   useEffect(() => {
-    if (calendarGroups.length > 0) {
+    if (calendarGroups.length > 0 && !activeGroupId) {
       setActiveGroupId(calendarGroups[0].id); // 초기 선택된 그룹 설정 (첫 번째 그룹)
     }
-  }, [calendarGroups]);
+  }, [calendarGroups, activeGroupId]);
 
   // activeGroupId가 변경될 때 이벤트 조회
   const { data: events, isLoading } = trpc.calendarEvents.getCalendarEventsByCalendarGroupId.useQuery(
@@ -35,20 +35,30 @@ export function MainGroup({ calendarGroups }) {
     }
   }, [events, activeGroupId]);
 
+  // 상태가 변할 때마다 상위 컴포넌트에 전달
+  useEffect(() => {
+    if (onGroupSelect && activeGroupId && selectedEvents[activeGroupId]) {
+      onGroupSelect({
+        calGroup: calendarGroups.find(group => group.id === activeGroupId),
+        calEvents: selectedEvents[activeGroupId] || [],
+      });
+    }
+  }, [activeGroupId, selectedEvents]);
+
   const handleGroupSelect = (group) => {
     setSelectedColor(group.color);
     setActiveGroupId(group.id);
   };
-
   // 아코디언 아이템 생성 함수
   const renderAccordionItems = () => {
+
     return calendarGroups.map((group) => {
       const isActive = group.color === selectedColor;
       const eventsForGroup = selectedEvents[group.id];
 
       return (
         <Accordion.Item key={group.id} value={group.name}>
-          <Accordion.Control onClick={() => handleGroupSelect(group)}>
+          <Accordion.Control onClick={() => handleGroupSelect(group, eventsForGroup)}>
             <div style={{ display: "flex", alignItems: "center" }}>
               <ColorSwatch
                 color={group.color}

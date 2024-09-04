@@ -47,8 +47,12 @@ export default function MyPageLayout({ children }: { children: any }) {
     }
   );
   // 현재 선택된 날짜 그룹 공유
-  const [selectedGroupDates, setSelectedGroupDates] = useState<any[]>(groupData || []);
-  // console.log(selectedGroupDates);
+  const [selectedGroupDates, setSelectedGroupDates] = useState<never[]>(groupData || []);
+  // selectedEvents의 타입을 객체로 선언 (group: 그룹 정보, events: 이벤트 목록)
+  const [selectedEvents, setSelectedEvents] = useState<{ group: any; events: any[] }>({
+    group: null,
+    events: [],
+  });
   // groupData가 변경될 때마다 selectedGroupDates 업데이트
   useEffect(() => {
     if (groupData) {
@@ -73,9 +77,14 @@ export default function MyPageLayout({ children }: { children: any }) {
     setCurrentAction(action); // 다음달 상태로 업데이트
   };
 
-  const handleGroupSelect = (group: any) => {
-    setSelectedGroupDates(group);
+  const handleGroupSelect = ({ calGroup, calEvents }) => {
+    console.log("선택된 그룹:", { calGroup, calEvents });
+    setSelectedEvents({
+      group: calGroup,
+      events: calEvents,
+    }); // 선택된 이벤트 업데이트 (배열로 설정)
   };
+
 
   return (
     <>
@@ -99,7 +108,7 @@ export default function MyPageLayout({ children }: { children: any }) {
             onNavigate={handleNavigate} // nextMonth <-> previous 상태 변경
             />
           {/* ### MainCalendarSideCalendar: 사이드 달력, 오늘 날짜 자동 선택, 선택할 때마다 동작 */}
-          <MainGroup calendarGroups={selectedGroupDates} />
+          <MainGroup calendarGroups={selectedGroupDates} onGroupSelect={handleGroupSelect} />
           {/* ### MainGroup: 내 캘린더 그룹별 볼 수 있음. */}
         </AppShell.Navbar>
         <AppShell.Main className={style["main_content"]}>
@@ -108,7 +117,7 @@ export default function MyPageLayout({ children }: { children: any }) {
             selectDate={dayjs(selectedStoreDate).toDate()}
             onSelectDate={handleStoreDateChange}
             calendarState={calendarStateValue}
-            selectedGroupEvent={selectedGroupDates}
+            calendarEvents={selectedEvents}
             currentAction={currentAction}
           />
           {/* ### MyCalendar: react-big-calender 라이브러리 이용한 메인 달력. 오늘 날짜 자동 선택, 선택할 때마다 동작, (MainCalendarHeader에서 변경된)상태 정보 */}
