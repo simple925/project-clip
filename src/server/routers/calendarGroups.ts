@@ -125,6 +125,7 @@ export const calendarGroupsRouter = router({
     .mutation(async ({ input }) => {
       const calendarGroup = await prisma.calendarGroups.create({
         data: {
+          id: "", // Add the id property here
           name: input.name,
           description: input.description,
           color: input.color,

@@ -3,89 +3,90 @@ import styles from "./MainGroup.module.css";
 import { useEffect, useState } from "react";
 import { trpc } from '@/server/client';
 
-export function MainGroup({ calendarGroups, onGroupSelect }) {
-  // 선택된 그룹의 배열 상태
-  const [selectedGroupDates, setSelectedGroupDates] = useState(null);
-  // calendarGroups를 상태로 관리 (초기값을 빈 배열로 설정)
-  const [groupDatas, setGroupDatas] = useState([]);
-  const [selectedEvents, setSelectedEvents] = useState({});
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [activeGroupId, setActiveGroupId] = useState(null); // 현재 선택된 그룹 ID
-  console.log( '##################', calendarGroups );
-  
-  // 특정 그룹의 이벤트를 가져오는 함수
-  const { data: events } = trpc.calendarEvents.getCalendarEventsByCalendarGroupId.useQuery(
-    { calendar_group_id: activeGroupId },  // 현재 선택된 그룹 ID로 쿼리 실행
+export function MainGroup({ calendarGroups }) {
+  const [selectedColor, setSelectedColor] = useState(null); // 선택된 색상
+  const [activeGroupId, setActiveGroupId] = useState(""); // 현재 선택된 그룹 ID
+  const [selectedEvents, setSelectedEvents] = useState({}); // 그룹별 이벤트 데이터 저장
+
+  // console.log('##################', calendarGroups);
+
+  // calendarGroups가 변경될 때 상태 업데이트
+  useEffect(() => {
+    if (calendarGroups.length > 0) {
+      setActiveGroupId(calendarGroups[0].id); // 초기 선택된 그룹 설정 (첫 번째 그룹)
+    }
+  }, [calendarGroups]);
+
+  // activeGroupId가 변경될 때 이벤트 조회
+  const { data: events, isLoading } = trpc.calendarEvents.getCalendarEventsByCalendarGroupId.useQuery(
+    { calendar_group_id: activeGroupId },
     {
-      enabled: !!activeGroupId,  // 그룹 ID가 있을 때만 쿼리 실행
-      onSuccess: (data) => {
-        // 이벤트 데이터를 상태로 저장
-        setSelectedEvents((prev) => ({ ...prev, [activeGroupId]: data }));
-      },
-      onError: (error) => {
-        console.error("Error loading events:", error);
-      },
+      enabled: !!activeGroupId,
     }
   );
+  // 이벤트 데이터가 업데이트될 때 selectedEvents 상태를 업데이트
+  useEffect(() => {
+    if (events) {
+      console.log("불러온 이벤트 데이터: ", events);
+      setSelectedEvents((prev) => ({
+        ...prev,
+        [activeGroupId]: events,
+      }));
+    }
+  }, [events, activeGroupId]);
 
-
-  // 아코디언 항목 클릭 시 처리
-  const onSelectedColorBtn = (item) => {
-    setSelectedColor(item.color);
-    setSelectedGroupDates(item);
-
-    // 선택된 그룹 ID 업데이트 (쿼리 실행을 트리거)
-    setActiveGroupId(item.id);
+  const handleGroupSelect = (group) => {
+    setSelectedColor(group.color);
+    setActiveGroupId(group.id);
   };
 
-  // 선택된 그룹 날짜가 변경될 때 부모 컴포넌트에 전달
-  useEffect(() => {
-    if (selectedGroupDates) {
-      onGroupSelect(selectedGroupDates);
-    }
-  }, [selectedGroupDates, onGroupSelect]);
-  // groupDatas 상태를 기반으로 Accordion 항목 생성
-  const items = groupDatas.map((item) => {
-    const isActive = item.color === selectedColor;
-    const colorBtn = isActive ? '#fff' : 'none';
-    const cursorBtn = isActive ? 'pointer' : 'default';
+  // 아코디언 아이템 생성 함수
+  const renderAccordionItems = () => {
+    return calendarGroups.map((group) => {
+      const isActive = group.color === selectedColor;
+      const eventsForGroup = selectedEvents[group.id];
 
-    const colors = (
-      <ColorSwatch
-        color={item.color}
-        style={{ color: colorBtn, cursor: cursorBtn }}
-      >
-        {isActive && <CheckIcon style={{ width: rem(12), height: rem(12) }} />}
-      </ColorSwatch>
-    );
-    return (
-      <Accordion.Item key={item.id} value={item.name}>
-        <Accordion.Control onClick={() => onSelectedColorBtn(item)}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {colors}
-            <span>{item.name}</span>
-          </div>
-        </Accordion.Control>
-        <Accordion.Panel>
-          {selectedEvents[item.id] ? (
-            selectedEvents[item.id].map(event => (
-              <div key={event.id}>
-                <strong>{event.title}</strong>
-                <p>{event.description}</p>
-                <p>{new Date(event.start_date).toLocaleDateString()} - {new Date(event.end_date).toLocaleDateString()}</p>
-              </div>
-            ))
-          ) : (
-            <p>이벤트 없음</p>
-          )}
-        </Accordion.Panel>
-      </Accordion.Item>
-    );
-  });
+      return (
+        <Accordion.Item key={group.id} value={group.name}>
+          <Accordion.Control onClick={() => handleGroupSelect(group)}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <ColorSwatch
+                color={group.color}
+                style={{ color: isActive ? "#fff" : "none", cursor: "pointer" }}
+              >
+                {isActive && (
+                  <CheckIcon style={{ width: rem(12), height: rem(12) }} />
+                )}
+              </ColorSwatch>
+              <span>{group.name}</span>
+            </div>
+          </Accordion.Control>
+          <Accordion.Panel>
+            {isLoading && activeGroupId === group.id ? (
+              <p>로딩 중...</p>
+            ) : eventsForGroup && eventsForGroup.length > 0 ? (
+              eventsForGroup.map((event) => (
+                <div key={event.id}>
+                  {/* <strong>{event.title}</strong> */}
+                  {/* <p>{event.description}</p> */}
+                  <p>
+                    {new Date(event.start_date).toLocaleDateString()} -{" "}
+                    {new Date(event.end_date).toLocaleDateString()}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p>이벤트 없음</p>
+            )}
+          </Accordion.Panel>
+        </Accordion.Item>
+      );
+    });
+  };
 
   return (
     <div className={styles.MainGroup}>
-      <Accordion defaultValue="내 캘린더">{items}</Accordion>
+      <Accordion>{renderAccordionItems()}</Accordion>
     </div>
   );
 }

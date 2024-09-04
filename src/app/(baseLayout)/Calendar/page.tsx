@@ -39,7 +39,6 @@ export default function MyPageLayout({ children }: { children: any }) {
       enabled: !!accountId, // account_id가 있을 때만 쿼리 실행
     }
   );
-  
   // account_id로 캘린더 그룹 조회
   const { data: groupData } = trpc.calendarGroups.getCalendarGroupsByAccountId.useQuery(
     { account_id: accountId },
@@ -47,11 +46,9 @@ export default function MyPageLayout({ children }: { children: any }) {
       enabled: !!accountId, // account_id가 있을 때만 쿼리 실행
     }
   );
-  console.log(groupData);
-
   // 현재 선택된 날짜 그룹 공유
   const [selectedGroupDates, setSelectedGroupDates] = useState<any[]>(groupData || []);
-  console.log(selectedGroupDates);
+  // console.log(selectedGroupDates);
   // groupData가 변경될 때마다 selectedGroupDates 업데이트
   useEffect(() => {
     if (groupData) {
@@ -102,8 +99,8 @@ export default function MyPageLayout({ children }: { children: any }) {
             onNavigate={handleNavigate} // nextMonth <-> previous 상태 변경
             />
           {/* ### MainCalendarSideCalendar: 사이드 달력, 오늘 날짜 자동 선택, 선택할 때마다 동작 */}
-          <MainGroup calendarGroups={selectedGroupDates} onGroupSelect={handleGroupSelect}/>
-          {/* ### MainGroup: 내 캘린더 그룹별 볼 수 있음. 추가적인 기능 정의 필요 */}
+          <MainGroup calendarGroups={selectedGroupDates} />
+          {/* ### MainGroup: 내 캘린더 그룹별 볼 수 있음. */}
         </AppShell.Navbar>
         <AppShell.Main className={style["main_content"]}>
           <div className={style["main_nav_content"]} />

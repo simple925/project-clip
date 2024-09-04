@@ -84,7 +84,7 @@ export const calendarEventsRouter = router({
       }
       return calendarEvents;
     }),
-
+    
   // 캘린더 이벤트 목록 조회 (페이지네이션)
   listCalendarEvents: procedure
     .input(

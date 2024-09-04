@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 
 const defaultMemberSelect = {
   id: true,
+  account_id: true,
   name: true,
   position: true,
   hire_date: true,
@@ -156,45 +157,5 @@ export const membersRouter = router({
       return prisma.members.delete({
         where: { id: input.id },
       });
-    }),
-
-  // Login procedure
-  login: procedure
-    .input(
-      z.object({
-        username: z.string().min(1),
-        password: z.string().min(1),
-      })
-    )
-    .mutation(async ({ input }) => {
-      const account = await prisma.accounts.findUnique({
-        where: { username: input.username },
-      });
-
-      if (!account) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Invalid username or password",
-        });
-      }
-
-      const passwordMatch = await bcrypt.compare(
-        input.password,
-        account.password
-      );
-
-      if (!passwordMatch) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Invalid username or password",
-        });
-      }
-
-      const member = await prisma.members.findUnique({
-        where: { account_id: account.id },
-        select: defaultMemberSelect,
-      });
-
-      return member;
     }),
 });

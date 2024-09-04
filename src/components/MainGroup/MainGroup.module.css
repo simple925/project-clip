@@ -1,10 +1,18 @@
 .MainGroup {
-  width: 20rem;
-  border: 1px solid #ddd; /* Light border around the container */
-  border-radius: 8px; /* Rounded corners */
-  overflow: hidden; /* Ensures content doesn't spill out of rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted effect */
-  background-color: #f9f9f9; /* Light background for contrast */
+  width: 100%;
+  max-width: 40rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+}
+
+@media (max-width: 600px) {
+  .MainGroup {
+    max-width: 100%;
+    width: auto;
+  }
 }
 
 .MainGroup .mantine-accordion {
