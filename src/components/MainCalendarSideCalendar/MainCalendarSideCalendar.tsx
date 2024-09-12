@@ -10,25 +10,25 @@ import styles from "./MainCalendarSideCalendar.module.css";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 
-const dayRenderer: DatePickerProps["renderDay"] = (date) => {
-  // 오늘 날짜 표기
-  const day = date.getDate();
-  return (
-    <>
-      <Indicator size={6} color="red" offset={-5} disabled={day !== 16}>
+
+export function MainCalendarSideCalendar({ selectedDate, onSelectDate, onNavigate, currentDate }: any) {
+  // 오늘 날짜를 기준으로 Indicator 활성화
+
+  const dayRenderer: DatePickerProps["renderDay"] = (date) => {
+    const day = date.getDate();
+    const isToday = dayjs(date).isSame(currentDate, "day"); // 현재 날짜와 비교
+
+    return (
+      <Indicator size={6} color="red" offset={-5} disabled={!isToday}>
         <div>{day}</div>
       </Indicator>
-    </>
-  );
-};
+    );
+  };
 
-export function MainCalendarSideCalendar({ selectedDate, onSelectDate, onNavigate }: any) {
-  // 날짜 선택시
   const handleDateSelect = (date: Date) => {
     onSelectDate(date); // 선택 날짜를 부모 컴포넌트로 전달
-    console.log('###현재 선택 날짜 :', date)
   };
-  
+
   const handleNextMonth = (date: Date) => {
     onNavigate('NEXT'); // 'NEXT' action 전달
     onSelectDate(date); // 선택 날짜를 부모 컴포넌트로 전달
@@ -48,6 +48,7 @@ export function MainCalendarSideCalendar({ selectedDate, onSelectDate, onNavigat
             firstDayOfWeek={0} // 시작일 설정(일요일 : 0)
             value={selectedDate}
             renderDay={dayRenderer}
+            monthLabelFormat={(date) => `${dayjs(date).format("YYYY년 M월")}`} 
             onChange={handleDateSelect}
             onNextMonth={handleNextMonth}
             onPreviousMonth={handlePreviousMonth}

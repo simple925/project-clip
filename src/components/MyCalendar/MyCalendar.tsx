@@ -65,8 +65,7 @@ export function MyCalendar({ selectDate, onSelectDate, calendarState, calendarEv
 
     const [calendarView, setCalendarView] = useState(Views.MONTH) // default Views.MONTH 보여주기 설정
     useEffect(() => {
-        console.log('얌미 ', calendarState) // 1) console에 calendarState값 로깅
-        setCalendarView(calendarState) // 2) calendarView에 불러온 값 담기
+        setCalendarView(calendarState) 
     }, [calendarState]) // calendarState가 변경될 때 동작
 
     const CalendarToolbar_off = () => {

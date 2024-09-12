@@ -8,8 +8,8 @@ import { IconPaperclip, IconChevronDown, IconBoxMultiple1, IconBoxMultiple7 } fr
 import { IconBrowserCheck } from "@tabler/icons-react";
 import classes from "./MainCalendarHeader.module.css";
 import { View, Views } from "react-big-calendar";
-import { MainCalendarTitle } from "@/components/MainCalendarTitle/MainCalendarTitle";
 import { IconArrowRight, IconArrowLeft } from '@tabler/icons-react';
+import dayjs from "dayjs";
 
 
 // ==> react-big-calendar의 view 속성 참고
@@ -20,7 +20,7 @@ const range = { label: "월간" }; // default 값 월간으로 지정
 const tabs = ["전체", "휴가", "일정"];
 const today = new Date();
 
-export function MainCalendarHeader({ date, onNavigate, currentAction, calendarState }:any) {
+export function MainCalendarHeader({ calendarState, currentAction, currentDate }:any) {
 
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
@@ -32,30 +32,37 @@ export function MainCalendarHeader({ date, onNavigate, currentAction, calendarSt
     </Tabs.Tab>
   ));
 
-  /* start
-  calendarView handle
-  */
   const [ calendarView, setCalendarView ] = useState<View>(Views.MONTH) //View 속성 지정 관리: 초기값 설정(Views.MONTH)
-  // useEffect(() => {
-  //  console.log('잇히 ', calendarView) // 1) console에 현재 calendarView값 로깅(MainCalendarHeader.tsx에서 찍힘)  
-  //  calendarState.calendarState(calendarView) // 2) calendarState값을 상위 컴포넌트에 전달(prop)
-  //}, [calendarView]) // calendarView가 변경될 때마다 해당 작업을 수행한다.
-  /* end
-    calendarView handle
-  */
+  const [today, setToday] = useState(currentDate) // 현재 날짜 관리
+
+  useEffect(() => {
+  //  console.log('잇히 ', calendarState) 
+    if (calendarState){
+      setCalendarView(calendarState)  
+    }
+  }, [calendarState]);
+
+  const handleCalendarView = (view:View, label:string) => {
+    setCalendarView(view) // calendarView를 클릭한 view로 설정
+    calendarState(view) // calendarState에 해당 view 설정
+    range.label = label // range.label에 해당 label 설정  
+  }
+  const returnCurrentMonth = () => {
+
+  }
+
   return (
     <div className={classes.header} >
       <Container>
-        {/* <MainCalendarTitle date={today} calendarState={calendarView} /> */}
         <div className={classes.toolbar}>
           <Group>
             <IconArrowLeft className={classes.arrowIcon} />
             <div className={classes.dateTitle}>
-              <span className={classes.year}>{`${today.getFullYear()}년`}</span>
-              <span className={classes.month}>{`${today.getMonth() + 1}월`}</span>
+              <span className={classes.year}>{`${dayjs(today).format('YYYY')}년`}</span>
+              <span className={classes.month}>{`${dayjs(today).format('MM')}월`}</span>
             </div>
-            <IconArrowRight className={classes.arrowIcon}  />
-            <Button variant="default" className={classes.todayButton} >이번달</Button>
+            <IconArrowRight className={classes.arrowIcon}/>
+            <Button variant="default" className={classes.todayButton} onClick={returnCurrentMonth}>이번달</Button>
           </Group>
         </div>
         <div className={classes.container}>
@@ -73,15 +80,15 @@ export function MainCalendarHeader({ date, onNavigate, currentAction, calendarSt
           <Tabs.List>{items}</Tabs.List>
         </Tabs>
         <Group className="group">
-          {/* <IconPaperclip size={28} /> */}
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <Menu
             width={120}
-            // position="bottom-end"
             transitionProps={{ transition: "pop-top-right" }}
             onClose={() => setUserMenuOpened(false)}
             onOpen={() => setUserMenuOpened(true)}
             withinPortal
+            trapFocus={false} // 포커스를 트랩하지 않도록 설정하여 에러 방지
+            closeOnEscape={true} // ESC로 닫기 가능하게 설정
           >
             <Menu.Target>
               <UnstyledButton className={cx(classes.range, { [classes.userActive]: userMenuOpened, })}>
@@ -104,8 +111,7 @@ export function MainCalendarHeader({ date, onNavigate, currentAction, calendarSt
                   />
                 }
                 onClick={() => {
-                  setCalendarView(Views.DAY) // 클릭시 일간 Views 설정
-                  range.label = '일간'
+                  handleCalendarView(Views.DAY, "일간") // 클릭시 일간 Views 설정
                 }}
               >
                 일간
@@ -119,8 +125,7 @@ export function MainCalendarHeader({ date, onNavigate, currentAction, calendarSt
                   />
                 }
                 onClick={() => {
-                  setCalendarView(Views.WEEK)  // 클릭시 주간 Views 설정
-                  range.label = '주간'
+                  handleCalendarView(Views.WEEK, "주간") 
                 }}
               >
                 주간
@@ -134,8 +139,7 @@ export function MainCalendarHeader({ date, onNavigate, currentAction, calendarSt
                   />
                 }
                 onClick={() => {
-                  setCalendarView(Views.MONTH)  // 클릭시 월간 Views 설정(해당 속성 default)
-                  range.label = '월간'
+                  handleCalendarView(Views.MONTH, "월간")   // 클릭시 월간 Views 설정(해당 속성 default)
                 }}
               >
                 월간
@@ -149,8 +153,7 @@ export function MainCalendarHeader({ date, onNavigate, currentAction, calendarSt
                   />
                 }
                 onClick={() => {
-                  setCalendarView(Views.AGENDA) // 클릭시 일정 목록 Views 설정
-                  range.label = '일정목록'
+                  handleCalendarView(Views.AGENDA, "일정목록") // 클릭시 일정 목록 Views 설정
                 }}
               >
                 일정목록

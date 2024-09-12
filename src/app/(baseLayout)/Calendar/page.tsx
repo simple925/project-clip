@@ -31,21 +31,21 @@ export default function MyPageLayout({ children }: { children: any }) {
   const dispatch = useAppDispatch();
   // Redux 스토어에서 계정 ID 가져오기
   const accountId = useAppSelector((state) => state.accountStore.accountData);
-  console.log('aaaaaaaaaaaa '+localStorage.getItem('accountId'))
+  const currentDate = useAppSelector((state: RootState) => state.dateStore.currentDate);
+
   
   // account_id로 멤버 정보 조회
-
   const { data: memberData } = trpc.members.getMemberByAccountId.useQuery(
-    { account_id: accountId },
+    { account_id: localStorage.getItem('accountId') || '' },
     {
-      enabled: !!accountId, // account_id가 있을 때만 쿼리 실행
+      enabled: !!localStorage.getItem('accountId'), // account_id가 있을 때만 쿼리 실행
     }
   );
   // account_id로 캘린더 그룹 조회
   const { data: groupData } = trpc.calendarGroups.getCalendarGroupsByAccountId.useQuery(
-    { account_id: accountId },
+    { account_id: localStorage.getItem('accountId')|| '' },
     {
-      enabled: !!accountId, // account_id가 있을 때만 쿼리 실행
+      enabled: !!localStorage.getItem('accountId'), // account_id가 있을 때만 쿼리 실행
     }
   );
   // 현재 선택된 날짜 그룹 공유
@@ -65,17 +65,20 @@ export default function MyPageLayout({ children }: { children: any }) {
   const handleStoreDateChange = (newDate: Date) => {
     // 날짜를 YYYY-MM-DD 형식으로 변환하여 저장
     dispatch(setSelectedDate(dayjs(newDate).format("YYYY-MM-DD")));
-    console.log('###스토어 날짜 변경 :', dayjs(newDate).format("YYYY-MM-DD"))
+    // console.log('###스토어 날짜 변경 :', dayjs(newDate).format("YYYY-MM-DD"))
   };
 
   const [calendarStateValue, setCalendarStateValue] = useState<View>(Views.MONTH) // Views 상태 관리( MainCalendarHeader와 MyCalendar에서 공유)
-  const _calendarState = (state:View) => { // MainCalendarHeader.calendarView<View> 값이 변할 경우 호출됨
-    console.log('드갈께~ ', state)
-    setCalendarStateValue(state) // MainCalendarHeader에서 변경된 state 값을 setCalendarStateValue에 담는다
+  const _calendarState = (state:View) => { 
+    setCalendarStateValue(state)
   }
+  // MainCalendarHeader.calendarView<View> 값이 변할 경우 호출됨
+  // MainCalendarHeader에서 변경된 state 값을 setCalendarStateValue에 담는다
 
   const [currentAction, setCurrentAction] = useState("");
+
   const handleNavigate = (action : string) => {
+    // console.log("네비게이션 액션:", action);
     setCurrentAction(action); // 다음달 상태로 업데이트
   };
 
@@ -84,7 +87,7 @@ export default function MyPageLayout({ children }: { children: any }) {
     setSelectedEvents({
       group: calGroup,
       events: calEvents,
-    }); // 선택된 이벤트 업데이트 (배열로 설정)
+    });
   };
 
 
@@ -98,7 +101,7 @@ export default function MyPageLayout({ children }: { children: any }) {
       >
         {/* zIndex의 수치를 Header에 더 높이 주어서, 자연스럽게 출력되게끔 조정 */}
         <AppShell.Header zIndex={300}>
-          <MainCalendarHeader calendarState={_calendarState}/>
+          <MainCalendarHeader calendarState={_calendarState} currentAction={currentAction} currentDate={currentDate} />
           {/* ### MainCalendarHeader: 전체, 휴가, 일정 선택 + 일간/주간/월간/일정목록 메뉴바 */}
           {/* MainCalendarHearder에서 calendarState라는 prop 전달(_calendarState값 전달) */}
         </AppShell.Header>
@@ -108,6 +111,7 @@ export default function MyPageLayout({ children }: { children: any }) {
             selectedDate={dayjs(selectedStoreDate).toDate()}
             onSelectDate={handleStoreDateChange}
             onNavigate={handleNavigate} // nextMonth <-> previous 상태 변경
+            currentDate={currentDate}
             />
           {/* ### MainCalendarSideCalendar: 사이드 달력, 오늘 날짜 자동 선택, 선택할 때마다 동작 */}
           <MainGroup calendarGroups={selectedGroupDates} onGroupSelect={handleGroupSelect} />
@@ -120,7 +124,6 @@ export default function MyPageLayout({ children }: { children: any }) {
             onSelectDate={handleStoreDateChange}
             calendarState={calendarStateValue}
             calendarEvents={selectedEvents}
-            currentAction={currentAction}
           />
           {/* ### MyCalendar: react-big-calender 라이브러리 이용한 메인 달력. 오늘 날짜 자동 선택, 선택할 때마다 동작, (MainCalendarHeader에서 변경된)상태 정보 */}
         </AppShell.Main>
