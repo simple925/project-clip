@@ -11,9 +11,18 @@ export const permissionRouter = router({
   // 권한 추가
   insertPermission: publicProcedure.input(
     z.object({
-
+      id: z.string(),
+      name: z.string(),
+      notes: z.string()
     })
   ).mutation(async ({input}) => {
+    await prisma.permissions.create({
+      data: {
+        id: input.id,
+        name: input.name,
+        notes: input.notes,
+      }
+    })
 
   }),
   // 권한 내용 수정

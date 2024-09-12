@@ -20,13 +20,17 @@ import {
   AutocompleteProps,
   Avatar,
   Autocomplete,
+  Input,
+  rem,
 } from "@mantine/core";
 import classes from "./ManageAuth.module.css";
-import { IconRefresh, IconUserCheck, IconUserPlus } from "@tabler/icons-react";
+import { IconCheck, IconRefresh, IconTablePlus, IconUserCheck, IconUserPlus, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 import { useDisclosure, useListState } from "@mantine/hooks";
 import { IconPencil } from "@tabler/icons-react";
 import { IconTrash } from "@tabler/icons-react";
+import { trpc } from "@/server/client";
+import { IconPlus } from "@tabler/icons-react";
 
 /**
  * @todo
@@ -181,6 +185,22 @@ export function ManageAuth() {
   ));
 
   /* 권한관리 modal */
+  const [prmsNm, setPrmsNm] = useState("")
+  const [prmsDscr, setPrmsDscr] = useState("")
+
+  const selectAuthList = trpc.permission.managePermissions.useQuery()
+
+  const insertManageAuthMutation = trpc.permission.insertPermission.useMutation({
+    onSettled: () => {
+      selectAuthList.refetch()
+    }
+  })
+  const insertManageAuthHandler = () => {
+    insertManageAuthMutation.mutate({
+      id: 'sdf232ffg56346sfsdf', name: prmsNm, notes: prmsDscr
+    })
+  }
+
   const [opened, { open, close }] = useDisclosure(false);
   const modalRows = values.map((element) => (
     <Table.Tr
@@ -194,20 +214,15 @@ export function ManageAuth() {
       <Table.Td>{element.name}</Table.Td>
       <Table.Td colSpan={3}>~~권한설명 추가~~</Table.Td>
       <Table.Td>
-        <ActionIcon variant="outline" color="indigo">
-          <IconPencil
-            style={{ width: "70%", height: "70%" }}
-            stroke={1.5}
-          ></IconPencil>
-        </ActionIcon>
-      </Table.Td>
-      <Table.Td>
-        <ActionIcon variant="outline" color="red">
-          <IconTrash
-            style={{ width: "70%", height: "70%" }}
-            stroke={1.5}
-          ></IconTrash>
-        </ActionIcon>
+        {/* Stack에 key 값 추가 필요 */}
+        <Stack gap="xs">
+          <ActionIcon variant="light" color="gray">
+            <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+          </ActionIcon>
+          <ActionIcon variant="light" color="gray">
+            <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+          </ActionIcon>
+        </Stack>
       </Table.Td>
     </Table.Tr>
   ));
@@ -352,31 +367,40 @@ export function ManageAuth() {
       <Modal opened={opened} onClose={close} size="lg">
         <Container>
           <Title mb={15}>권한 관리</Title>
-          <Button>권한 추가</Button>
+          <ActionIcon variant="light" color="black">
+            <IconPlus />
+          </ActionIcon>
           <Group>
             <Table className={classes.tableBorder}>
               <Table.Thead>
-                <Table.Th>권한명</Table.Th>
-                <Table.Th colSpan={3}>권한내용</Table.Th>
-                <Table.Th colSpan={2}>설정</Table.Th>
+                <Table.Tr>
+                  <Table.Th>권한명</Table.Th>
+                  <Table.Th colSpan={3}>권한내용</Table.Th>
+                  <Table.Th>설정</Table.Th>
+                </Table.Tr>
               </Table.Thead>
-              <Table.Tbody>{modalRows}</Table.Tbody>
+              <Table.Tbody>
+                <Table.Tr>
+                  <Table.Td>
+                    <Input placeholder="권한명을 입력하세요." value={prmsNm} onChange={(e) => setPrmsNm(e.currentTarget.value)}></Input>
+                  </Table.Td>
+                  <Table.Td colSpan={3}>
+                    <Input placeholder="권한 내용을 입력하세요." value={prmsDscr} onChange={(e) => setPrmsDscr(e.currentTarget.value)}></Input>
+                  </Table.Td>
+                  <Table.Td>
+                    <Stack gap="xs">
+                      <ActionIcon variant="light" color="indigo" onClick={insertManageAuthHandler}>
+                        <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                      </ActionIcon>
+                      <ActionIcon variant="light" color="red">
+                        <IconX style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                      </ActionIcon>
+                    </Stack>
+                  </Table.Td>
+                </Table.Tr>
+                {modalRows}
+              </Table.Tbody>
             </Table>
-            <Flex
-              mih={50}
-              gap="md"
-              justify="center"
-              align="center"
-              direction="row"
-              wrap="wrap"
-            >
-              <Button variant="filled" radius="xl">
-                저장
-              </Button>
-              <Button variant="filled" color="gray" radius="xl">
-                취소
-              </Button>
-            </Flex>
           </Group>
         </Container>
       </Modal>
