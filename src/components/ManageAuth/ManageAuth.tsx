@@ -25,7 +25,7 @@ import {
 } from "@mantine/core";
 import classes from "./ManageAuth.module.css";
 import { IconCheck, IconRefresh, IconTablePlus, IconUserCheck, IconUserPlus, IconX } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDisclosure, useListState } from "@mantine/hooks";
 import { IconPencil } from "@tabler/icons-react";
 import { IconTrash } from "@tabler/icons-react";
@@ -185,34 +185,57 @@ export function ManageAuth() {
   ));
 
   /* 권한관리 modal */
-  const [prmsNm, setPrmsNm] = useState("")
-  const [prmsDscr, setPrmsDscr] = useState("")
-
+  const [authList, listHandler] = useListState([])
+  
+  // 권한 조회
   const selectAuthList = trpc.permission.managePermissions.useQuery()
+  useEffect(() => {
+    if (selectAuthList.data) {
+      listHandler.setState(selectAuthList.data);
+    }
+  }, [selectAuthList.data])
 
+  // 신규 입력 값 handle
+  const [newAuth, setNewAuth] = useState({
+    id: "",
+    name: "",
+    notes: ""
+  })
+  const handleInputChange = (e) => {
+    const {name, value} = e.target
+    setNewAuth({
+      ...newAuth,
+      [name]: value
+    })
+  }
+
+  // 신규 권한 추가
   const insertManageAuthMutation = trpc.permission.insertPermission.useMutation({
     onSettled: () => {
       selectAuthList.refetch()
     }
   })
+
   const insertManageAuthHandler = () => {
-    insertManageAuthMutation.mutate({
-      id: 'sdf232ffg56346sfsdf', name: prmsNm, notes: prmsDscr
+    insertManageAuthMutation.mutate(newAuth)
+    setShowNewInput(false)
+  }
+  // 권한 추가 버튼 toggle
+  const [showNewInput, setShowNewInput] = useState(false)
+  const toggleAddBtn = () => {
+    setShowNewInput(!showNewInput)
+    setNewAuth({
+      id: "",
+      name: "",
+      notes: ""
     })
   }
 
   const [opened, { open, close }] = useDisclosure(false);
-  const modalRows = values.map((element) => (
-    <Table.Tr
-      key={element.name}
-      bg={
-        selectedRows.includes(element.key)
-          ? "var(--mantine-color-blue-light)"
-          : undefined
-      }
-    >
-      <Table.Td>{element.name}</Table.Td>
-      <Table.Td colSpan={3}>~~권한설명 추가~~</Table.Td>
+  const modalRows = authList.map((list) => (
+    <Table.Tr key={list.id}>
+      <Table.Td>{list.name}</Table.Td>
+      <Table.Td colSpan={3}>{list.notes}</Table.Td>
       <Table.Td>
         {/* Stack에 key 값 추가 필요 */}
         <Stack gap="xs">
@@ -367,7 +390,8 @@ export function ManageAuth() {
       <Modal opened={opened} onClose={close} size="lg">
         <Container>
           <Title mb={15}>권한 관리</Title>
-          <ActionIcon variant="light" color="black">
+          {/* 권한 추가 버튼 */}
+          <ActionIcon variant="light" color="black" onClick={toggleAddBtn}>
             <IconPlus />
           </ActionIcon>
           <Group>
@@ -380,24 +404,29 @@ export function ManageAuth() {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                <Table.Tr>
-                  <Table.Td>
-                    <Input placeholder="권한명을 입력하세요." value={prmsNm} onChange={(e) => setPrmsNm(e.currentTarget.value)}></Input>
-                  </Table.Td>
-                  <Table.Td colSpan={3}>
-                    <Input placeholder="권한 내용을 입력하세요." value={prmsDscr} onChange={(e) => setPrmsDscr(e.currentTarget.value)}></Input>
-                  </Table.Td>
-                  <Table.Td>
-                    <Stack gap="xs">
-                      <ActionIcon variant="light" color="indigo" onClick={insertManageAuthHandler}>
-                        <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-                      </ActionIcon>
-                      <ActionIcon variant="light" color="red">
-                        <IconX style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-                      </ActionIcon>
-                    </Stack>
-                  </Table.Td>
-                </Table.Tr>
+                {showNewInput && 
+                  <Table.Tr>
+                    <Table.Td>
+                      <Input placeholder="key값" name="id" value={newAuth.id} onChange={handleInputChange}></Input>
+                      <Input placeholder="권한명을 입력하세요." name="name" value={newAuth.name} onChange={handleInputChange}></Input>
+                    </Table.Td>
+                    <Table.Td colSpan={3}>
+                      <Input placeholder="권한 내용을 입력하세요." name="notes" value={newAuth.notes} onChange={handleInputChange}></Input>
+                    </Table.Td>
+                    <Table.Td>
+                      <Stack gap="xs">
+                        {/* 신규 권한 insert */}
+                        <ActionIcon variant="light" color="indigo" onClick={insertManageAuthHandler}>
+                          <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                        </ActionIcon>
+                        {/* 입력 취소 후 input hidden */}
+                        <ActionIcon variant="light" color="red" onClick={() => setShowNewInput(false)}>
+                          <IconX style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                        </ActionIcon>
+                      </Stack>
+                    </Table.Td>
+                  </Table.Tr>
+                }
                 {modalRows}
               </Table.Tbody>
             </Table>
