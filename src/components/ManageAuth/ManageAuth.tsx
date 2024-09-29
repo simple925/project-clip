@@ -20,13 +20,17 @@ import {
   AutocompleteProps,
   Avatar,
   Autocomplete,
+  Input,
+  rem,
 } from "@mantine/core";
 import classes from "./ManageAuth.module.css";
-import { IconRefresh, IconUserCheck, IconUserPlus } from "@tabler/icons-react";
-import { useState } from "react";
+import { IconCheck, IconRefresh, IconTablePlus, IconUserCheck, IconUserPlus, IconX } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 import { useDisclosure, useListState } from "@mantine/hooks";
 import { IconPencil } from "@tabler/icons-react";
 import { IconTrash } from "@tabler/icons-react";
+import { trpc } from "@/server/client";
+import { IconPlus } from "@tabler/icons-react";
 
 /**
  * @todo
@@ -181,34 +185,142 @@ export function ManageAuth() {
   ));
 
   /* 권한관리 modal */
+  const [authList, listHandler] = useListState([])
+  
+  // 권한 조회
+  const selectAuthList = trpc.permission.managePermissions.useQuery()
+  useEffect(() => {
+    if (selectAuthList.data) {
+      listHandler.setState(selectAuthList.data);
+    }
+  }, [selectAuthList.data])
+
+  // 신규 입력 값 handle
+  const [newAuth, setNewAuth] = useState({
+    id: "",
+    name: "",
+    notes: ""
+  })
+  const handleInputChange = (e) => {
+    const {name, value} = e.target
+    setNewAuth({
+      ...newAuth,
+      [name]: value
+    })
+  }
+  // 신규 권한 추가
+  const insertAuthMutation = trpc.permission.insertPermission.useMutation({
+    onSettled: () => {
+      selectAuthList.refetch()
+    }
+  })
+  const insertAuthHandler = () => {
+    if (newAuth.id === '' || newAuth.name === '' || newAuth.notes === '') {
+      alert("내용을 입력하세요.")
+    } else {
+      insertAuthMutation.mutate(newAuth)
+      setShowNewInput(false)
+    }
+  }
+  // 권한 추가 버튼 toggle
+  const [showNewInput, setShowNewInput] = useState(false)
+  const toggleAddBtn = () => {
+    setShowNewInput(!showNewInput)
+    setNewAuth({
+      id: "",
+      name: "",
+      notes: ""
+    })
+  }
+
+  const [rowId, setRowId] = useState(null)
+  const [editedRow, setEditedRow] = useState({})
+  // 수정 버튼 click
+  const toggleEditBtn = (id) => {
+    setRowId(id)
+    const currentRow = authList.find((row) => row.id === id)
+    setEditedRow({...currentRow})
+  }
+  // 수정된 값 handle
+  const handleUpdateChange = (e) => {
+    const {name, value} = e.target
+    setEditedRow({
+      ...editedRow,
+      [name]: value
+    })
+  }
+  // 권한 수정
+  const updateAuthMutation = trpc.permission.updatePermission.useMutation({
+    onSettled: () => {
+      selectAuthList.refetch()
+    }
+  })
+  const updateAuthHandler = () => {
+    if (editedRow.name === '' || editedRow.notes === '') {
+      alert("내용을 입력하세요.")
+    } else {
+      updateAuthMutation.mutate(editedRow)
+      setRowId(null)
+    }
+  }
+  // 수정 취소 버튼
+  const cancelUpateBtn = () => {
+    setRowId(null)
+  }
+
+  // 권한 삭제
+  const deleteAuthMutation = trpc.permission.deletePermission.useMutation({
+    onSettled: () => {
+      selectAuthList.refetch()
+    }
+  })
+  const deleteAuthHandler = (id) => {
+    const confirmDelete = window.confirm("해당 권한을 삭제하시겠습니까?")
+    if (confirmDelete) {
+      deleteAuthMutation.mutate({id})
+    }
+  }
+
   const [opened, { open, close }] = useDisclosure(false);
-  const modalRows = values.map((element) => (
-    <Table.Tr
-      key={element.name}
-      bg={
-        selectedRows.includes(element.key)
-          ? "var(--mantine-color-blue-light)"
-          : undefined
-      }
-    >
-      <Table.Td>{element.name}</Table.Td>
-      <Table.Td colSpan={3}>~~권한설명 추가~~</Table.Td>
-      <Table.Td>
-        <ActionIcon variant="outline" color="indigo">
-          <IconPencil
-            style={{ width: "70%", height: "70%" }}
-            stroke={1.5}
-          ></IconPencil>
-        </ActionIcon>
-      </Table.Td>
-      <Table.Td>
-        <ActionIcon variant="outline" color="red">
-          <IconTrash
-            style={{ width: "70%", height: "70%" }}
-            stroke={1.5}
-          ></IconTrash>
-        </ActionIcon>
-      </Table.Td>
+  const modalRows = authList.map((list) => (
+    <Table.Tr key={list.id}>
+      {rowId === list.id ? (
+        <Table.Td><Input name="name" value={editedRow.name !== undefined ? editedRow.name : list.name} onChange={handleUpdateChange}></Input></Table.Td>
+      ) : (
+        <Table.Td>{list.name}</Table.Td>
+      )}
+      {rowId === list.id ? (
+        <Table.Td colSpan={3}><Input name="notes" value={editedRow.notes !== undefined ? editedRow.notes : list.notes} onChange={handleUpdateChange}></Input></Table.Td>
+      ) : (
+        <Table.Td colSpan={3}>{list.notes}</Table.Td>
+      )}
+      {rowId === list.id ? (
+        <Table.Td>
+          <Stack gap="xs">
+            {/* 권한 수정 */}
+            <ActionIcon variant="light" color="indigo" onClick={updateAuthHandler}>
+              <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            </ActionIcon>
+            {/* 수정 취소 */}
+            <ActionIcon variant="light" color="red" onClick={cancelUpateBtn}>
+              <IconX style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            </ActionIcon>
+          </Stack>
+        </Table.Td>
+      ) : (
+        <Table.Td>
+            {/* Stack에 key 값 추가 필요 */}
+            <Stack gap="xs">
+              <ActionIcon variant="light" color="gray" onClick={() => toggleEditBtn(list.id)}>
+                <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              </ActionIcon>
+              <ActionIcon variant="light" color="gray" onClick={() => deleteAuthHandler(list.id)}>
+                <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              </ActionIcon>
+            </Stack>
+          </Table.Td>
+
+      )}
     </Table.Tr>
   ));
 
@@ -352,30 +464,46 @@ export function ManageAuth() {
       <Modal opened={opened} onClose={close} size="lg">
         <Container>
           <Title mb={15}>권한 관리</Title>
+          {/* 권한 추가 버튼 */}
+          <ActionIcon variant="light" color="black" onClick={toggleAddBtn}>
+            <IconPlus />
+          </ActionIcon>
           <Group>
             <Table className={classes.tableBorder}>
               <Table.Thead>
-                <Table.Th>권한명</Table.Th>
-                <Table.Th colSpan={3}>권한내용</Table.Th>
-                <Table.Th colSpan={2}>설정</Table.Th>
+                <Table.Tr>
+                  <Table.Th>권한명</Table.Th>
+                  <Table.Th colSpan={3}>권한내용</Table.Th>
+                  <Table.Th>설정</Table.Th>
+                </Table.Tr>
               </Table.Thead>
-              <Table.Tbody>{modalRows}</Table.Tbody>
+              <Table.Tbody>
+                {showNewInput && 
+                  <Table.Tr>
+                    <Table.Td>
+                      <Input placeholder="key값" name="id" value={newAuth.id} onChange={handleInputChange}></Input>
+                      <Input placeholder="권한명을 입력하세요." name="name" value={newAuth.name} onChange={handleInputChange}></Input>
+                    </Table.Td>
+                    <Table.Td colSpan={3}>
+                      <Input placeholder="권한 내용을 입력하세요." name="notes" value={newAuth.notes} onChange={handleInputChange}></Input>
+                    </Table.Td>
+                    <Table.Td>
+                      <Stack gap="xs">
+                        {/* 신규 권한 insert */}
+                        <ActionIcon variant="light" color="indigo" onClick={insertAuthHandler}>
+                          <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                        </ActionIcon>
+                        {/* 입력 취소 후 input hidden */}
+                        <ActionIcon variant="light" color="red" onClick={() => setShowNewInput(false)}>
+                          <IconX style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                        </ActionIcon>
+                      </Stack>
+                    </Table.Td>
+                  </Table.Tr>
+                }
+                {modalRows}
+              </Table.Tbody>
             </Table>
-            <Flex
-              mih={50}
-              gap="md"
-              justify="center"
-              align="center"
-              direction="row"
-              wrap="wrap"
-            >
-              <Button variant="filled" radius="xl">
-                저장
-              </Button>
-              <Button variant="filled" color="gray" radius="xl">
-                취소
-              </Button>
-            </Flex>
           </Group>
         </Container>
       </Modal>
