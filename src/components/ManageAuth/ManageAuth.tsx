@@ -208,17 +208,19 @@ export function ManageAuth() {
       [name]: value
     })
   }
-
   // 신규 권한 추가
-  const insertManageAuthMutation = trpc.permission.insertPermission.useMutation({
+  const insertAuthMutation = trpc.permission.insertPermission.useMutation({
     onSettled: () => {
       selectAuthList.refetch()
     }
   })
-
-  const insertManageAuthHandler = () => {
-    insertManageAuthMutation.mutate(newAuth)
-    setShowNewInput(false)
+  const insertAuthHandler = () => {
+    if (newAuth.id === '' || newAuth.name === '' || newAuth.notes === '') {
+      alert("내용을 입력하세요.")
+    } else {
+      insertAuthMutation.mutate(newAuth)
+      setShowNewInput(false)
+    }
   }
   // 권한 추가 버튼 toggle
   const [showNewInput, setShowNewInput] = useState(false)
@@ -231,22 +233,94 @@ export function ManageAuth() {
     })
   }
 
+  const [rowId, setRowId] = useState(null)
+  const [editedRow, setEditedRow] = useState({})
+  // 수정 버튼 click
+  const toggleEditBtn = (id) => {
+    setRowId(id)
+    const currentRow = authList.find((row) => row.id === id)
+    setEditedRow({...currentRow})
+  }
+  // 수정된 값 handle
+  const handleUpdateChange = (e) => {
+    const {name, value} = e.target
+    setEditedRow({
+      ...editedRow,
+      [name]: value
+    })
+  }
+  // 권한 수정
+  const updateAuthMutation = trpc.permission.updatePermission.useMutation({
+    onSettled: () => {
+      selectAuthList.refetch()
+    }
+  })
+  const updateAuthHandler = () => {
+    if (editedRow.name === '' || editedRow.notes === '') {
+      alert("내용을 입력하세요.")
+    } else {
+      updateAuthMutation.mutate(editedRow)
+      setRowId(null)
+    }
+  }
+  // 수정 취소 버튼
+  const cancelUpateBtn = () => {
+    setRowId(null)
+  }
+
+  // 권한 삭제
+  const deleteAuthMutation = trpc.permission.deletePermission.useMutation({
+    onSettled: () => {
+      selectAuthList.refetch()
+    }
+  })
+  const deleteAuthHandler = (id) => {
+    const confirmDelete = window.confirm("해당 권한을 삭제하시겠습니까?")
+    if (confirmDelete) {
+      deleteAuthMutation.mutate({id})
+    }
+  }
+
   const [opened, { open, close }] = useDisclosure(false);
   const modalRows = authList.map((list) => (
     <Table.Tr key={list.id}>
-      <Table.Td>{list.name}</Table.Td>
-      <Table.Td colSpan={3}>{list.notes}</Table.Td>
-      <Table.Td>
-        {/* Stack에 key 값 추가 필요 */}
-        <Stack gap="xs">
-          <ActionIcon variant="light" color="gray">
-            <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon variant="light" color="gray">
-            <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </ActionIcon>
-        </Stack>
-      </Table.Td>
+      {rowId === list.id ? (
+        <Table.Td><Input name="name" value={editedRow.name !== undefined ? editedRow.name : list.name} onChange={handleUpdateChange}></Input></Table.Td>
+      ) : (
+        <Table.Td>{list.name}</Table.Td>
+      )}
+      {rowId === list.id ? (
+        <Table.Td colSpan={3}><Input name="notes" value={editedRow.notes !== undefined ? editedRow.notes : list.notes} onChange={handleUpdateChange}></Input></Table.Td>
+      ) : (
+        <Table.Td colSpan={3}>{list.notes}</Table.Td>
+      )}
+      {rowId === list.id ? (
+        <Table.Td>
+          <Stack gap="xs">
+            {/* 권한 수정 */}
+            <ActionIcon variant="light" color="indigo" onClick={updateAuthHandler}>
+              <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            </ActionIcon>
+            {/* 수정 취소 */}
+            <ActionIcon variant="light" color="red" onClick={cancelUpateBtn}>
+              <IconX style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            </ActionIcon>
+          </Stack>
+        </Table.Td>
+      ) : (
+        <Table.Td>
+            {/* Stack에 key 값 추가 필요 */}
+            <Stack gap="xs">
+              <ActionIcon variant="light" color="gray" onClick={() => toggleEditBtn(list.id)}>
+                <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              </ActionIcon>
+              <ActionIcon variant="light" color="gray" onClick={() => deleteAuthHandler(list.id)}>
+                <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              </ActionIcon>
+            </Stack>
+          </Table.Td>
+
+      )}
     </Table.Tr>
   ));
 
@@ -416,7 +490,7 @@ export function ManageAuth() {
                     <Table.Td>
                       <Stack gap="xs">
                         {/* 신규 권한 insert */}
-                        <ActionIcon variant="light" color="indigo" onClick={insertManageAuthHandler}>
+                        <ActionIcon variant="light" color="indigo" onClick={insertAuthHandler}>
                           <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                         </ActionIcon>
                         {/* 입력 취소 후 input hidden */}
