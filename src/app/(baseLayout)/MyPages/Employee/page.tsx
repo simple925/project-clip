@@ -3,15 +3,18 @@ import { MyContent } from "@/components/MyContent/MyContent";
 import { MyPageSearchBar } from "@/components/MyPageSearchBar/MyPageSearchBar";
 import { Container, Flex, Grid, Textarea, Title } from "@mantine/core";
 import { Accordion, Avatar, Button, TextInput, Text, Group, ActionIcon, rem, Stack, Modal, Mark, Select } from '@mantine/core';
-import { IconPhoneCall, IconAt, IconTrash, IconPencil, IconUserPlus, IconHome } from '@tabler/icons-react';
+import { IconPhoneCall, IconAt, IconTrash, IconPencil, IconUserPlus, IconHome, IconCalendar, IconCake, IconUrgent } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import classes from './UserInfoIcons.module.css';
 // import { trpc } from '@/server/client';
 import { trpc } from '@/server/client';
 import { MemberModal } from "@/components/MemberModal/MemberModal";
 import { useState } from "react";
+import dayjs from "dayjs";
+import 'dayjs/locale/ko'
 
 export default function VacationPage() {
+  dayjs.locale('ko')
 
   const [data, setData] = useState('');
  
@@ -80,6 +83,24 @@ if(memberList.data != null){
           <IconHome  stroke={1.5} size="1rem" className={classes.icon} />
           <Text fz="s" c="dimmed">
             {item.address}
+          </Text>
+        </Group>
+        <Group wrap="nowrap" gap={10} mt={5}>
+          <IconCalendar  stroke={1.5} size="1rem" className={classes.icon} />
+          <Text fz="s" c="dimmed">
+            {item.hire_date==null?'':dayjs(item.hire_date).format("YYYY년 MM월 DD일 dddd")}
+          </Text>
+        </Group>
+        <Group wrap="nowrap" gap={10} mt={5}>
+          <IconCake  stroke={1.5} size="1rem" className={classes.icon} />
+          <Text fz="s" c="dimmed">
+            {item.birth_date==null?'':dayjs(item.birth_date).format("YYYY년 MM월 DD일 dddd")}
+          </Text>
+        </Group>
+        <Group wrap="nowrap" gap={10} mt={5}>
+          <IconUrgent  stroke={1.5} size="1rem" className={classes.icon} />
+          <Text fz="s" c="dimmed">
+            {item.emergency_contact_number}
           </Text>
         </Group>
       </Accordion.Panel>

@@ -7,17 +7,17 @@ import {
   Select,
   Mark,
   ScrollArea,
-  ComboboxItem,
-  ComboboxItemGroup
+  FileInput,
 } from "@mantine/core";
 import { DateInput } from '@mantine/dates';
 import '@mantine/dates/styles.css';
 import { useForm } from '@mantine/form';
 import { useFocusWithin } from '@mantine/hooks';
-import { IconUserPlus } from '@tabler/icons-react';
+import { IconUserPlus, IconPhotoPlus } from '@tabler/icons-react';
 import { trpc } from '@/server/client';
 import { any } from "zod";
 import { useState } from "react";
+
 
 export function MemberModal({opened, close}) {
   type FormData = {
@@ -32,6 +32,8 @@ export function MemberModal({opened, close}) {
     address: string,
     emergency_contact_number: string,
   };
+
+  const imageIcon = <IconPhotoPlus stroke={2} />
 
   const getAccounts = trpc.accounts.getUnRegisteredAccounts.useQuery()
 
@@ -185,6 +187,7 @@ export function MemberModal({opened, close}) {
           placeholder="서울시 영등포구"
           key={form.key('address')}
           {...form.getInputProps('address')}/>
+        <FileInput leftSection={imageIcon} accept="image/png,image/jpeg" label="이미지 등록" placeholder="이미지를 등록하세요."/>
         <Button type="submit">저장</Button>
       </Stack>
       </form>
