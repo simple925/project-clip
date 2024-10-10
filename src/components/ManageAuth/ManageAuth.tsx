@@ -24,7 +24,7 @@ import {
   rem,
 } from "@mantine/core";
 import classes from "./ManageAuth.module.css";
-import { IconCheck, IconRefresh, IconTablePlus, IconUserCheck, IconUserPlus, IconX } from "@tabler/icons-react";
+import { IconCheck, IconRefresh, IconUserCheck, IconUserPlus, IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useDisclosure, useListState } from "@mantine/hooks";
 import { IconPencil } from "@tabler/icons-react";
@@ -109,18 +109,6 @@ export function ManageAuth() {
     { name: "배ㅇㅇ", uuid: "uuid5" },
     { name: "최ㅇㅇ", uuid: "uuid6" },
   ]);
-  
-  /* 권한 목록 영역 */
-  const elements = [
-    { key: 1, name: "권한1", checked: false },
-    { key: 2, name: "권한2", checked: false },
-    { key: 3, name: "권한3", checked: false },
-    { key: 4, name: "권한4", checked: false },
-    { key: 5, name: "권한5", checked: false },
-    { key: 6, name: "권한6", checked: false },
-    { key: 7, name: "권한7", checked: false },
-    { key: 8, name: "권한8", checked: false },
-  ];
 
   /* 권한 대상 삭제 */
   function removeObject(uuid: String) {
@@ -151,40 +139,8 @@ export function ManageAuth() {
   ));
 
   /* 권한 목록 List */
-  // 체크박스 row 컨트롤
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
-  // 체크박스 전체 선택 컨트롤
-  const [values, handlers] = useListState(elements);
-  const allChecked = selectedRows.length == values.length ? true : false;
-  const indeterminate = values.some((value) => value.checked) && !allChecked;
-
-  const rows = values.map((element) => (
-    <Table.Tr
-      key={element.name}
-      bg={
-        selectedRows.includes(element.key)
-          ? "var(--mantine-color-blue-light)"
-          : undefined
-      }
-    >
-      <Table.Td>
-        <Checkbox
-          checked={selectedRows.includes(element.key)}
-          onChange={(event) =>
-            setSelectedRows(
-              event.currentTarget.checked
-                ? [...selectedRows, element.key]
-                : selectedRows.filter((key) => key !== element.key)
-            )
-          }
-        />
-      </Table.Td>
-      <Table.Td>{element.name}</Table.Td>
-    </Table.Tr>
-  ));
-
-  /* 권한관리 modal */
+  /* 권한관리 */
   const [authList, listHandler] = useListState([])
   
   // 권한 조회
@@ -194,6 +150,44 @@ export function ManageAuth() {
       listHandler.setState(selectAuthList.data);
     }
   }, [selectAuthList.data])
+
+  /* 권한 목록 영역 */
+  const elements = authList.map(item => ({
+    ...item,
+    checked: false,
+  }))
+
+  // 체크박스 row 컨트롤
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+
+  // 체크박스 전체 선택 컨트롤
+  const allChecked = selectedRows.length == elements.length ? true : false;
+  const indeterminate = elements.some((value) => value.checked) && !allChecked;
+
+  const rows = elements.map((element) => (
+    <Table.Tr
+      key={element.name}
+      bg={
+        selectedRows.includes(element.id)
+          ? "var(--mantine-color-blue-light)"
+          : undefined
+      }
+    >
+      <Table.Td>
+        <Checkbox
+          checked={selectedRows.includes(element.id)}
+          onChange={(event) =>
+            setSelectedRows(
+              event.currentTarget.checked
+                ? [...selectedRows, element.id]
+                : selectedRows.filter((key) => key !== element.id)
+            )
+          }
+        />
+      </Table.Td>
+      <Table.Td>{element.name}</Table.Td>
+    </Table.Tr>
+  ));
 
   // 신규 입력 값 handle
   const [newAuth, setNewAuth] = useState({
@@ -415,14 +409,14 @@ export function ManageAuth() {
                           checked={allChecked}
                           indeterminate={indeterminate}
                           onChange={() =>
-                            handlers.setState((current) => {
+                            listHandler.setState((current) => {
                               const check = current.map((value) => ({
                                 ...value,
                                 checked: !value.checked,
                               }));
                               allChecked
                                 ? setSelectedRows([])
-                                : setSelectedRows(check.map((v) => v.key));
+                                : setSelectedRows(check.map((v) => v.id));
                               return check;
                             })
                           }
