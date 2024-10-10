@@ -10,6 +10,7 @@ IconMail,
 IconHome,
 IconWritingSign
 } from '@tabler/icons-react';
+import { trpc } from '@/server/client';
 
 export function MenuBar(prop: any) {
 
@@ -19,7 +20,8 @@ export function MenuBar(prop: any) {
 
 	// navbar 메뉴 추가 시 변경 될 데이터 
 
-
+const notice = trpc.notifications.getNotificationAll.useQuery();
+  const noticeCount = notice.data?.length
 
 const handleClick = () => {
 	prop.onValue(prop.isOpen)
@@ -72,7 +74,7 @@ return (
 				size="xs" circle
 				color="red"
 				pos="relative" top="-20px" right="385px"
-				>1</Badge>
+				>{noticeCount}</Badge>
 		</span>
 	</nav>
 </>

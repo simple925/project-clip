@@ -18,6 +18,20 @@ const defaultNotificationSelect = {
 } satisfies Prisma.NotificationsSelect;
 
 export const notificationsRouter = router({
+    // 공지사항 전체 조회
+    getNotificationAll: 
+        publicProcedure.query(async () => {
+            const notification = await prisma.notifications.findMany({
+                select: defaultNotificationSelect,
+            });
+            if (!notification) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: `No notification'`,
+                });
+            }
+            return notification;
+        }),
     // 공지사항 ID로 조회
     getNotificationById: publicProcedure
         .input(

@@ -6,6 +6,7 @@ import { modals } from "@mantine/modals";
 import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import { IconBell } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import { trpc } from '@/server/client';
 
 export function Modal(props: {id:  string , clickState: boolean}) {
   //   const [opened, { open, close }] = useDisclosure(false);
@@ -20,47 +21,10 @@ export function Modal(props: {id:  string , clickState: boolean}) {
   }, [props.clickState]); // props.clickState 값이 변경될 때마다 실행
 
   useAnimationOffsetEffect(embla, TRANSITION_DURATION);
-  //한번만 호출
-  // useEffect(() => {
-  //   fetch('http://localhost:9999/comments')
-  //     .then(res => res.json())
-  //     .then(data => {
-  //           setData(data)
-  //     });
-  //   },[]);
-    const data = [
-    {
-      "id": 1,
-      "title": "첫번째 알림의 제목입니다",
-      "content": "첫번째 내용......",
-      "postId": 1
-    },
-    {
-      "id": 2,
-      "title": "두번째 알림의 제목입니다",
-      "content": "두번째 내용......",
-      "postId": 2
-    },
-    {
-      "id": 3,
-      "title": "세번째 알림의 제목입니다",
-      "content": "세번째 내용......",
-      "postId": 3
-    },
-    {
-      "id": 4,
-      "title": "네번째 알림의 제목입니다",
-      "content": "네번째 내용......",
-      "postId": 4
-    },
-    {
-      "id": 5,
-      "title": "다섯번째 알림의 제목입니다",
-      "content": "다섯번째 내용......",
-      "postId": 5
-    }
-  ]
-  // if (!data) return <p>No profile data</p>
+
+  // 공지사항 조회
+  const notice = trpc.notifications.getNotificationAll.useQuery();
+  const data = notice.data
 
   const openModal = (data: any) => {
     modals.open({
@@ -68,7 +32,7 @@ export function Modal(props: {id:  string , clickState: boolean}) {
         <>
           <IconBell />
           <span style={{ fontWeight: "bold", padding: "10px" }}>
-            {props.id+"님의 알림"}
+            New 알림
           </span>
         </>
       ),

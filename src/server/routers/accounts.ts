@@ -182,4 +182,20 @@ export const accountsRouter = router({
                 last_login: account.last_login,
             };
         }),
+    
+    // 사원등록되지 않은 계정 리스트
+    getUnRegisteredAccounts: publicProcedure
+        .query(async () => {
+        return prisma.accounts.findMany({
+            where: {
+                Members: {
+                    none: {}, // Employees 테이블에 등록되지 않은 계정을 필터링
+                },
+            },
+            select: {
+                id: true,
+                username: true,
+            },
+        });
+    }),
 });
